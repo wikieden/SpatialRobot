@@ -1,0 +1,27 @@
+# Workspace root — tracks the 3 submodules + shared config only.
+# Each submodule has its own .gitignore for its source tree.
+
+# uv shared environment (lockfile IS committed for reproducibility)
+.venv/
+__pycache__/
+*.py[cod]
+
+# Agent / tooling state
+.omc/
+.omx/
+.claude/
+
+# SpatialMem stores
+*.smem
+*.smem-wal
+*.smem-shm
+
+# Env / secrets
+.env
+.env.local
+
+# OS / editor
+.DS_Store
+*.swp
+.idea/
+.vscode/

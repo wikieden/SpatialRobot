@@ -1,0 +1,27 @@
+# SpatialRobot — embodied-brain workspace root (virtual; not a package).
+# One uv environment for all three repos. Members keep their own pyproject /
+# git history and publish independently to PyPI; this file only wires them
+# together for local development.
+#
+#   uv sync           # create .venv at root, install all 3 members editable + dev tools
+#   uv run pytest     # run from any member dir; resolves against the shared env
+#
+# Inter-member deps (perception->core, brain->core[+perception]) are taken from
+# the local source tree here via [tool.uv.sources]; published wheels still pull
+# the PyPI releases.
+
+[tool.uv.workspace]
+members = ["SpatialMem", "spatialmem-brain", "spatialmem-perception"]
+
+[tool.uv.sources]
+spatialmem = { workspace = true }
+spatialmem-perception = { workspace = true }
+
+# Shared dev toolchain — one install covers lint/type/test for every member.
+[dependency-groups]
+dev = [
+    "pytest>=8",
+    "pytest-cov>=5",
+    "ruff>=0.6",
+    "pyright>=1.1.380",
+]

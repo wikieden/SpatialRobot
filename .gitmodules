@@ -1,0 +1,12 @@
+[submodule "SpatialMem"]
+	path = SpatialMem
+	url = https://github.com/wikieden/spatialmem.git
+	branch = feat/cosmos-integration
+[submodule "spatialmem-brain"]
+	path = spatialmem-brain
+	url = https://github.com/wikieden/spatialmem-brain.git
+	branch = main
+[submodule "spatialmem-perception"]
+	path = spatialmem-perception
+	url = https://github.com/wikieden/spatialmem-perception.git
+	branch = main
