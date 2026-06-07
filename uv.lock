@@ -267,7 +267,7 @@ name = "exceptiongroup"
 version = "1.3.1"
 source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple" }
 dependencies = [
-    { name = "typing-extensions", marker = "python_full_version < '3.13'" },
+    { name = "typing-extensions", marker = "python_full_version < '3.11'" },
 ]
 sdist = { url = "https://pypi.tuna.tsinghua.edu.cn/packages/50/79/66800aadf48771f6b62f7eb014e352e5d06856655206165d775e675a02c9/exceptiongroup-1.3.1.tar.gz", hash = "sha256:8b412432c6055b0b7d14c310000ae93352ed6754f70fa8f7c34141f91c4e3219", size = 30371, upload-time = "2025-11-21T23:01:54.787Z" }
 wheels = [
@@ -1383,7 +1383,9 @@ dependencies = [
 
 [package.optional-dependencies]
 dev = [
+    { name = "pyright" },
     { name = "pytest" },
+    { name = "pytest-cov" },
     { name = "ruff" },
 ]
 perception = [
@@ -1393,7 +1395,9 @@ perception = [
 [package.metadata]
 requires-dist = [
     { name = "numpy" },
+    { name = "pyright", marker = "extra == 'dev'" },
     { name = "pytest", marker = "extra == 'dev'" },
+    { name = "pytest-cov", marker = "extra == 'dev'" },
     { name = "ruff", marker = "extra == 'dev'" },
     { name = "spatialmem", editable = "SpatialMem" },
     { name = "spatialmem-perception", marker = "extra == 'perception'", editable = "spatialmem-perception" },
@@ -1417,7 +1421,9 @@ clip = [
     { name = "torch" },
 ]
 dev = [
+    { name = "pyright" },
     { name = "pytest" },
+    { name = "pytest-cov" },
     { name = "ruff" },
 ]
 
@@ -1426,7 +1432,9 @@ requires-dist = [
     { name = "numpy" },
     { name = "open-clip-torch", marker = "extra == 'clip'" },
     { name = "pillow", marker = "extra == 'clip'" },
+    { name = "pyright", marker = "extra == 'dev'" },
     { name = "pytest", marker = "extra == 'dev'" },
+    { name = "pytest-cov", marker = "extra == 'dev'" },
     { name = "ruff", marker = "extra == 'dev'" },
     { name = "spatialmem", editable = "SpatialMem" },
     { name = "torch", marker = "extra == 'clip'" },
