@@ -10,6 +10,8 @@ __pycache__/
 .omc/
 .omx/
 .claude/
+.codegraph/
+.cursor/
 
 # SpatialMem stores
 *.smem
