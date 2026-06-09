@@ -1,3 +1,5 @@
+> 🌐 **English** · [中文](README.zh.md)
+
 # SpatialRobot
 
 Workspace umbrella for the **embodied-brain** stack — a memory core, optional

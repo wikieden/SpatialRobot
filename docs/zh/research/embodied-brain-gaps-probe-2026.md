@@ -1,3 +1,5 @@
+> 🌐 [English](../../en/research/embodied-brain-gaps-probe-2026.md) · **中文**
+
 # 二轮深挖：空间记忆 GTM 付费意愿 + RoboOS/InternRobotics 场景图记忆（2026）
 
 > 多 agent workflow 深挖 + 对抗验证。回填 VISION 的 OQ-1（首个付费方）、OQ-5（RoboOS 是否覆盖）。数字按 verdict 处理。
@@ -177,7 +179,7 @@
 ### 4.3 本仓库内部依据
 
 - OQ-1 / OQ-5 定义与关闭判据：`/Users/wiki/Documents/Claude/Projects/SpatialRobot/docs/VISION.md`（§6.1、§7.2、§8 里程碑表）
-- 系统级愿景：`/Users/wiki/Documents/Claude/Projects/SpatialRobot/docs/00-SYSTEM-VISION.md`
+- 系统级愿景：`/Users/wiki/Documents/Claude/Projects/SpatialRobot/docs/VISION.md`（定稿 v2）
 - 既有竞品调研：`/Users/wiki/Documents/Claude/Projects/SpatialRobot/docs/research/embodied-brain-landscape-2026.md`
 - 单包记忆核愿景与 Open Questions：`/Users/wiki/Documents/Claude/Projects/SpatialRobot/SpatialMem/docs/00-VISION.md`、`/Users/wiki/Documents/Claude/Projects/SpatialRobot/SpatialMem/docs/05-OPEN.md`（B3 Mem0 合作问题与本报告 §1 直接相关）
 

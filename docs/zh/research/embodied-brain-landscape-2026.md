@@ -1,3 +1,5 @@
+> 🌐 [English](../../en/research/embodied-brain-landscape-2026.md) · **中文**
+
 # 具身大脑系统 · 国内外公司与开源项目深度调研（2026）
 
 > 由多 agent workflow 联网调研（exa）+ 对抗验证生成：8 维度 / 96 findings / 8 维。

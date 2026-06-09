@@ -1,9 +1,11 @@
+> 🌐 [English](../en/VISION.md) · **中文**
+
 # SpatialRobot · 系统级 Vision 与定位（2026 · 定稿 v2）
 
 > 本文是 SpatialRobot 工作区（三层：`spatialmem` / `spatialmem-perception` / `spatialmem-brain`）的系统级愿景与定位文档。
 > 输入依据：[docs/research/embodied-brain-landscape-2026.md](research/embodied-brain-landscape-2026.md)（8 维度、对抗验证调研）+ 对本仓库三层实际代码的核读。
 > 凡引用数字一律按报告 verdict 处理：**refuted 不采用、updated 用更新值、uncertain 明确标注"待核实"**。
-> 单包（记忆核）愿景见 [SpatialMem/docs/00-VISION.md](../SpatialMem/docs/00-VISION.md)；本文是其系统级超集，二者不冲突。
+> 单包（记忆核）愿景见 [SpatialMem/docs/00-VISION.md](../../SpatialMem/docs/zh/00-VISION.md)；本文是其系统级超集，二者不冲突。
 > **v2 定稿说明**：本版吸收了工程 / 商业 / 战略三个视角的对抗式批判。所有被批判暴露的漏洞，要么已在正文补齐（带工程证据），要么明确降级为 **[开放问题]** 并给出关闭它的最小判据。本文区分两类断言：标 **[已验证]** 的来自代码核读或调研 confirmed；标 **[内部分析]** 的是本项目自研判断，不得对外当作独立证据；标 **[开放问题]** 的是尚未关闭、需要外部验证的赌注。
 
 ---
@@ -447,7 +449,7 @@ P2→P3 的"发布评测集 → 被默认采用"跳跃缺少说服机制。补�
 ## 附：本文与单包 vision 的关系
 
 - 本文（系统级）= SpatialRobot 三层整体的生态位、范式关系、路线、风险与商业化框架；
-- [SpatialMem/docs/00-VISION.md](../SpatialMem/docs/00-VISION.md)（单包级）= 记忆核作为独立 SDK 的"Mem0-for-3D-space"叙事；
+- [SpatialMem/docs/00-VISION.md](../../SpatialMem/docs/zh/00-VISION.md)（单包级）= 记忆核作为独立 SDK 的"Mem0-for-3D-space"叙事；
 - 二者一致：系统级把单包的"空间记忆 SDK"放进 dual-system + world model 的具身大脑全景中，定义为"所有 S2 可挂载的外置海马体"。如有冲突，以本文调研事实与代码核读为准。
 
 ---

@@ -100,7 +100,7 @@ stdlib-only and speaks to **any OpenAI-compatible `/v1/chat/completions`**. To
 self-host the reasoner, point `base_url` at a local vLLM/NIM server — no code
 change. The user runs Cosmos-Reason2-8B on an **RTX PRO 6000 (96 GB)** workstation;
 deployment specifics (variants, VRAM, serve commands) are in
-[spatialmem-brain/docs/local-serving.md](spatialmem-brain/docs/local-serving.md).
+[spatialmem-brain/docs/en/local-serving.md](spatialmem-brain/docs/en/local-serving.md).
 
 ## Conventions (from SpatialMem/spec/ENGINEERING.md — normative for all three)
 
@@ -118,8 +118,14 @@ deployment specifics (variants, VRAM, serve commands) are in
 
 ## Where to read first
 
-- Product/design (read in order): `SpatialMem/docs/00-VISION.md` → `01-POSITIONING.md`
+> **Docs are bilingual.** Every narrative doc lives in both `docs/en/` (English,
+> canonical) and `docs/zh/` (中文). READMEs use a suffix instead: `README.md`
+> (English) + `README.zh.md`. `spec/*.md` and `CHANGELOG.md` stay English-only.
+> Paths below point at the English canonical.
+
+- System vision (the 3-package whole): `docs/en/VISION.md`
+- Product/design (read in order): `SpatialMem/docs/en/00-VISION.md` → `01-POSITIONING.md`
   → `02-ARCHITECTURE.md` → `03-ROADMAP.md` → `04-MVP-SCOPE.md`
 - Normative specs: `SpatialMem/spec/{API,SCHEMA,FUSION-ARBITER,QUERY-ROUTER,ENGINEERING}.md`
-- Full system design (perception + memory + brain): `spatialmem-brain/docs/cosmos3-spatialmem-llm-brain.md`
+- Full system design (perception + memory + brain): `spatialmem-brain/docs/en/cosmos3-spatialmem-llm-brain.md`
 - Runnable, no GPU: `SpatialMem/examples/01_quickstart.py`, `spatialmem-brain/examples/`
