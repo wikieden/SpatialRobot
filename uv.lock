@@ -404,6 +404,20 @@ wheels = [
 ]
 
 [[package]]
+name = "imageio"
+version = "2.37.3"
+source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple" }
+dependencies = [
+    { name = "numpy", version = "2.2.6", source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple" }, marker = "python_full_version < '3.11'" },
+    { name = "numpy", version = "2.4.6", source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple" }, marker = "python_full_version >= '3.11'" },
+    { name = "pillow" },
+]
+sdist = { url = "https://pypi.tuna.tsinghua.edu.cn/packages/b1/84/93bcd1300216ea50811cee96873b84a1bebf8d0489ffaf7f2a3756bab866/imageio-2.37.3.tar.gz", hash = "sha256:bbb37efbfc4c400fcd534b367b91fcd66d5da639aaa138034431a1c5e0a41451", size = 389673, upload-time = "2026-03-09T11:31:12.573Z" }
+wheels = [
+    { url = "https://pypi.tuna.tsinghua.edu.cn/packages/49/fa/391e437a34e55095173dca5f24070d89cbc233ff85bf1c29c93248c6588d/imageio-2.37.3-py3-none-any.whl", hash = "sha256:46f5bb8522cd421c0f5ae104d8268f569d856b29eb1a13b92829d1970f32c9f0", size = 317646, upload-time = "2026-03-09T11:31:10.771Z" },
+]
+
+[[package]]
 name = "iniconfig"
 version = "2.3.0"
 source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple" }
@@ -1338,6 +1352,7 @@ dependencies = [
 
 [package.optional-dependencies]
 all = [
+    { name = "imageio" },
     { name = "open-clip-torch" },
     { name = "pyright" },
     { name = "pytest" },
@@ -1354,22 +1369,26 @@ dev = [
     { name = "pytest-cov" },
     { name = "ruff" },
 ]
+replica = [
+    { name = "imageio" },
+]
 vec = [
     { name = "sqlite-vec" },
 ]
 
 [package.metadata]
 requires-dist = [
+    { name = "imageio", marker = "extra == 'replica'", specifier = ">=2.30" },
     { name = "numpy", specifier = ">=1.24" },
     { name = "open-clip-torch", marker = "extra == 'clip'", specifier = ">=2.20" },
     { name = "pyright", marker = "extra == 'dev'", specifier = ">=1.1.380" },
     { name = "pytest", marker = "extra == 'dev'", specifier = ">=8" },
     { name = "pytest-cov", marker = "extra == 'dev'", specifier = ">=5" },
     { name = "ruff", marker = "extra == 'dev'", specifier = ">=0.6" },
-    { name = "spatialmem", extras = ["vec", "clip", "dev"], marker = "extra == 'all'", editable = "SpatialMem" },
+    { name = "spatialmem", extras = ["vec", "clip", "replica", "dev"], marker = "extra == 'all'", editable = "SpatialMem" },
     { name = "sqlite-vec", marker = "extra == 'vec'", specifier = ">=0.1.0" },
 ]
-provides-extras = ["vec", "clip", "dev", "all"]
+provides-extras = ["vec", "clip", "replica", "dev", "all"]
 
 [[package]]
 name = "spatialmem-brain"
