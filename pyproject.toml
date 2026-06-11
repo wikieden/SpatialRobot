@@ -11,11 +11,11 @@
 # the PyPI releases.
 
 [tool.uv.workspace]
-members = ["SpatialMem", "spatialmem-brain", "spatialmem-perception"]
+members = ["tempomem", "mindloop", "worldsense"]
 
 [tool.uv.sources]
-spatialmem = { workspace = true }
-spatialmem-perception = { workspace = true }
+tempomem = { workspace = true }
+worldsense = { workspace = true }
 
 # Shared dev toolchain — one install covers lint/type/test for every member.
 [dependency-groups]

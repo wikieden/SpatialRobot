@@ -1,12 +1,12 @@
-[submodule "SpatialMem"]
-	path = SpatialMem
-	url = https://github.com/wikieden/spatialmem.git
+[submodule "Chronotope"]
+	path = tempomem
+	url = https://github.com/wikieden/tempomem.git
 	branch = feat/cosmos-integration
-[submodule "spatialmem-brain"]
-	path = spatialmem-brain
-	url = https://github.com/wikieden/spatialmem-brain.git
+[submodule "mindloop"]
+	path = mindloop
+	url = https://github.com/wikieden/mindloop.git
 	branch = main
-[submodule "spatialmem-perception"]
-	path = spatialmem-perception
-	url = https://github.com/wikieden/spatialmem-perception.git
+[submodule "worldsense"]
+	path = worldsense
+	url = https://github.com/wikieden/worldsense.git
 	branch = main

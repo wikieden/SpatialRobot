@@ -5,9 +5,9 @@
 .PHONY: help sync sync-clip test test-core test-brain test-perception \
         lint fmt types bump clean
 
-CORE        := SpatialMem
-BRAIN       := spatialmem-brain
-PERCEPTION  := spatialmem-perception
+CORE        := Chronotope
+BRAIN       := mindloop
+PERCEPTION  := worldsense
 
 help: ## List targets
 	@grep -E '^[a-zA-Z_-]+:.*## ' $(MAKEFILE_LIST) | \
@@ -38,9 +38,9 @@ fmt: ## ruff format the whole workspace
 	uv run ruff format .
 
 types: ## pyright on all 3 src trees
-	uv run pyright $(CORE)/src/spatialmem
-	uv run pyright $(BRAIN)/src/spatialmem_brain
-	uv run pyright $(PERCEPTION)/src/spatialmem_perception
+	uv run pyright $(CORE)/src/tempomem
+	uv run pyright $(BRAIN)/src/mindloop
+	uv run pyright $(PERCEPTION)/src/worldsense
 
 bump: ## Pull each submodule's tracked branch to latest (then commit the pointer)
 	git submodule update --remote

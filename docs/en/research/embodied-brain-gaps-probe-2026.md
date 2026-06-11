@@ -181,4 +181,4 @@ At the conceptual level they correspond highly (both are hierarchical node-edge 
 - OQ-1 / OQ-5 definitions and closure criteria: `/Users/wiki/Documents/Claude/Projects/SpatialRobot/docs/VISION.md` (§6.1, §7.2, §8 milestone table)
 - System-level vision: `/Users/wiki/Documents/Claude/Projects/SpatialRobot/docs/VISION.md` (finalized v2)
 - Existing competitor research: `/Users/wiki/Documents/Claude/Projects/SpatialRobot/docs/research/embodied-brain-landscape-2026.md`
-- Single-package memory core vision and Open Questions: `/Users/wiki/Documents/Claude/Projects/SpatialRobot/SpatialMem/docs/00-VISION.md`, `/Users/wiki/Documents/Claude/Projects/SpatialRobot/SpatialMem/docs/05-OPEN.md` (B3 Mem0 collaboration question is directly related to §1 of this report)
+- Single-package memory core vision and Open Questions: `/Users/wiki/Documents/Claude/Projects/SpatialRobot/tempomem/docs/00-VISION.md`, `/Users/wiki/Documents/Claude/Projects/SpatialRobot/tempomem/docs/05-OPEN.md` (B3 Mem0 collaboration question is directly related to §1 of this report)

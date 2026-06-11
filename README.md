@@ -13,20 +13,20 @@ independently versioned repos and bundled here as git submodules + one
 > just gives them one resolved environment.
 
 ```
-RGB(-D) ─► spatialmem-perception (eyes) ─► Detections
+RGB(-D) ─► worldsense (eyes) ─► Detections
                                               │
                                               ▼
-                              spatialmem (memory: fuse → persist → query)
+                              tempomem (memory: fuse → persist → query)
                                               │ serialize
                                               ▼
-              spatialmem-brain  Brain.ask ─► Reasoner (LLM) ─► Answer(text, cited node ids)
+              mindloop  Brain.ask ─► Reasoner (LLM) ─► Answer(text, cited node ids)
 ```
 
 | Submodule | Package | Role | Repo |
 |---|---|---|---|
-| `SpatialMem/` | `spatialmem` | Memory core — `.smem` SQLite scene-graph, fusion, query (numpy-only). | [wikieden/spatialmem](https://github.com/wikieden/spatialmem) |
-| `spatialmem-perception/` | `spatialmem-perception` | Eyes — RGB(-D) → world-frame `Detection`s (CLIP behind `[clip]`). | [wikieden/spatialmem-perception](https://github.com/wikieden/spatialmem-perception) |
-| `spatialmem-brain/` | `spatialmem-brain` | Brain — `Brain` loop + `Reasoner` + `CosmosReasonVerbalizer`. | [wikieden/spatialmem-brain](https://github.com/wikieden/spatialmem-brain) |
+| `tempomem/` | `tempomem` | Memory core — `.smem` SQLite scene-graph, fusion, query (numpy-only). | [wikieden/tempomem](https://github.com/wikieden/tempomem) |
+| `worldsense/` | `worldsense` | Eyes — RGB(-D) → world-frame `Detection`s (CLIP behind `[clip]`). | [wikieden/worldsense](https://github.com/wikieden/worldsense) |
+| `mindloop/` | `mindloop` | Brain — `Brain` loop + `Reasoner` + `CosmosReasonVerbalizer`. | [wikieden/mindloop](https://github.com/wikieden/mindloop) |
 
 Dependency direction: `perception → core`, `brain → core` (+ optional
 `brain[perception]`). The core never imports the other two.
@@ -49,7 +49,7 @@ uv sync                 # .venv at root, all 3 members editable + shared dev too
 uv sync --extra clip    # + the GPU/CLIP stack (torch, open-clip, pillow)
 ```
 
-`[tool.uv.sources]` maps `spatialmem` / `spatialmem-perception` to the local
+`[tool.uv.sources]` maps `tempomem` / `worldsense` to the local
 tree — edit the core, brain/perception see it immediately, no reinstall.
 
 ## Common commands
@@ -66,12 +66,12 @@ make types           # pyright on all 3 src trees
 make bump            # pull each submodule's tracked branch to latest
 ```
 
-Run anything directly too, e.g. `uv run pytest SpatialMem/tests` or
-`uv run spatialmem viz store.smem -o scene.html`.
+Run anything directly too, e.g. `uv run pytest tempomem/tests` or
+`uv run tempomem viz store.smem -o scene.html`.
 
 ## Daily submodule flow
 
-1. Work inside a member dir (`SpatialMem/`, …) — commit + push in that child repo.
+1. Work inside a member dir (`tempomem/`, …) — commit + push in that child repo.
 2. Back at the root, record the new pointer:
    ```bash
    git submodule update --remote   # or just `make bump`
@@ -79,7 +79,7 @@ Run anything directly too, e.g. `uv run pytest SpatialMem/tests` or
    git push
    ```
 
-Tracked branches: `SpatialMem` → `feat/cosmos-integration`, the other two → `main`.
+Tracked branches: `Chronotope` → `feat/cosmos-integration`, the other two → `main`.
 
 ## More
 

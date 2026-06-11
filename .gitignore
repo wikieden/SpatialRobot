@@ -13,7 +13,7 @@ __pycache__/
 .codegraph/
 .cursor/
 
-# SpatialMem stores
+# Chronotope stores
 *.smem
 *.smem-wal
 *.smem-shm

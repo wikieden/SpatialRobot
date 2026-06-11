@@ -2,10 +2,10 @@
 
 # SpatialRobot · System-Level Vision and Positioning (2026 · Finalized v2)
 
-> This document is the system-level vision and positioning document for the SpatialRobot workspace (three layers: `spatialmem` / `spatialmem-perception` / `spatialmem-brain`).
+> This document is the system-level vision and positioning document for the SpatialRobot workspace (three layers: `tempomem` / `worldsense` / `mindloop`).
 > Input basis: [docs/research/embodied-brain-landscape-2026.md](research/embodied-brain-landscape-2026.md) (8-dimension, adversarially verified research) + a careful read of the actual three-layer code in this repository.
 > All cited figures are handled per the report's verdict: **refuted ones are not adopted, updated ones use the updated value, uncertain ones are explicitly marked "to be verified".**
-> The single-package (memory core) vision is in [SpatialMem/docs/00-VISION.md](../../SpatialMem/docs/en/00-VISION.md); this document is its system-level superset, and the two do not conflict.
+> The single-package (memory core) vision is in [tempomem/docs/00-VISION.md](../../tempomem/docs/en/00-VISION.md); this document is its system-level superset, and the two do not conflict.
 > **v2 finalization note**: This version absorbs adversarial critique from three perspectives — engineering / business / strategy. Every vulnerability exposed by the critique is either already filled in the main text (with engineering evidence) or explicitly downgraded to an **[open question]** with the minimum criterion to close it. This document distinguishes two kinds of assertion: those marked **[verified]** come from a careful code read or research confirmed; those marked **[internal analysis]** are this project's own judgment and must not be treated externally as independent evidence; those marked **[open question]** are unclosed bets that require external validation.
 
 ---
@@ -84,9 +84,9 @@ Chapter 3 of the report groups the field into three **orthogonal, complementary*
 
 SpatialRobot explicitly stands at the third pole and does three things:
 
-1. **Memory (`spatialmem`, the memory core)** — a numpy-only `.smem` SQLite 3D scene graph: fuse → persist → query. It is the system's **only stateful object**, the hippocampus.
-2. **Perception (`spatialmem-perception`, the eyes)** — RGB-D → world-frame `Detection`; camera→world geometry lift, CLIP encoding (torch is only introduced behind the `[clip]` extra).
-3. **Brain (`spatialmem-brain`, the brain seam)** — the `Brain` cognitive loop + `Reasoner` + `CosmosReasonVerbalizer`, interfacing with the S2 of **any OpenAI-compatible `/v1/chat/completions`**.
+1. **Memory (`tempomem`, the memory core)** — a numpy-only `.smem` SQLite 3D scene graph: fuse → persist → query. It is the system's **only stateful object**, the hippocampus.
+2. **Perception (`worldsense`, the eyes)** — RGB-D → world-frame `Detection`; camera→world geometry lift, CLIP encoding (torch is only introduced behind the `[clip]` extra).
+3. **Brain (`mindloop`, the brain seam)** — the `Brain` cognitive loop + `Reasoner` + `CosmosReasonVerbalizer`, interfacing with the S2 of **any OpenAI-compatible `/v1/chat/completions`**.
 
 The three layers use the **three Protocols — `PerceptionAdapter` / `Verbalizer` / `Reasoner` — exposed by the core** as BYO seams. The system's closed-loop interface is already a prototype: `Brain.ask()` produces, via `serialize(format="prompt")`, a token-efficient **hierarchical scene graph** with `#id` references fed to the Reasoner, returning **`Answer(text, cited_node_ids)`**. This is precisely the engineering implementation of the "VLM planner + structured spatial context" paradigm.
 
@@ -197,9 +197,9 @@ Absorbing engineering critique **HIGH-5** — "numpy-only, installable on the ed
 
 | Configuration | Install | Dependencies | Compute / VRAM | Suitable for | End-to-end capability |
 |---|---|---|---|---|---|
-| **core-only** | `pip install spatialmem` | numpy (no torch, no CUDA) | CPU, can run from MCU-class up | edge / embedded / receiving upstream `Detection` | fusion + persistence + query (keyword/linear fallback); **no visual front-end** |
+| **core-only** | `pip install tempomem` | numpy (no torch, no CUDA) | CPU, can run from MCU-class up | edge / embedded / receiving upstream `Detection` | fusion + persistence + query (keyword/linear fallback); **no visual front-end** |
 | **+perception** | `+ [clip]` extra | torch + open-clip + (SAM2/GDINO) | GPU (CLIP inference) | on-machine with GPU / edge box | RGB-D → scene graph (with semantic encoding) |
-| **+brain** | `+ spatialmem-brain` | stdlib only (LLM remote) | depends on S2 deployment location | any (S2 can be in cloud / remote vLLM) | memory + reasoning closed loop |
+| **+brain** | `+ mindloop` | stdlib only (LLM remote) | depends on S2 deployment location | any (S2 can be in cloud / remote vLLM) | memory + reasoning closed loop |
 | **full stack** | all + local S2 | torch + CUDA + local vLLM/NIM | high (e.g. Cosmos-Reason2-8B needs RTX PRO 6000 class) | workstation / R&D | full closed loop running locally |
 
 **P1 acceptance must include**: (a) **an end-to-end smoke test of the GPU-free pure-numpy fallback path** (core-only configuration, BYO `Detection` → query); (b) simultaneously verifying the GPU path of the +perception configuration. Only when both pass is "tiered installability" a credible selling point.
@@ -430,7 +430,7 @@ Absorbing strategy critique **MEDIUM-2**: license red lines (irreversible legal 
 
 ### 9.2 Engineering red lines (architectural-integrity constraints · changes need RFC + owner approval)
 
-- the core stays **numpy-only** — adding a torch/LLM import to `SpatialMem/` breaks the contract;
+- the core stays **numpy-only** — adding a torch/LLM import to `tempomem/` breaks the contract;
 - the **fuse-before-persist invariant** — any new mutator must first `_flush_pending()`;
 - tests are **network-free** — use `ScriptedReasoner` / `HashEncoder`, and absolutely never reach a real LLM or download a model in a test.
 
@@ -449,7 +449,7 @@ Absorbing strategy critique **MEDIUM-2**: license red lines (irreversible legal 
 ## Appendix: Relationship Between This Document and the Single-Package Vision
 
 - This document (system level) = the niche, paradigm relationships, roadmap, risks, and commercialization framework of the SpatialRobot three-layer whole;
-- [SpatialMem/docs/00-VISION.md](../../SpatialMem/docs/en/00-VISION.md) (single-package level) = the "Mem0-for-3D-space" narrative of the memory core as a standalone SDK;
+- [tempomem/docs/00-VISION.md](../../tempomem/docs/en/00-VISION.md) (single-package level) = the "Mem0-for-3D-space" narrative of the memory core as a standalone SDK;
 - The two are consistent: the system level places the single-package "spatial-memory SDK" into the full embodied-brain panorama of dual-system + world model, defining it as "the external hippocampus that all S2 can mount." In case of conflict, this document's research facts and code read prevail.
 
 ---

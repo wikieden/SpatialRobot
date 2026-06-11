@@ -7,20 +7,20 @@
 > 本仓库**不包含任何自有源码** —— 仅存放 submodule 指针和共享开发配置（uv workspace、lockfile、Python 版本锁定、`CLAUDE.md`、本 README）。每个包在其自有仓库中独立开发；workspace 的作用仅是为它们提供一个统一的依赖解析环境。
 
 ```
-RGB(-D) ─► spatialmem-perception (eyes) ─► Detections
+RGB(-D) ─► worldsense (eyes) ─► Detections
                                               │
                                               ▼
-                              spatialmem (memory: fuse → persist → query)
+                              tempomem (memory: fuse → persist → query)
                                               │ serialize
                                               ▼
-              spatialmem-brain  Brain.ask ─► Reasoner (LLM) ─► Answer(text, cited node ids)
+              mindloop  Brain.ask ─► Reasoner (LLM) ─► Answer(text, cited node ids)
 ```
 
 | Submodule | 包名 | 职责 | 仓库 |
 |---|---|---|---|
-| `SpatialMem/` | `spatialmem` | 记忆核心 —— `.smem` SQLite 场景图、融合、查询（仅依赖 numpy）。 | [wikieden/spatialmem](https://github.com/wikieden/spatialmem) |
-| `spatialmem-perception/` | `spatialmem-perception` | 视觉感知 —— RGB(-D) → 世界坐标系 `Detection`（CLIP 位于 `[clip]` extra 之后）。 | [wikieden/spatialmem-perception](https://github.com/wikieden/spatialmem-perception) |
-| `spatialmem-brain/` | `spatialmem-brain` | 大脑 —— `Brain` 认知循环 + `Reasoner` + `CosmosReasonVerbalizer`。 | [wikieden/spatialmem-brain](https://github.com/wikieden/spatialmem-brain) |
+| `tempomem/` | `tempomem` | 记忆核心 —— `.smem` SQLite 场景图、融合、查询（仅依赖 numpy）。 | [wikieden/tempomem](https://github.com/wikieden/tempomem) |
+| `worldsense/` | `worldsense` | 视觉感知 —— RGB(-D) → 世界坐标系 `Detection`（CLIP 位于 `[clip]` extra 之后）。 | [wikieden/worldsense](https://github.com/wikieden/worldsense) |
+| `mindloop/` | `mindloop` | 大脑 —— `Brain` 认知循环 + `Reasoner` + `CosmosReasonVerbalizer`。 | [wikieden/mindloop](https://github.com/wikieden/mindloop) |
 
 依赖方向：`perception → core`，`brain → core`（以及可选的 `brain[perception]`）。核心层永远不导入其他两个模块。
 
@@ -42,7 +42,7 @@ uv sync                 # 在根目录创建 .venv，以可编辑模式安装全
 uv sync --extra clip    # 额外安装 GPU/CLIP 技术栈（torch、open-clip、pillow）
 ```
 
-`[tool.uv.sources]` 将 `spatialmem` / `spatialmem-perception` 映射到本地目录树 —— 修改核心代码后，brain/perception 立即可见，无需重新安装。
+`[tool.uv.sources]` 将 `tempomem` / `worldsense` 映射到本地目录树 —— 修改核心代码后，brain/perception 立即可见，无需重新安装。
 
 ## 常用命令
 
@@ -58,11 +58,11 @@ make types           # 对全部 3 个 src 目录执行 pyright
 make bump            # 将每个 submodule 拉取到其跟踪分支的最新提交
 ```
 
-也可以直接运行任意命令，例如 `uv run pytest SpatialMem/tests` 或 `uv run spatialmem viz store.smem -o scene.html`。
+也可以直接运行任意命令，例如 `uv run pytest tempomem/tests` 或 `uv run tempomem viz store.smem -o scene.html`。
 
 ## 日常 submodule 工作流
 
-1. 在成员目录内工作（`SpatialMem/`、……）—— 在子仓库中提交并推送。
+1. 在成员目录内工作（`tempomem/`、……）—— 在子仓库中提交并推送。
 2. 回到根目录，记录新的指针：
    ```bash
    git submodule update --remote   # 或直接执行 `make bump`
@@ -70,7 +70,7 @@ make bump            # 将每个 submodule 拉取到其跟踪分支的最新提�
    git push
    ```
 
-跟踪分支：`SpatialMem` → `feat/cosmos-integration`，其余两个 → `main`。
+跟踪分支：`Chronotope` → `feat/cosmos-integration`，其余两个 → `main`。
 
 ## 更多资料
 

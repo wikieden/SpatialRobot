@@ -2,10 +2,10 @@
 
 # SpatialRobot · 系统级 Vision 与定位（2026 · 定稿 v2）
 
-> 本文是 SpatialRobot 工作区（三层：`spatialmem` / `spatialmem-perception` / `spatialmem-brain`）的系统级愿景与定位文档。
+> 本文是 SpatialRobot 工作区（三层：`tempomem` / `worldsense` / `mindloop`）的系统级愿景与定位文档。
 > 输入依据：[docs/research/embodied-brain-landscape-2026.md](research/embodied-brain-landscape-2026.md)（8 维度、对抗验证调研）+ 对本仓库三层实际代码的核读。
 > 凡引用数字一律按报告 verdict 处理：**refuted 不采用、updated 用更新值、uncertain 明确标注"待核实"**。
-> 单包（记忆核）愿景见 [SpatialMem/docs/00-VISION.md](../../SpatialMem/docs/zh/00-VISION.md)；本文是其系统级超集，二者不冲突。
+> 单包（记忆核）愿景见 [tempomem/docs/00-VISION.md](../../tempomem/docs/zh/00-VISION.md)；本文是其系统级超集，二者不冲突。
 > **v2 定稿说明**：本版吸收了工程 / 商业 / 战略三个视角的对抗式批判。所有被批判暴露的漏洞，要么已在正文补齐（带工程证据），要么明确降级为 **[开放问题]** 并给出关闭它的最小判据。本文区分两类断言：标 **[已验证]** 的来自代码核读或调研 confirmed；标 **[内部分析]** 的是本项目自研判断，不得对外当作独立证据；标 **[开放问题]** 的是尚未关闭、需要外部验证的赌注。
 
 ---
@@ -84,9 +84,9 @@
 
 SpatialRobot 明确站在第三极，做三件事：
 
-1. **Memory（`spatialmem`，记忆核）**——numpy-only 的 `.smem` SQLite 3D 场景图：融合（fuse）→ 持久化（persist）→ 查询（query）。它是整个系统**唯一的有状态对象**，是海马体。
-2. **Perception（`spatialmem-perception`，眼睛）**——RGB-D → 世界系 `Detection`；相机→世界几何 lift，CLIP 编码（`[clip]` extra 后才引入 torch）。
-3. **Brain（`spatialmem-brain`，大脑接缝）**——`Brain` 认知循环 + `Reasoner` + `CosmosReasonVerbalizer`，对接**任意 OpenAI 兼容 `/v1/chat/completions`** 的 S2。
+1. **Memory（`tempomem`，记忆核）**——numpy-only 的 `.smem` SQLite 3D 场景图：融合（fuse）→ 持久化（persist）→ 查询（query）。它是整个系统**唯一的有状态对象**，是海马体。
+2. **Perception（`worldsense`，眼睛）**——RGB-D → 世界系 `Detection`；相机→世界几何 lift，CLIP 编码（`[clip]` extra 后才引入 torch）。
+3. **Brain（`mindloop`，大脑接缝）**——`Brain` 认知循环 + `Reasoner` + `CosmosReasonVerbalizer`，对接**任意 OpenAI 兼容 `/v1/chat/completions`** 的 S2。
 
 三层通过 core 暴露的 **`PerceptionAdapter` / `Verbalizer` / `Reasoner` 三个 Protocol** 作为 BYO 接缝。系统的闭环接口已是雏形：`Brain.ask()` 经 `serialize(format="prompt")` 产出 token 高效、带 `#id` 引用的**层级场景图**喂给 Reasoner，返回 **`Answer(text, cited_node_ids)`**。这正是"VLM planner + 结构化空间上下文"范式的工程实现。
 
@@ -197,9 +197,9 @@ RGB-D ─►│  S2 (VLM, ~7-9Hz, 规划)  ◄──注入结构化空间上下�
 
 | 配置 | 安装 | 依赖 | 算力 / VRAM | 适用 | 端到端能力 |
 |---|---|---|---|---|---|
-| **core-only** | `pip install spatialmem` | numpy（无 torch、无 CUDA） | CPU、可跑 MCU 级以上 | 边缘端 / 嵌入式 / 接收上游 `Detection` | 融合 + 持久化 + 查询（keyword/linear fallback）；**无视觉前端** |
+| **core-only** | `pip install tempomem` | numpy（无 torch、无 CUDA） | CPU、可跑 MCU 级以上 | 边缘端 / 嵌入式 / 接收上游 `Detection` | 融合 + 持久化 + 查询（keyword/linear fallback）；**无视觉前端** |
 | **+perception** | `+ [clip]` extra | torch + open-clip + (SAM2/GDINO) | GPU（CLIP 推理） | 有 GPU 的机上 / 边缘盒子 | RGB-D → 场景图（含语义编码） |
-| **+brain** | `+ spatialmem-brain` | 仅 stdlib（LLM 远程） | 取决于 S2 部署位置 | 任意（S2 可在云 / 远端 vLLM） | 记忆 + 推理闭环 |
+| **+brain** | `+ mindloop` | 仅 stdlib（LLM 远程） | 取决于 S2 部署位置 | 任意（S2 可在云 / 远端 vLLM） | 记忆 + 推理闭环 |
 | **full stack** | 全部 + 本地 S2 | torch + CUDA + 本地 vLLM/NIM | 高（如 Cosmos-Reason2-8B 需 RTX PRO 6000 级） | 工作站 / 研发 | 全闭环本地运行 |
 
 **P1 验收必须包含**：(a) **无 GPU 纯 numpy fallback 路径的端到端冒烟测试**（core-only 配置，BYO `Detection` → 查询）；(b) 同时验证 +perception 配置的 GPU 路径。两条都过，"分级可装"才是可信卖点。
@@ -430,7 +430,7 @@ P2→P3 的"发布评测集 → 被默认采用"跳跃缺少说服机制。补�
 
 ### 9.2 工程红线（架构完整性约束 · 变更需 RFC + 负责人批准）
 
-- core 保持 **numpy-only**——给 `SpatialMem/` 加 torch/LLM import 即破契约；
+- core 保持 **numpy-only**——给 `tempomem/` 加 torch/LLM import 即破契约；
 - **fuse-before-persist 不变量**——新增任何 mutator 必先 `_flush_pending()`；
 - 测试 **network-free**——用 `ScriptedReasoner` / `HashEncoder`，绝不在测试中触达真实 LLM 或下载模型。
 
@@ -449,7 +449,7 @@ P2→P3 的"发布评测集 → 被默认采用"跳跃缺少说服机制。补�
 ## 附：本文与单包 vision 的关系
 
 - 本文（系统级）= SpatialRobot 三层整体的生态位、范式关系、路线、风险与商业化框架；
-- [SpatialMem/docs/00-VISION.md](../../SpatialMem/docs/zh/00-VISION.md)（单包级）= 记忆核作为独立 SDK 的"Mem0-for-3D-space"叙事；
+- [tempomem/docs/00-VISION.md](../../tempomem/docs/zh/00-VISION.md)（单包级）= 记忆核作为独立 SDK 的"Mem0-for-3D-space"叙事；
 - 二者一致：系统级把单包的"空间记忆 SDK"放进 dual-system + world model 的具身大脑全景中，定义为"所有 S2 可挂载的外置海马体"。如有冲突，以本文调研事实与代码核读为准。
 
 ---

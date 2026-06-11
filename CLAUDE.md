@@ -12,25 +12,25 @@ package** — it is a [uv workspace](https://docs.astral.sh/uv/concepts/projects
 that gives all three a single shared environment.
 
 ```
-RGB(-D) ─► spatialmem-perception (eyes) ─► Detections
+RGB(-D) ─► worldsense (eyes) ─► Detections
                                               │
                                               ▼
-                              spatialmem (memory: fuse → persist → query)
+                              tempomem (memory: fuse → persist → query)
                                               │ serialize
                                               ▼
-              spatialmem-brain  Brain.ask ─► Reasoner (LLM) ─► Answer(text, cited node ids)
+              mindloop  Brain.ask ─► Reasoner (LLM) ─► Answer(text, cited node ids)
 ```
 
 | Member dir | Package | Role | Heavy deps |
 |---|---|---|---|
-| `SpatialMem/` | `spatialmem` | Memory core — `.smem` SQLite scene-graph, fusion arbiter, query, serialize. The hippocampus. | none (numpy-only) |
-| `spatialmem-perception/` | `spatialmem-perception` | Eyes — RGB(-D) → world-frame `Detection`s; camera→world geometry lift, CLIP encoders. | behind `[clip]` (torch) |
-| `spatialmem-brain/` | `spatialmem-brain` | Brain — `Brain` cognitive loop + `Reasoner` + `CosmosReasonVerbalizer`. | none in core; LLM is remote/self-hosted |
+| `tempomem/` | `tempomem` | Memory core — `.smem` SQLite scene-graph, fusion arbiter, query, serialize. The hippocampus. | none (numpy-only) |
+| `worldsense/` | `worldsense` | Eyes — RGB(-D) → world-frame `Detection`s; camera→world geometry lift, CLIP encoders. | behind `[clip]` (torch) |
+| `mindloop/` | `mindloop` | Brain — `Brain` cognitive loop + `Reasoner` + `CosmosReasonVerbalizer`. | none in core; LLM is remote/self-hosted |
 
 **Dependency direction:** `perception → core`, `brain → core` (+ optional
 `brain[perception]`). The core never imports the other two; it only ships the
 `PerceptionAdapter` and `Verbalizer` *protocols* they fill. Keep it that way —
-adding a torch/LLM import to `SpatialMem/` breaks the numpy-only contract.
+adding a torch/LLM import to `tempomem/` breaks the numpy-only contract.
 
 ## Environment & commands
 
@@ -42,25 +42,25 @@ uv sync                       # create root .venv, install all 3 members editabl
 uv sync --extra clip          # add the GPU/CLIP stack (torch, open-clip, pillow)
 ```
 
-`[tool.uv.sources]` here maps `spatialmem` and `spatialmem-perception` to the
+`[tool.uv.sources]` here maps `tempomem` and `worldsense` to the
 local tree, so editing the core is immediately visible to brain/perception with
 no reinstall. Run tooling through `uv run` so it uses the shared env:
 
 ```bash
 # Tests — scope to a member by passing its tests dir
-uv run pytest SpatialMem/tests
-uv run pytest spatialmem-brain/tests
-uv run pytest spatialmem-perception/tests
-uv run pytest SpatialMem/tests/unit/test_fusion.py::test_dedup_same_object_merges  # single test
-uv run pytest --cov=SpatialMem/src --cov-report=term-missing            # coverage (gate: ≥75% on core)
+uv run pytest tempomem/tests
+uv run pytest mindloop/tests
+uv run pytest worldsense/tests
+uv run pytest tempomem/tests/unit/test_fusion.py::test_dedup_same_object_merges  # single test
+uv run pytest --cov=tempomem/src --cov-report=term-missing            # coverage (gate: ≥75% on core)
 
 # Lint / format / types
 uv run ruff check .
 uv run ruff format .
-uv run pyright SpatialMem/src/spatialmem      # core is the only pyright target (strict-ish)
+uv run pyright tempomem/src/tempomem      # core is the only pyright target (strict-ish)
 
-# CLI (core only) — also runnable as `uv run spatialmem ...`
-uv run spatialmem viz store.smem -o scene.html
+# CLI (core only) — also runnable as `uv run tempomem ...`
+uv run tempomem viz store.smem -o scene.html
 ```
 
 Each member also defines `[tool.pytest.ini_options]` with `pythonpath` so
@@ -71,8 +71,8 @@ a real LLM or model download in a test.
 
 ## Architecture notes that span files
 
-**`spatialmem` (the core) is the only stateful object.** `SpatialMemory` in
-`SpatialMem/src/spatialmem/__init__.py` is the entire public surface; everything
+**`tempomem` (the core) is the only stateful object.** `SpatialMemory` in
+`tempomem/src/tempomem/__init__.py` is the entire public surface; everything
 else (`store`, `fusion`, `query`, `serialize`, `relations`, `persist`) is a
 stateless module it composes. `__all__` is the API contract — anything not
 listed is private.
@@ -94,18 +94,18 @@ silent default. Heavy backends (`sqlite-vec` ANN, OpenCLIP) live behind extras
 with linear/keyword fallbacks so the core stays installable with numpy alone.
 
 **The brain is a thin orchestrator over protocols.** `Brain`
-(`spatialmem-brain/src/spatialmem_brain/`) wires memory + a `Reasoner`;
+(`mindloop/src/mindloop/`) wires memory + a `Reasoner`;
 `VerbalizerReasoner` adapts any `Verbalizer`, and `CosmosReasonVerbalizer` is
 stdlib-only and speaks to **any OpenAI-compatible `/v1/chat/completions`**. To
 self-host the reasoner, point `base_url` at a local vLLM/NIM server — no code
 change. The user runs Cosmos-Reason2-8B on an **RTX PRO 6000 (96 GB)** workstation;
 deployment specifics (variants, VRAM, serve commands) are in
-[spatialmem-brain/docs/en/local-serving.md](spatialmem-brain/docs/en/local-serving.md).
+[mindloop/docs/en/local-serving.md](mindloop/docs/en/local-serving.md).
 
-## Conventions (from SpatialMem/spec/ENGINEERING.md — normative for all three)
+## Conventions (from tempomem/spec/ENGINEERING.md — normative for all three)
 
 - **Value types are `@dataclass(frozen=True, slots=True)`.** No global mutable state.
-- **`logging.getLogger("spatialmem.<module>")`, never `print()`.** No `pickle`,
+- **`logging.getLogger("tempomem.<module>")`, never `print()`.** No `pickle`,
   no pre-3.10 typing syntax.
 - **Returns over raises for expected absence** (`Optional`, `[]`); raise only for
   programmer error or IO failure. Error types live in `_errors.py`.
@@ -124,8 +124,8 @@ deployment specifics (variants, VRAM, serve commands) are in
 > Paths below point at the English canonical.
 
 - System vision (the 3-package whole): `docs/en/VISION.md`
-- Product/design (read in order): `SpatialMem/docs/en/00-VISION.md` → `01-POSITIONING.md`
+- Product/design (read in order): `tempomem/docs/en/00-VISION.md` → `01-POSITIONING.md`
   → `02-ARCHITECTURE.md` → `03-ROADMAP.md` → `04-MVP-SCOPE.md`
-- Normative specs: `SpatialMem/spec/{API,SCHEMA,FUSION-ARBITER,QUERY-ROUTER,ENGINEERING}.md`
-- Full system design (perception + memory + brain): `spatialmem-brain/docs/en/cosmos3-spatialmem-llm-brain.md`
-- Runnable, no GPU: `SpatialMem/examples/01_quickstart.py`, `spatialmem-brain/examples/`
+- Normative specs: `tempomem/spec/{API,SCHEMA,FUSION-ARBITER,QUERY-ROUTER,ENGINEERING}.md`
+- Full system design (perception + memory + brain): `mindloop/docs/en/cosmos3-tempomem-llm-brain.md`
+- Runnable, no GPU: `tempomem/examples/01_quickstart.py`, `mindloop/examples/`

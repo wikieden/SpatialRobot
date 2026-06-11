@@ -7,19 +7,19 @@
 
 ---
 
-本报告基于 8 个维度、经对抗验证（confirmed / updated / uncertain / refuted）的调研数据，为 SpatialRobot 项目定 vision 与架构提供输入。所有数字均按 verdict 处理：refuted 的不采用、updated 的用更新值、uncertain 的明确标注"待核实"。报告同时结合对本仓库三层（spatialmem / spatialmem-perception / spatialmem-brain）实际代码的核读（关键事实：core 通过 `PerceptionAdapter` / `Verbalizer` / `Reasoner` 三个 Protocol 作为 BYO 接缝；`Brain.ask()` 经 `serialize(format="prompt")` 生成 token 高效、带 `#id` 引用的层级化场景图喂给 Reasoner，再以 `Answer(text, cited_node_ids)` 闭环回可定位节点 id；query 路由分层为 relational → intent → semantic-vec/keyword）。
+本报告基于 8 个维度、经对抗验证（confirmed / updated / uncertain / refuted）的调研数据，为 SpatialRobot 项目定 vision 与架构提供输入。所有数字均按 verdict 处理：refuted 的不采用、updated 的用更新值、uncertain 的明确标注"待核实"。报告同时结合对本仓库三层（tempomem / worldsense / mindloop）实际代码的核读（关键事实：core 通过 `PerceptionAdapter` / `Verbalizer` / `Reasoner` 三个 Protocol 作为 BYO 接缝；`Brain.ask()` 经 `serialize(format="prompt")` 生成 token 高效、带 `#id` 引用的层级化场景图喂给 Reasoner，再以 `Answer(text, cited_node_ids)` 闭环回可定位节点 id；query 路由分层为 relational → intent → semantic-vec/keyword）。
 
 ## 1. 执行摘要
 
-1. **格局判断：中美呈"软件大脑 vs 硬件本体"的镜像分工，但都在向中间收敛。** 美国头部（NVIDIA、Google DeepMind、Physical Intelligence、Figure、Skild、Generalist）以 foundation model / VLA / world model 软件层为锚，硬件多靠合作伙伴；中国头部（宇树、智元、优必选、傅利叶、星动、逐际、银河通用）以量产本体与出货量领跑，大脑层近一年由开源研究院（BAAI RoboBrain、上海 AI Lab InternRobotics、北京人形国地中心）和 VLA 创业（千寻、自变量、穹彻、银河通用）快速补强。**两边都缺一个工程化、可持久化、可查询的结构化空间记忆层——这正是 SpatialMem 的稀缺位。**
+1. **格局判断：中美呈"软件大脑 vs 硬件本体"的镜像分工，但都在向中间收敛。** 美国头部（NVIDIA、Google DeepMind、Physical Intelligence、Figure、Skild、Generalist）以 foundation model / VLA / world model 软件层为锚，硬件多靠合作伙伴；中国头部（宇树、智元、优必选、傅利叶、星动、逐际、银河通用）以量产本体与出货量领跑，大脑层近一年由开源研究院（BAAI RoboBrain、上海 AI Lab InternRobotics、北京人形国地中心）和 VLA 创业（千寻、自变量、穹彻、银河通用）快速补强。**两边都缺一个工程化、可持久化、可查询的结构化空间记忆层——这正是 Chronotope 的稀缺位。**
 
-2. **技术范式已从"端到端 VLA"明确收敛到"分层 dual-system（S2 慢推理 VLM + S1 快执行 policy）"作为 2024–2025 工业事实趋同（注意：研究数据中"PsiBot 最早提出双系统"一项被 refuted，"事实标准"措辞证据偏强，宜表述为"头部公司趋同"）。** Figure Helix、π0.5/Hi Robot、NVIDIA GR00T N1、Gemini Robotics-ER 均是此结构。SpatialMem 的三层与之天然对位：brain 层 = S2，控制器（不含）= S1，**memory 层填补了所有这些系统共同缺失的"跨帧持久空间状态"**。
+2. **技术范式已从"端到端 VLA"明确收敛到"分层 dual-system（S2 慢推理 VLM + S1 快执行 policy）"作为 2024–2025 工业事实趋同（注意：研究数据中"PsiBot 最早提出双系统"一项被 refuted，"事实标准"措辞证据偏强，宜表述为"头部公司趋同"）。** Figure Helix、π0.5/Hi Robot、NVIDIA GR00T N1、Gemini Robotics-ER 均是此结构。Chronotope 的三层与之天然对位：brain 层 = S2，控制器（不含）= S1，**memory 层填补了所有这些系统共同缺失的"跨帧持久空间状态"**。
 
-3. **世界模型（World Model）是与空间记忆互补而非竞争的第三极。** Cosmos 3、1X World Model、Wayve GAIA-1、Covariant RFM-1、自变量 WUM 做的是像素级 imagination / 合成数据 / 前向预测；SpatialMem 做的是结构化、显式、可查询的 3D 对象关系记忆。二者结合（世界模型生成训练数据 + 场景图提供结构化先验降低搜索空间）是有价值的组合，不是替代关系。
+3. **世界模型（World Model）是与空间记忆互补而非竞争的第三极。** Cosmos 3、1X World Model、Wayve GAIA-1、Covariant RFM-1、自变量 WUM 做的是像素级 imagination / 合成数据 / 前向预测；Chronotope 做的是结构化、显式、可查询的 3D 对象关系记忆。二者结合（世界模型生成训练数据 + 场景图提供结构化先验降低搜索空间）是有价值的组合，不是替代关系。
 
-4. **空间记忆 / 3D 场景图已是一个清晰的学术范式，且学术主流的技术选择与 SpatialMem 高度一致但更工程化。** ConceptGraphs、Hydra/Clio、HOV-SG、Embodied-RAG、3DLLM-Mem、RoboMemory 都是这一范式的实现；SpatialMem 的 numpy-only core + sqlite-vec ANN + PerceptionAdapter 协议 + `#id` 可引用序列化，是把这套学术能力做成可装、可嵌、可商用工程组件的差异化路径。
+4. **空间记忆 / 3D 场景图已是一个清晰的学术范式，且学术主流的技术选择与 Chronotope 高度一致但更工程化。** ConceptGraphs、Hydra/Clio、HOV-SG、Embodied-RAG、3DLLM-Mem、RoboMemory 都是这一范式的实现；Chronotope 的 numpy-only core + sqlite-vec ANN + PerceptionAdapter 协议 + `#id` 可引用序列化，是把这套学术能力做成可装、可嵌、可商用工程组件的差异化路径。
 
-5. **对我们最关键的启示：SpatialMem 不应去和 VLA / 本体 / 大脑大模型正面竞争，而应做"所有 S2 都能挂载的外置空间海马体"。** 几乎每个竞品（π0.7 的 MEM、1X 提到 memory context、FieldAI 无地图导航、DYNA 的在职持续学习、Galbot 货架状态、BAAI RoboOS 的"跨机器人空间记忆共享"）都在事实上需要、但都没有做成独立可复用的持久化空间记忆层。
+5. **对我们最关键的启示：Chronotope 不应去和 VLA / 本体 / 大脑大模型正面竞争，而应做"所有 S2 都能挂载的外置空间海马体"。** 几乎每个竞品（π0.7 的 MEM、1X 提到 memory context、FieldAI 无地图导航、DYNA 的在职持续学习、Galbot 货架状态、BAAI RoboOS 的"跨机器人空间记忆共享"）都在事实上需要、但都没有做成独立可复用的持久化空间记忆层。
 
 6. **许可与可复用性上，我们的"numpy-only core + 协议接缝"路线天然适配开源生态。** 可直接 fork/port 的高价值开源组件（LeRobot、openpi、ConceptGraphs、Hydra、SAM 2、GroundingDINO、OpenCLIP、Cosmos-Reason、RoboBrain）多为 Apache-2.0 / MIT / BSD；要避开的陷阱是 ORB-SLAM3（GPLv3 传染）、AgiBot World / RoboCasa 部分数据集（CC BY-NC-SA 非商业）、以及 LLaMA-2 衍生权重（7 亿 MAU 条款）。
 
@@ -75,7 +75,7 @@
 - **硬件 vs 软件分工**：美国创业（PI、Skild、Generalist、Field AI、Covariant、Dyna）大量是**纯软件 foundation model 公司**，明确"做机器人界的 Android/大脑供应商"，硬件外包；中国头部是**本体量产领跑**（宇树/智元/优必选/傅利叶出货量与 IPO 进度全球领先），大脑层近一年才由研究院开源（BAAI/上海 AI Lab/国地中心）与 VLA 创业（千寻/自变量/穹彻/银河通用）补强。
 - **开源策略差异**：中国"国家队 + 研究院"路线把**大脑模型与数据集大规模开源**（RoboBrain、InternVLA、慧思开物、AGIBOT WORLD、RoboMIND、FluxVLA、WALL-OSS、Spirit v1.5、RLDX-1），形成与美国"NVIDIA 开放权重 + 学界 Apache/MIT"并行的第二条开源供给。美国闭源创业（Figure/PI 商业版/Skild/Generalist）则把最强能力留在私有版本。
 - **数据飞轮锚点差异**：美国靠人类穿戴设备（Generalist 50 万小时）、仓储部署（Covariant）、遥操作（PI/ALOHA）；中国靠真实业务场景（阿里仓储/配送/零售、银河通用零售门店、优必选/智元汽车产线）。
-- **共同空白**：中美双方的 S2/大脑层都**默认无持久化、可查询的结构化空间记忆**——这是 SpatialMem 的中立生态位（可同时服务两边的 OpenAI 兼容 Reasoner）。
+- **共同空白**：中美双方的 S2/大脑层都**默认无持久化、可查询的结构化空间记忆**——这是 Chronotope 的中立生态位（可同时服务两边的 OpenAI 兼容 Reasoner）。
 
 ## 3. 技术架构范式对比
 
@@ -84,9 +84,9 @@
 | **端到端 VLA** | RT-2、OpenVLA(7B)、π0、MolmoAct 2、RDT-1B、GR-3、Spirit | 视觉+语言+动作统一单网络，一次前向出动作 token（离散/扩散/流匹配） | 简单、低延迟、无协调开销；OpenVLA 7B 以编码器选择超 RT-2-X 55B **16.5%（已确认；"省 70% GPU 时间"被 updated 为约 87.5%/8x）** | 难 debug 局部故障、跨机型泛化差、长程任务随步数衰减、**无显式场景记忆/无跨帧持久状态** | 仍是 SOTA 基线，但单体路线在长程任务上触顶，正被双系统吸收 |
 | **分层 dual-system（S1+S2）** | Figure Helix、π0.5/Hi Robot、GR00T N1、Gemini Robotics-ER、Fast-in-Slow | S2（7B VLM，7-9Hz，规划）+ S1（80M policy，200Hz，控制），中间用 latent/NL 子指令/action chunk 桥接 | 多时间尺度推理、安全性好、易长程；**2024-25 头部公司趋同（"事实标准"措辞证据偏强；"PsiBot 最早提出"被 refuted）** | 协调延迟、S1/S2 对齐困难、工程复杂；**S2 仍无持久空间记忆** | 工业主流。Fast-in-Slow 用参数共享消协调开销（RLBench 69% vs π0 55%）；三系统加 Critic 提升 OOD |
 | **世界模型（World Model）** | Cosmos 3、Genie 2/3、1X WM、Wayve GAIA-1、Covariant RFM-1、自变量 WUM、V-JEPA 2 | 视频生成模型模拟环境动态，在 imagination 中 rollout/规划/生成合成数据 | 缓解数据瓶颈、安全评估、策略改进；**Cosmos 3 统一单系统已确认（"30s 预测"待核实）** | 动作一致性、长程误差累积、实时推理代价大、评估指标不统一 | 快速发展；定位为 learned simulator / 合成数据源，**而非替代感知+记忆层** |
-| **空间记忆 / 3D 场景图** | ConceptGraphs、Hydra/Clio、HOV-SG、Embodied-RAG、3DLLM-Mem、RoboMemory、**SpatialMem** | RGB-D → 持久化可查询 3D 对象图，为 VLM/LLM 规划器注入结构化空间上下文 | 解决 VLM 无跨帧记忆痛点；轻量、可查询、可引用；3DLLM-Mem 困难任务 **32.1% vs 基线约 5%（已确认）** | 学术为主、少商业产品；稠密 vs 稀疏表示尚未定型；依赖上游感知质量 | 从稀疏对象图→稠密 3D patch、从静态→动态；趋势是与 dual-system 的 S2 集成 |
+| **空间记忆 / 3D 场景图** | ConceptGraphs、Hydra/Clio、HOV-SG、Embodied-RAG、3DLLM-Mem、RoboMemory、**Chronotope** | RGB-D → 持久化可查询 3D 对象图，为 VLM/LLM 规划器注入结构化空间上下文 | 解决 VLM 无跨帧记忆痛点；轻量、可查询、可引用；3DLLM-Mem 困难任务 **32.1% vs 基线约 5%（已确认）** | 学术为主、少商业产品；稠密 vs 稀疏表示尚未定型；依赖上游感知质量 | 从稀疏对象图→稠密 3D patch、从静态→动态；趋势是与 dual-system 的 S2 集成 |
 
-**取舍结论**：端到端 VLA 与 dual-system 是"动作生成"主线的两代；世界模型是"数据/想象"辅助极；空间记忆是"持久状态/记忆"极。**这三极正交互补**——SpatialMem 应明确站在"空间记忆极"，做 dual-system S2 的外挂记忆与 world model 的结构化先验提供方，而不是去做第四个 VLA。本仓库代码已天然落在该位置：`serialize(format="prompt")` 产出带 `#id` 的层级场景图 → Reasoner 推理 → `Answer.cited_node_ids` 回指可定位节点，正是"VLM planner + 结构化空间上下文"范式的工程实现。
+**取舍结论**：端到端 VLA 与 dual-system 是"动作生成"主线的两代；世界模型是"数据/想象"辅助极；空间记忆是"持久状态/记忆"极。**这三极正交互补**——Chronotope 应明确站在"空间记忆极"，做 dual-system S2 的外挂记忆与 world model 的结构化先验提供方，而不是去做第四个 VLA。本仓库代码已天然落在该位置：`serialize(format="prompt")` 产出带 `#id` 的层级场景图 → Reasoner 推理 → `Answer.cited_node_ids` 回指可定位节点，正是"VLM planner + 结构化空间上下文"范式的工程实现。
 
 ## 4. 开源可复用组件清单（按三层归类）
 
@@ -108,7 +108,7 @@
 |---|---|---|---|
 | SAM 2 | Apache-2.0（代码+权重） | 生产可用，Meta 官方维护 | **可 fork/直接依赖**：实例分割 + streaming memory，是 PerceptionAdapter 的核心 mask 来源；streaming memory 与我们 pending/commit 思路互补 |
 | GroundingDINO | Apache-2.0（v1）；1.5/DINO-X 为 API（待确认） | ECCV 2024，10.1k stars，已进 HF Transformers | **可直接依赖**：开放集检测 bbox；与 SAM 2 组成 Grounded-SAM 前端 |
-| OpenCLIP | Apache-2.0 | 生产可用，社区活跃 | **已直接依赖**：spatialmem-perception `[clip]` extra 即用 open-clip-torch，写入 sqlite-vec ANN |
+| OpenCLIP | Apache-2.0 | 生产可用，社区活跃 | **已直接依赖**：worldsense `[clip]` extra 即用 open-clip-torch，写入 sqlite-vec ANN |
 | KISS-ICP / KISS-SLAM | MIT（ICP）/ 待确认（SLAM） | KISS-ICP 成熟（v1.3.0 2026-04）；KISS-SLAM IROS 2025 | **可直接依赖**：提供 world-frame 位姿（odometry），是 camera→world lift 的前置；MIT 无传染风险 |
 | SplaTAM | BSD-3-Clause | CVPR 2024 原型 | **仅参考/可选**：3DGS 稠密 RGB-D 重建可作几何基底，与我们显式场景图互补 |
 | ORB-SLAM3 | **GPLv3** | 学术标准基线，维护趋缓 | **仅参考，勿链接进发行包**：GPLv3 传染性对商业不友好；位姿需求优先用 KISS-ICP |
@@ -157,19 +157,19 @@
 
 - **不做端到端 VLA / 不做大脑大模型**：那是 PI/Skild/Generalist/RoboBrain/千寻/自变量的红海，我们去做必败。
 - **不做本体**：那是宇树/智元/傅利叶/逐际的资本密集赛道。
-- **做 dual-system 的 memory 层**：把 SpatialMem 定位为"任何 S2（Cosmos-Reason / RoboBrain / Gemini-ER / π0.5）都能调用的结构化空间记忆 + 查询服务"。`Brain.ask()` 已是这个接口的雏形。
+- **做 dual-system 的 memory 层**：把 Chronotope 定位为"任何 S2（Cosmos-Reason / RoboBrain / Gemini-ER / π0.5）都能调用的结构化空间记忆 + 查询服务"。`Brain.ask()` 已是这个接口的雏形。
 - **做 world model 的结构化先验提供方**：用世界模型生成合成 RGB-D 扩充 perception 训练集；用 `.smem` 场景图为 imagination rollout 提供物体位置/关系先验，降低搜索空间。
 
 ### 6.3 分阶段路线建议
 
 - **Phase 1（地基，0–3 月）**：坐实 memory core 与 BYO 接缝。落地首个 `PerceptionAdapter` 具体实现（ConceptGraphs 路线：SAM 2 + GroundingDINO + OpenCLIP，全 Apache/MIT，behind `[perception]` extra）；坐实 Cosmos-Reason2 / RoboBrain 双 Reasoner 后端；自建空间记忆评测集（6.1 的 wedge 必须有数字支撑）。
 - **Phase 2（集成验证，3–6 月）**：在 1–2 个开源友好的国内本体上做端到端 demo（傅利叶 N1 全开源、逐际 FluxVLA(MIT)、银河通用零售货架场景是教科书用例）；接入 LeRobot 生态（LeRobotDataset 喂感知、其 5 个官方 VLA 作下游 S1）；对接一个外置 S2（RoboBrain RoboOS 的"空间记忆共享"是最契合的集成点）。
-- **Phase 3（生态位锁定，6–12 月）**：把 SpatialMem 做成"具身记忆标准接口"——发布稳定的序列化协议（已有 `#id` 可引用 prompt 格式）、跨 episode/跨机器人持久化、decay/consolidate 生命周期；争取被一个开源大脑（RoboBrain / InternRobotics）或一个本体厂作为默认记忆层采用。商业场景优先选**多班次/长时连续作业**（优必选 Walker S2 7×24h、DYNA 24h、仓储多班次）——这些场景下持久空间记忆是刚需而非锦上添花。
+- **Phase 3（生态位锁定，6–12 月）**：把 Chronotope 做成"具身记忆标准接口"——发布稳定的序列化协议（已有 `#id` 可引用 prompt 格式）、跨 episode/跨机器人持久化、decay/consolidate 生命周期；争取被一个开源大脑（RoboBrain / InternRobotics）或一个本体厂作为默认记忆层采用。商业场景优先选**多班次/长时连续作业**（优必选 Walker S2 7×24h、DYNA 24h、仓储多班次）——这些场景下持久空间记忆是刚需而非锦上添花。
 
 ### 6.4 要避开的许可陷阱与坑
 
 - **许可陷阱**：ORB-SLAM3（**GPLv3 传染**，勿链接进发行包，位姿用 KISS-ICP/MIT）；AgiBot World / 部分 RoboCasa 数据集（**CC BY-NC-SA 非商业**，仅可研究）；OpenVLA / 任何 LLaMA-2 衍生权重（**7 亿 MAU 条款**，优选 LLaMA-3.2/Qwen 系骨干）；GR00T N1/N1.5 权重（**NVIDIA 非商业许可，禁商用**，商业用 N1.7 Apache-2.0 或 Cosmos Open Model License）。
-- **工程坑**：保持 core numpy-only 契约（CLAUDE.md 已明令：给 SpatialMem/ 加 torch/LLM import 即破契约）；fuse-before-persist 不变量（新增 mutator 必须先 `_flush_pending()`）；测试 network-free（用 ScriptedReasoner / HashEncoder）。
+- **工程坑**：保持 core numpy-only 契约（CLAUDE.md 已明令：给 tempomem/ 加 torch/LLM import 即破契约）；fuse-before-persist 不变量（新增 mutator 必须先 `_flush_pending()`）；测试 network-free（用 ScriptedReasoner / HashEncoder）。
 - **战略坑**：不要被"出货量/估值/全球第一"营销数字带节奏定 vision——多个此类声称在本次验证中被 refuted/uncertain；以技术生态位为锚。
 
 ## 7. 关键不确定项（验证为 uncertain/refuted 的声明 + 待调研空白）

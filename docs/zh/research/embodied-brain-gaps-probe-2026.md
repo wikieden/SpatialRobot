@@ -181,5 +181,5 @@
 - OQ-1 / OQ-5 定义与关闭判据：`/Users/wiki/Documents/Claude/Projects/SpatialRobot/docs/VISION.md`（§6.1、§7.2、§8 里程碑表）
 - 系统级愿景：`/Users/wiki/Documents/Claude/Projects/SpatialRobot/docs/VISION.md`（定稿 v2）
 - 既有竞品调研：`/Users/wiki/Documents/Claude/Projects/SpatialRobot/docs/research/embodied-brain-landscape-2026.md`
-- 单包记忆核愿景与 Open Questions：`/Users/wiki/Documents/Claude/Projects/SpatialRobot/SpatialMem/docs/00-VISION.md`、`/Users/wiki/Documents/Claude/Projects/SpatialRobot/SpatialMem/docs/05-OPEN.md`（B3 Mem0 合作问题与本报告 §1 直接相关）
+- 单包记忆核愿景与 Open Questions：`/Users/wiki/Documents/Claude/Projects/SpatialRobot/tempomem/docs/00-VISION.md`、`/Users/wiki/Documents/Claude/Projects/SpatialRobot/tempomem/docs/05-OPEN.md`（B3 Mem0 合作问题与本报告 §1 直接相关）
 
