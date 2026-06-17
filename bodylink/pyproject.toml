@@ -1,0 +1,40 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "bodylink"
+version = "0.1.0a0"
+description = "The execution-adapter layer for Chronotope — ExecutorAdapter reference fill (MockBody + reference manifests). Each robot is a device package filling the brain's executor seam."
+readme = "README.md"
+requires-python = ">=3.10"
+license = "Apache-2.0"
+authors = [{ name = "wikieden" }]
+dependencies = ["mindloop"]
+
+[project.optional-dependencies]
+# Physics sim (Genesis/Isaac) lives behind [sim] (D5) — not a core dependency.
+sim = []
+dev = ["pytest", "pytest-cov", "ruff", "pyright"]
+
+[project.urls]
+Brain = "https://github.com/wikieden/mindloop"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/bodylink"]
+
+[tool.ruff]
+line-length = 100
+src = ["src", "tests"]
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "B", "UP", "SIM", "PERF", "RUF"]
+
+[tool.pyright]
+include = ["src/bodylink"]
+pythonVersion = "3.10"
+typeCheckingMode = "standard"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["src", "."]
