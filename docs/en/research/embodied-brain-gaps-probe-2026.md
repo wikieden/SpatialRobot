@@ -6,9 +6,9 @@
 
 ---
 
-# SpatialRobot Round 2 Deep-Dive Report: Commercial Willingness-to-Pay and RoboOS/InternRobotics Scene-Graph Memory
+# Chronotope Round 2 Deep-Dive Report: Commercial Willingness-to-Pay and RoboOS/InternRobotics Scene-Graph Memory
 
-> This report is written based on two deep-dive datasets that have undergone adversarial verification. All numbers and inferences are faithfully tagged with their verdict: `confirmed` / `updated` (number confirmed but inference needs correction) / `uncertain` (source unreliable or not applicable) / `refuted` (overturned, not adopted). Refuted numbers are never used as arguments and are listed only as "cautionary lessons / cognitive corrections." The corresponding VISION document is `/Users/wiki/Documents/Claude/Projects/SpatialRobot/docs/VISION.md` (OQ-1 see §6.1, OQ-5 see §7.2).
+> This report is written based on two deep-dive datasets that have undergone adversarial verification. All numbers and inferences are faithfully tagged with their verdict: `confirmed` / `updated` (number confirmed but inference needs correction) / `uncertain` (source unreliable or not applicable) / `refuted` (overturned, not adopted). Refuted numbers are never used as arguments and are listed only as "cautionary lessons / cognitive corrections." The corresponding VISION document is `docs/en/VISION.md` (OQ-1 see §6.1, OQ-5 see §7.2).
 
 ---
 
@@ -76,7 +76,7 @@ The major domestic open-source "one brain, many bodies" stacks currently **all l
 
 | Stack / Team | Has scene graph? | Storage layer | Persistence | Positioning | Relation to .smem | Credibility |
 |---|---|---|---|---|---|---|
-| **BAAI RoboOS 1.0** (arXiv:2505.03673, Apache-2.0, 561★) | ✅ Dynamic scene graph (floor/room/object layering, nodes contain position/affordance/label, built from RGB-D+SAM+CLIP) | **Redis** (in-memory KV, JSON+RAG) | ❌ frame-by-frame update, not cross-session | Multi-robot real-time coordination middleware | **Complementary** — .smem can be its persistence backend | strong |
+| **BAAI RoboOS 1.0** (arXiv:2505.03673, Apache-2.0, 561★ as of 2026-05 — grew to 571★ by 2026-06-10, see the RoboOS/RoboBrain deep-dive) | ✅ Dynamic scene graph (floor/room/object layering, nodes contain position/affordance/label, built from RGB-D+SAM+CLIP) | **Redis** (in-memory KV, JSON+RAG) | ❌ frame-by-frame update, not cross-session | Multi-robot real-time coordination middleware | **Complementary** — .smem can be its persistence backend | strong |
 | **BAAI RoboOS-NeXT / STEM** (arXiv:2510.26536, 2025-10) | ✅ Most complete: queue-tree-graph-agent (root/region/carrier tree + object relation graph, predicates ON/IN/LEFT/RIGHT/FRONT/BACK/NEAR) | Not specified in paper (design layer) | Paper-level, **code not open-sourced** | Academic design | **Largest potential overlap**, re-judge pending code release | strong |
 | **BAAI RoboBrain 2.0/2.5** (arXiv:2507.02029, 3B/7B/32B, Apache-2.0) | Scene graph only as **LLM input JSON token**, the model **consumes** but does not **store** | None (persistence delegated to RoboOS Redis) | ❌ | Brain model | Does not constitute a memory competitor | strong |
 | **InternRobotics (Shanghai AI Lab, formerly OpenRobotLab)** | EmbodiedScan/OST-Bench/InternSR are all **perception/evaluation tools**; InternUtopia's WKM is only in-memory within simulation | No runtime persistent memory module | ❌ | Perception/evaluation toolchain | **No substitute competitor** (but OST-Bench shows this direction is under research) | strong |
@@ -178,7 +178,7 @@ At the conceptual level they correspond highly (both are hierarchical node-edge 
 
 ### 4.3 Internal Basis in This Repo
 
-- OQ-1 / OQ-5 definitions and closure criteria: `/Users/wiki/Documents/Claude/Projects/SpatialRobot/docs/VISION.md` (§6.1, §7.2, §8 milestone table)
-- System-level vision: `/Users/wiki/Documents/Claude/Projects/SpatialRobot/docs/VISION.md` (finalized v2)
-- Existing competitor research: `/Users/wiki/Documents/Claude/Projects/SpatialRobot/docs/research/embodied-brain-landscape-2026.md`
-- Single-package memory core vision and Open Questions: `/Users/wiki/Documents/Claude/Projects/SpatialRobot/tempomem/docs/00-VISION.md`, `/Users/wiki/Documents/Claude/Projects/SpatialRobot/tempomem/docs/05-OPEN.md` (B3 Mem0 collaboration question is directly related to §1 of this report)
+- OQ-1 / OQ-5 definitions and closure criteria: `docs/en/VISION.md` (§6.1, §7.2, §8 milestone table)
+- System-level vision: `docs/en/VISION.md` (finalized v3)
+- Existing competitor research: `docs/en/research/embodied-brain-landscape-2026.md`
+- Single-package memory core vision and Open Questions: `tempomem/docs/en/00-VISION.md`, `tempomem/docs/en/05-OPEN.md` (B3 Mem0 collaboration question is directly related to §1 of this report)

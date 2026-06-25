@@ -40,6 +40,9 @@
 6. **Watch item: BAAI Conference 2026 is June 12–13** (embodied forum June 13; topics include world
    model ORCA, "robot universal brain", self-evolution). New RoboBrain/RoboOS announcements are
    plausible days after this report — re-check the triggers after the conference.
+   > ⚠️ **Overdue as of 2026-06-25**: the conference has passed; the post-conference trigger sweep
+   > (RoboBrain 2.5-32B release, RoboOS-NeXT code, any new memory/scene-graph capability) has **not
+   > yet been run**. Treat every "as of 2026-06-10" claim below as ~2 weeks stale until refreshed.
 
 ---
 
@@ -238,6 +241,11 @@ serialize-into-prompt + stateless VLM — exactly ours.**
 - **Recommendation: complement, not replace.** Second vLLM endpoint + thin adapter = RoboBrain 2.5
   as spatial-output head (pointing, placement, traces, metric clearance, GRM progress) alongside
   Cosmos QA. Also the natural A/B pair for the eval suite.
+- **Reconcile with the landscape report:** the landscape doc flags that the *Cosmos-Reason2 repo is
+  already unmaintained, superseded by Cosmos 3* — that is about the **repo's update cadence**, not
+  the model's usability. The integrated `Cosmos-Reason2-8B` weights still serve QA fine, so "keep
+  Cosmos-Reason2" stands; but **do not expect upstream repo updates** — track Cosmos 3 (and
+  RoboBrain 2.5) as the successors the eval suite should start A/B-ing against.
 
 ### 3.4 Interface guidance extracted from their stack
 

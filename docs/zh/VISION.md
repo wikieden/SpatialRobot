@@ -1,18 +1,45 @@
 > 🌐 [English](../en/VISION.md) · **中文**
 
-# SpatialRobot · 系统级 Vision 与定位（2026 · 定稿 v2）
+# Chronotope · 系统级 Vision 与定位（2026 · 定稿 v3）
 
-> 本文是 SpatialRobot 工作区（三层：`tempomem` / `worldsense` / `mindloop`）的系统级愿景与定位文档。
-> 输入依据：[docs/research/embodied-brain-landscape-2026.md](research/embodied-brain-landscape-2026.md)（8 维度、对抗验证调研）+ 对本仓库三层实际代码的核读。
+> **TL;DR** —— **Chronotope** 是一套工程落地级的**外置空间海马体**：把 RGB-D 感知融合成一份
+> 持久、可查询、带 `#id` 引用的 3D 场景图记忆（`.smem`），挂载到任意 dual-system 机器人大脑的
+> **S2**（慢推理 VLM）上。**它是什么**：结构化空间记忆 + 查询服务。**它不是什么**：不是 VLA、
+> 不是大脑大模型、不是机器人本体。**当前状态**：numpy-only 记忆核已可用；`Brain.ask()` 闭环雏形；
+> 商业付费意愿未验证（见 §0 开放问题）。**整套栈是 5 个 workspace 成员** —— `tempomem`（记忆核）·
+> `worldsense`（眼睛）· `mindloop`（大脑）· `bodylink`（本体/执行器接缝）· `skillforge`
+> （自学习实验室，research track）。
+
+> 本文是 **Chronotope** 栈（workspace 目录：`SpatialRobot/`；5 个成员：`tempomem` / `worldsense` /
+> `mindloop` / `bodylink` / `skillforge`）的系统级愿景与定位文档。"Chronotope" 是产品/品牌名，
+> "SpatialRobot" 仅是工程 workspace 目录名。
+> 输入依据：[research/embodied-brain-landscape-2026.md](research/embodied-brain-landscape-2026.md)（8 维度、对抗验证调研）+ 对本仓库各成员实际代码的核读。
 > 凡引用数字一律按报告 verdict 处理：**refuted 不采用、updated 用更新值、uncertain 明确标注"待核实"**。
 > 单包（记忆核）愿景见 [tempomem/docs/00-VISION.md](../../tempomem/docs/zh/00-VISION.md)；本文是其系统级超集，二者不冲突。
 > **v2 定稿说明**：本版吸收了工程 / 商业 / 战略三个视角的对抗式批判。所有被批判暴露的漏洞，要么已在正文补齐（带工程证据），要么明确降级为 **[开放问题]** 并给出关闭它的最小判据。本文区分两类断言：标 **[已验证]** 的来自代码核读或调研 confirmed；标 **[内部分析]** 的是本项目自研判断，不得对外当作独立证据；标 **[开放问题]** 的是尚未关闭、需要外部验证的赌注。
+> **v3 增量**：将整套栈改用已定稿的产品名 **Chronotope**，并把成员从三个扩到 **五个** —— `bodylink`（脑↔体执行器接缝，参考实现 `MockBody`）与 `skillforge`（自主自学习实验室，工作名，walking-skeleton `v0.1.0a0`）加入原有的"记忆/眼睛/大脑"三件套。定位、生态位、开放问题均不变；两个新成员把闭环向下游（执行）和跨回合（学习）延伸 —— 见 §2.1 与 §3。
+
+---
+
+## 术语表（在定义前就出现的名词）
+
+| 术语 | 含义 |
+|---|---|
+| **dual-system** | 已收敛的机器人大脑结构：**S2**（慢推理 VLM 规划）+ **S1**（快速控制策略） |
+| **S2 / S1** | S2 ≈ 7B VLM，~7–9 Hz，规划；S1 ≈ 80M policy，~200 Hz，控制。Chronotope 是 *S2 的外置记忆* |
+| **wedge（楔子）** | 差异化切入点 —— Chronotope 切入的结构性缺口（缺持久空间记忆） |
+| **`.smem`** | Chronotope 的单文件 SQLite 场景图记忆格式；跨重启存活、可增量更新 |
+| **`#id` / `cited_node_ids`** | 场景图节点引用；大脑的 `Answer` 回引它所用到的记忆节点（溯源） |
+| **BYO** | "bring your own" —— 感知/verbalizer/reasoner 是可插拔协议接缝，不绑定默认实现 |
+| **ICP** | 理想客户画像 —— 首个付费方原型（OQ-1，仍未验证） |
+| **Open Core** | 宽松核 + 单独授权的企业层 的商业化模型 |
+| **recall@k** | 评估指标：正确的记忆节点是否出现在 top-k 检索结果中 |
 
 ---
 
 ## 一句话定位
 
-**SpatialRobot 是一套工程落地级的"外置空间海马体"——把 RGB-D 感知融合成一份持久、可查询、带 `#id` 引用的 3D 场景图记忆，挂载到任意 dual-system 机器人大脑的 S2（慢推理 VLM）上，让今天结构性缺失跨帧空间记忆的具身大脑获得"它记得房间里有什么、在哪、什么关系"的能力。**
+**Chronotope 是一套工程落地级的"外置空间海马体"——把 RGB-D 感知融合成一份持久、可查询、带 `#id` 引用的 3D 场景图记忆，挂载到任意 dual-system 机器人大脑的 S2（慢推理 VLM）上，让今天结构性缺失跨帧空间记忆的具身大脑获得"它记得房间里有什么、在哪、什么关系"的能力。**
 
 我们不做第四个 VLA、不做大脑大模型、不做本体——我们做**所有 S2 都能挂载、中立、可商用的结构化空间记忆与查询服务**。
 
@@ -69,7 +96,7 @@
 
 > 表述纪律：报告将"3DLLM-Mem 比基线高 6 倍"标记为 **refuted**——论文主口径是绝对 **+16.5 个百分点**，"6 倍"仅对应 hard 子集。本文只引用绝对值与 hard 子集的 32.1% vs 约 5%，不写"6 倍"。
 
-**结论：缺失的不是更强的 VLA，而是一个所有 S2 都能挂载的外置持久空间记忆层。这就是 SpatialRobot 的技术生态位。** 但"技术生态位成立" ≠ "商业生态位成立"——后者取决于 OQ-1/OQ-2/OQ-3，见 §6。
+**结论：缺失的不是更强的 VLA，而是一个所有 S2 都能挂载的外置持久空间记忆层。这就是 Chronotope 的技术生态位。** 但"技术生态位成立" ≠ "商业生态位成立"——后者取决于 OQ-1/OQ-2/OQ-3，见 §6。
 
 ---
 
@@ -82,18 +109,22 @@
 - **数据 / 想象极**（world model，learned simulator + 合成数据）；
 - **持久状态 / 记忆极**（空间记忆 / 3D 场景图）。
 
-SpatialRobot 明确站在第三极，做三件事：
+Chronotope 明确站在第三极。其锚点是记忆核；其他成员是喂给它、以及在它之上行动的接缝。整套栈是 **5 个 workspace 成员**：
 
 1. **Memory（`tempomem`，记忆核）**——numpy-only 的 `.smem` SQLite 3D 场景图：融合（fuse）→ 持久化（persist）→ 查询（query）。它是整个系统**唯一的有状态对象**，是海马体。
 2. **Perception（`worldsense`，眼睛）**——RGB-D → 世界系 `Detection`；相机→世界几何 lift，CLIP 编码（`[clip]` extra 后才引入 torch）。
-3. **Brain（`mindloop`，大脑接缝）**——`Brain` 认知循环 + `Reasoner` + `CosmosReasonVerbalizer`，对接**任意 OpenAI 兼容 `/v1/chat/completions`** 的 S2。
+3. **Brain（`mindloop`，大脑接缝）**——`Brain` 认知循环 + `Reasoner` + `CosmosReasonVerbalizer`，对接**任意 OpenAI 兼容 `/v1/chat/completions`** 的 S2。它还提供 `ExecutorAdapter` *协议*（脑↔体接缝）。
+4. **Body seam（`bodylink`，执行器适配层）**［P0 参考实现］——填充 `mindloop` 的 `ExecutorAdapter` 协议：`MockBody` 接收大脑的 `SubTask`、回显驱动它的 node ids（B9 溯源）、汇报带类型的成功/失败 —— 让 L3 大脑在**无机器人、无网络**下端到端跑通。真实本体是 out-of-tree 的设备包，仅以 **Body Profile + 动词集** 区分（"换身不换脑"，D3）。它还提供 `CapabilityManifest` 参考（`g1d_manifest`，G1-D 轮式人形）。
+5. **Self-learning lab（`skillforge`，元编排器）**［research track · 工作名 · walking skeleton `v0.1.0a0`］——**唯一**允许 import 其他全部成员的成员。它以闭合的 **ENPIRE** 循环（Environment / Policy-improvement / Rollout / Evolution）驱动 记忆+大脑+本体+世界，让本体**从自己的试错中习得一项技能**，全程无人介入。与 `mindloop` DEV-PLAN 平行，不在其关键路径上；名字尚未经 owner 定稿。
 
-三层通过 core 暴露的 **`PerceptionAdapter` / `Verbalizer` / `Reasoner` 三个 Protocol** 作为 BYO 接缝。系统的闭环接口已是雏形：`Brain.ask()` 经 `serialize(format="prompt")` 产出 token 高效、带 `#id` 引用的**层级场景图**喂给 Reasoner，返回 **`Answer(text, cited_node_ids)`**。这正是"VLM planner + 结构化空间上下文"范式的工程实现。
+> **依赖方向（整套卖点所依赖的契约）**：`worldsense → core`、`mindloop → core`（+ 可选 `mindloop[perception]`）、`bodylink → mindloop`、`skillforge → tempomem + mindloop + bodylink`。**核（`tempomem`）不 import 其他任何成员** —— 只暴露它们填充的协议。这正是让核保持 numpy-only、可装边缘的根本。
+
+各成员通过 **core 的 BYO 协议接缝 —— `PerceptionAdapter` / `Verbalizer` / `Reasoner`，外加 `mindloop` 的 `ExecutorAdapter`**（由 `bodylink` 填充）—— 接入 Chronotope。系统的闭环接口已是雏形：`Brain.ask()` 经 `serialize(format="prompt")` 产出 token 高效、带 `#id` 引用的**层级场景图**喂给 Reasoner，返回 **`Answer(text, cited_node_ids)`**。这正是"VLM planner + 结构化空间上下文"范式的工程实现。
 
 ### 2.2 明确不做什么（6.2 normative）
 
 - **不做端到端 VLA / 不做大脑大模型。** 那是 Physical Intelligence / Skild / Generalist / RoboBrain / 千寻 / 自变量的红海，正面竞争必败。
-- **不做本体。** 那是宇树 / 智元 / 傅利叶 / 逐际的资本密集赛道。
+- **不做机器人本体（硬件）。** 那是宇树 / 智元 / 傅利叶 / 逐际的资本密集赛道。**注意区分**：`bodylink` 是*执行器适配接缝*（`ExecutorAdapter` 参考填充 + 无硬件 `MockBody`），**不是**机器人。我们做的是脑↔体的*接口*；物理本体仍 out-of-tree、由厂商提供。
 - **不做 SLAM。** 世界系位姿来自上游（KISS-ICP/MIT、cuVSLAM、ARKit、仿真 ground truth）；**绝不链接 ORB-SLAM3（GPLv3 传染）进发行包**。
 - **不做 world model 本身，但做它的结构化先验提供方**（见 §3）。
 - **不做"云优先"。** 本地优先、可嵌入、BYO-LLM；托管层是后续便利，**但是否产生收入是开放问题**（见 §6 OQ-2，吸收商业批判：不能既排斥托管护城河又不给替代粘性）。
@@ -138,21 +169,27 @@ SpatialRobot 明确站在第三极，做三件事：
 
 ### 3.1 与 dual-system 的关系：做 S2 的外挂记忆
 
-```
-        ┌─────────────── dual-system 机器人大脑 ───────────────┐
-        │                                                      │
-RGB-D ─►│  S2 (VLM, ~7-9Hz, 规划)  ◄──注入结构化空间上下文──┐  │──► S1 (policy, ~200Hz)
-        │         │                                        │  │      │
-        └─────────┼────────────────────────────────────────┼──┘      ▼
-                  │  serialize(format="prompt")             │      执行器/本体
-                  ▼  带 #id 的层级场景图（受 token 预算约束）│      (不在范围内)
-        ┌──────────────── SpatialRobot ───────────────┐    │
-        │ perception → memory(.smem) ── query/answer ──┘    │ Answer.cited_node_ids
-        └──────────────────────────────────────────────────┘ 回指可定位节点（尽力提取）
+```mermaid
+flowchart LR
+    RGBD["RGB-D"]
+    subgraph chrono["Chronotope 栈（我们做的部分）"]
+        direction LR
+        WS["worldsense<br/>眼睛"]
+        TM["tempomem<br/>记忆 · .smem"]
+        ML["mindloop<br/>Brain.ask()"]
+        BL["bodylink<br/>ExecutorAdapter · MockBody"]
+        WS -->|Detections| TM
+        TM -->|"serialize(prompt)：<br/>场景图 + #id<br/>（受 token 预算约束）"| ML
+        ML -->|"SubTask(verb, node_ids)"| BL
+    end
+    RGBD --> WS
+    ML <==>|"/v1/chat/completions"| S2["S2 · 外部 VLM reasoner<br/>BYO：Cosmos-Reason2 / RoboBrain / Gemini-ER"]
+    S2 -.->|"Answer.cited_node_ids<br/>（溯源，尽力提取）"| TM
+    BL --> BODY["物理本体 + S1 控制<br/>（out-of-tree，厂商提供）"]
 ```
 
-- **S2 = brain 层对接的外部 Reasoner**（Cosmos-Reason2 / RoboBrain / Gemini-ER / π0.5 等任意 OpenAI 兼容模型）；
-- **S1 = 下游控制器**，不在本项目范围内（可对接 LeRobot 5 个官方 VLA：Pi0Fast / Pi0.5 / GR00T N1.5 / SmolVLA / XVLA 作为下游执行器，已确认）；
+- **S2 = `mindloop` 对接的外部 Reasoner**（Cosmos-Reason2 / RoboBrain / Gemini-ER / π0.5 等任意 OpenAI 兼容模型）—— **BYO，不内置**；
+- **S1 = 物理本体内的下游控制器**，不在范围内；大脑经 `bodylink` 的 `ExecutorAdapter` 接缝触达它（真实本体可包 LeRobot 5 个官方 VLA：Pi0Fast / Pi0.5 / GR00T N1.5 / SmolVLA / XVLA 作为 S1 执行器，已确认）；
 - **memory 层正好填补"所有这些系统共同缺失的跨帧持久空间状态"**（执行摘要 2）。
 
 我们对 S2 是**中立、可挂载**的：因为接口是 OpenAI 兼容 `/v1/chat/completions` + 协议接缝，同一套记忆层可同时服务中美双方任意 Reasoner（2.3 共同空白）。
@@ -163,7 +200,7 @@ RGB-D ─►│  S2 (VLM, ~7-9Hz, 规划)  ◄──注入结构化空间上下�
 
 报告明确判定：**world model 与空间记忆是互补的第三极，不是替代关系。**
 - World model（Cosmos 3、1X WM、Wayve GAIA-1、Covariant RFM-1、自变量 WUM、V-JEPA 2）做的是**像素级 imagination / 合成数据 / 前向预测**，定位是 learned simulator + 合成数据源；
-- SpatialRobot 做的是**结构化、显式、可查询的 3D 对象关系记忆**。
+- Chronotope 做的是**结构化、显式、可查询的 3D 对象关系记忆**。
 
 两者结合的价值组合（非替代）：
 1. 用 world model 生成合成 RGB-D 扩充 perception 训练集；
@@ -187,7 +224,7 @@ RGB-D ─►│  S2 (VLM, ~7-9Hz, 规划)  ◄──注入结构化空间上下�
 本仓库的工程选择恰好把这套学术能力做成"可嵌入任意 S2 的外置海马体"：
 - **numpy-only core**（CLAUDE.md 明令的契约）→ 可装在任何环境，包括边缘端（部署矩阵见 §4.2）；
 - **`.smem` 单文件 SQLite + sqlite-vec ANN**（重 backend 后有线性/keyword fallback）→ 重启可存活、可增量更新、零基础设施依赖；
-- **`PerceptionAdapter` / `Verbalizer` / `Reasoner` 三协议接缝** → BYO，不锁定上游感知 / 下游模型；
+- **BYO 协议接缝 `PerceptionAdapter` / `Verbalizer` / `Reasoner`（+ `ExecutorAdapter`）** → 不锁定上游感知 / 下游模型 / 物理本体；
 - **`#id` 可引用序列化 + `Answer.cited_node_ids`** → 朝"可定位、可审计"的方向走（当前是尽力提取，见 §2.4）；
 - **fuse-before-persist 不变量** → 工程正确性保证（新增 mutator 必先 `_flush_pending()`）。
 
@@ -200,7 +237,9 @@ RGB-D ─►│  S2 (VLM, ~7-9Hz, 规划)  ◄──注入结构化空间上下�
 | **core-only** | `pip install tempomem` | numpy（无 torch、无 CUDA） | CPU、可跑 MCU 级以上 | 边缘端 / 嵌入式 / 接收上游 `Detection` | 融合 + 持久化 + 查询（keyword/linear fallback）；**无视觉前端** |
 | **+perception** | `+ [clip]` extra | torch + open-clip + (SAM2/GDINO) | GPU（CLIP 推理） | 有 GPU 的机上 / 边缘盒子 | RGB-D → 场景图（含语义编码） |
 | **+brain** | `+ mindloop` | 仅 stdlib（LLM 远程） | 取决于 S2 部署位置 | 任意（S2 可在云 / 远端 vLLM） | 记忆 + 推理闭环 |
+| **+body seam** | `+ bodylink` | 仅 stdlib（依赖 `mindloop`） | CPU（`MockBody` 无硬件） | 无机器人也能跑/测脑→体闭环 | 记忆 + 推理 + 派发 `SubTask`（mock 或 out-of-tree 真实本体） |
 | **full stack** | 全部 + 本地 S2 | torch + CUDA + 本地 vLLM/NIM | 高（如 Cosmos-Reason2-8B 需 RTX PRO 6000 级） | 工作站 / 研发 | 全闭环本地运行 |
+| **+self-learning**（research track） | `+ skillforge` | 依赖 `tempomem`+`mindloop`+`bodylink` | walking skeleton 用 CPU（`ScriptedAuthor`+`MockBody`）；接真实 author/sim 后随之上升 | 跨回合技能习得实验 | ENPIRE 循环：本体从自己试错中习得技能（`v0.1.0a0`，无网络） |
 
 **P1 验收必须包含**：(a) **无 GPU 纯 numpy fallback 路径的端到端冒烟测试**（core-only 配置，BYO `Detection` → 查询）；(b) 同时验证 +perception 配置的 GPU 路径。两条都过，"分级可装"才是可信卖点。
 
@@ -374,7 +413,7 @@ P2→P3 的"发布评测集 → 被默认采用"跳跃缺少说服机制。补�
 
 | 里程碑 | 验收标准 |
 |---|---|
-| 首个 `PerceptionAdapter` 具体实现（ConceptGraphs 路线：SAM 2 + GroundingDINO + OpenCLIP，全 Apache/MIT，behind `[perception]` extra） | RGB-D 序列 → `.smem` 场景图端到端跑通；core 仍 numpy-only（pyright clean，无 torch import 入核） |
+| 首个 `PerceptionAdapter` 具体实现（ConceptGraphs 路线：SAM 2 + GroundingDINO + OpenCLIP，全 Apache/MIT，behind `[clip]` extra） | RGB-D 序列 → `.smem` 场景图端到端跑通；core 仍 numpy-only（pyright clean，无 torch import 入核） |
 | **PerceptionAdapter Protocol v2 设计**（吸收工程批判 HIGH-3） | 现协议仅 `process_frame()`，无生命周期接口；v2 至少加 `__enter__`/`__exit__`（或 `close()`/`flush()`），管理有状态 encoder（CLIP 模型加载）的生命周期 |
 | **检索式上下文（先 query 过滤子图再 serialize）**（吸收工程批判 CRITICAL-1，OQ-6） | `Brain.ask()` 不再全图截断；超预算场景下召回相关子图。评测覆盖"超预算场景"，分别报告全图截断 vs query 子图两种策略召回率 |
 | 坐实双 Reasoner 后端 | Cosmos-Reason2（本地 RTX PRO 6000，OpenAI 兼容 `/v1`）与 RoboBrain 两条后端均能驱动 `Brain.ask()` 返回带 `cited_node_ids` 的 `Answer` |
@@ -396,7 +435,7 @@ P2→P3 的"发布评测集 → 被默认采用"跳跃缺少说服机制。补�
 | 评测对外 + 人工语义标注 | 评测集对外发布，邀请 1–2 个外部团队复现；**补做 P1 推迟的人工语义正确率标注** |
 | **`cited_node_ids` 两层评测 + structured output 探索**（吸收工程批判 HIGH-4，OQ-7） | 分别报告格式遵从率 + 内容正确率；探索 JSON mode / function call 替代正则提取 |
 
-**P2 出口判据**：至少 1 个外部团队在真实或半真实本体上跑通"挂载 SpatialRobot 后 S2 长程任务表现**可测提升**"（不是"跑起来了"）。
+**P2 出口判据**：至少 1 个外部团队在真实或半真实本体上跑通"挂载 Chronotope 后 S2 长程任务表现**可测提升**"（不是"跑起来了"）。
 
 ### P3 · 生态位锁定（6–12 月）：做成"具身记忆标准接口" + 首个商业验证
 
@@ -407,7 +446,7 @@ P2→P3 的"发布评测集 → 被默认采用"跳跃缺少说服机制。补�
 | **被默认采用（双层验收）**（吸收商业批判 4） | **(a) 技术采用**：某开源大脑 / 本体厂 import/fork 为默认记忆层；**(b) 商业承诺**：有 license 协议或付费 PoC（不是拿走开源后消失） |
 | **商业基线（关闭 OQ-1/OQ-2）** | 完成 1–2 次真实客户访谈，收敛假设性 ICP 为具体付费客户原型；确定发行许可证 + Open Core 分界线 + 首个商业形态；启动企业就绪路径（托管 / 支持 / 数据隔离） |
 
-**P3 出口判据**：北极星指标 ≥ 1 个外部大脑/本体把 SpatialRobot 作为**默认**（非可选）记忆层**且满足质量门三条**（可测提升 + ≥2 月维护 + 公开引用），同时 OQ-1 有可信的付费客户原型。
+**P3 出口判据**：北极星指标 ≥ 1 个外部大脑/本体把 Chronotope 作为**默认**（非可选）记忆层**且满足质量门三条**（可测提升 + ≥2 月维护 + 公开引用），同时 OQ-1 有可信的付费客户原型。
 
 ---
 
@@ -448,15 +487,15 @@ P2→P3 的"发布评测集 → 被默认采用"跳跃缺少说服机制。补�
 
 ## 附：本文与单包 vision 的关系
 
-- 本文（系统级）= SpatialRobot 三层整体的生态位、范式关系、路线、风险与商业化框架；
+- 本文（系统级）= Chronotope 五成员整体的生态位、范式关系、路线、风险与商业化框架；
 - [tempomem/docs/00-VISION.md](../../tempomem/docs/zh/00-VISION.md)（单包级）= 记忆核作为独立 SDK 的"Mem0-for-3D-space"叙事；
 - 二者一致：系统级把单包的"空间记忆 SDK"放进 dual-system + world model 的具身大脑全景中，定义为"所有 S2 可挂载的外置海马体"。如有冲突，以本文调研事实与代码核读为准。
 
 ---
 
-## 附：v2 定稿对三视角批判的处置台账
+## 附（内部）：v2 定稿对三视角批判的处置台账
 
-> 透明记录每条批判的处置，便于复审。verdict：**采纳**（已补正文）/ **降级为开放问题**（写入 §0 清单）/ **部分采纳**。
+> **内部流程记录——不属于对外 pitch。** 透明记录每条批判的处置，便于复审；它暴露原始内部批判 ID（CRITICAL-1、HIGH-4……），仅供复审存档，不对外流通。verdict：**采纳**（已补正文）/ **降级为开放问题**（写入 §0 清单）/ **部分采纳**。
 
 **工程视角：**
 - CRITICAL-1（全图截断）→ **采纳**：§2.3 声明限制 + §8 P1 列"检索式上下文"任务 + 评测覆盖超预算场景（OQ-6）。

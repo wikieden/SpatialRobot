@@ -4,12 +4,16 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## What this is
 
-`SpatialRobot` is the **workspace root** for an embodied-brain stack split across
-**three independently published, independently git-versioned** Python packages.
-The split mirrors a body: a numpy-only memory core, optional GPU-heavy eyes, and
-an LLM brain that drives the loop. The root itself is **not a git repo and not a
-package** — it is a [uv workspace](https://docs.astral.sh/uv/concepts/projects/workspaces/)
-that gives all three a single shared environment.
+`SpatialRobot` is the **workspace root** (engineering dir name only) for **Chronotope**,
+an embodied-brain stack split across **independently published, independently
+git-versioned** Python packages. The product/brand name is **Chronotope**; `SpatialRobot`
+is just this workspace directory (repos not yet renamed). The split mirrors a body: a
+numpy-only memory core, optional GPU-heavy eyes, an LLM brain that drives the loop, a
+body/executor seam, and a self-learning lab on top. The root itself is **not a git repo
+and not a package** — it is a [uv workspace](https://docs.astral.sh/uv/concepts/projects/workspaces/)
+that gives all members a single shared environment. There are **five workspace members**
+(three core + two newer): `bodylink` (P0 reference impl) and `skillforge` (research track,
+working name, `v0.1.0a0` walking skeleton) joined the original triad.
 
 ```
 RGB(-D) ─► worldsense (eyes) ─► Detections
@@ -19,18 +23,27 @@ RGB(-D) ─► worldsense (eyes) ─► Detections
                                               │ serialize
                                               ▼
               mindloop  Brain.ask ─► Reasoner (LLM) ─► Answer(text, cited node ids)
+                                              │ SubTask (ExecutorAdapter)
+                                              ▼
+                              bodylink (body seam: MockBody / real device pkg)
+
+  skillforge (research track): drives mem+brain+body+world in an ENPIRE self-learning loop
 ```
 
 | Member dir | Package | Role | Heavy deps |
 |---|---|---|---|
 | `tempomem/` | `tempomem` | Memory core — `.smem` SQLite scene-graph, fusion arbiter, query, serialize. The hippocampus. | none (numpy-only) |
 | `worldsense/` | `worldsense` | Eyes — RGB(-D) → world-frame `Detection`s; camera→world geometry lift, CLIP encoders. | behind `[clip]` (torch) |
-| `mindloop/` | `mindloop` | Brain — `Brain` cognitive loop + `Reasoner` + `CosmosReasonVerbalizer`. | none in core; LLM is remote/self-hosted |
+| `mindloop/` | `mindloop` | Brain — `Brain` cognitive loop + `Reasoner` + `CosmosReasonVerbalizer`; ships the `ExecutorAdapter` protocol. | none in core; LLM is remote/self-hosted |
+| `bodylink/` | `bodylink` | Body seam — fills `mindloop`'s `ExecutorAdapter`: `MockBody` (no-hardware ref) + `CapabilityManifest` (`g1d_manifest`). "Swap the body, keep the mind." | none (stdlib; depends on `mindloop`) |
+| `skillforge/` | `skillforge` | Self-learning lab (research track, working name) — ENPIRE loop (Environment/Policy/Rollout/Evolution) over mem+brain+body+world. The **only** member that imports all others. | none (`v0.1.0a0` walking skeleton, network-free) |
 
-**Dependency direction:** `perception → core`, `brain → core` (+ optional
-`brain[perception]`). The core never imports the other two; it only ships the
-`PerceptionAdapter` and `Verbalizer` *protocols* they fill. Keep it that way —
-adding a torch/LLM import to `tempomem/` breaks the numpy-only contract.
+**Dependency direction:** `worldsense → core`, `mindloop → core` (+ optional
+`mindloop[perception]`), `bodylink → mindloop`, `skillforge → tempomem + mindloop +
+bodylink`. The core (`tempomem`) never imports the others; it only ships the
+`PerceptionAdapter` and `Verbalizer` *protocols* they fill (`mindloop` ships
+`ExecutorAdapter`). Keep it that way — adding a torch/LLM import to `tempomem/` breaks the
+numpy-only contract.
 
 ## Environment & commands
 
@@ -38,7 +51,7 @@ One env for the whole workspace, driven from this root via uv (Python pinned to
 3.12 in `.python-version`; packages support ≥ 3.10):
 
 ```bash
-uv sync                       # create root .venv, install all 3 members editable + shared dev tools
+uv sync                       # create root .venv, install all 5 members editable + shared dev tools
 uv sync --extra clip          # add the GPU/CLIP stack (torch, open-clip, pillow)
 ```
 
@@ -102,7 +115,7 @@ change. The user runs Cosmos-Reason2-8B on an **RTX PRO 6000 (96 GB)** workstati
 deployment specifics (variants, VRAM, serve commands) are in
 [mindloop/docs/en/local-serving.md](mindloop/docs/en/local-serving.md).
 
-## Conventions (from tempomem/spec/ENGINEERING.md — normative for all three)
+## Conventions (from tempomem/spec/ENGINEERING.md — normative for all members)
 
 - **Value types are `@dataclass(frozen=True, slots=True)`.** No global mutable state.
 - **`logging.getLogger("tempomem.<module>")`, never `print()`.** No `pickle`,

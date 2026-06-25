@@ -1,18 +1,48 @@
 > 🌐 **English** · [中文](../zh/VISION.md)
 
-# SpatialRobot · System-Level Vision and Positioning (2026 · Finalized v2)
+# Chronotope · System-Level Vision and Positioning (2026 · Finalized v3)
 
-> This document is the system-level vision and positioning document for the SpatialRobot workspace (three layers: `tempomem` / `worldsense` / `mindloop`).
-> Input basis: [docs/research/embodied-brain-landscape-2026.md](research/embodied-brain-landscape-2026.md) (8-dimension, adversarially verified research) + a careful read of the actual three-layer code in this repository.
+> **TL;DR** — **Chronotope** is an engineering-grade **external spatial hippocampus**: it
+> fuses RGB-D perception into a persistent, queryable 3D scene-graph memory (`.smem`) with
+> `#id` references that the **S2** (slow-reasoning VLM) of any dual-system robot brain can
+> mount. **What it is:** a structured spatial-memory + query service. **What it is not:**
+> not a VLA, not a brain large-model, not a robot body. **Status:** numpy-only memory core
+> working; closed-loop `Brain.ask()` prototype; commercial willingness-to-pay unverified
+> (see §0 open questions). **The stack is 5 workspace members** — `tempomem` (memory core) ·
+> `worldsense` (eyes) · `mindloop` (brain) · `bodylink` (body/executor seam) · `skillforge`
+> (self-learning lab, research track).
+
+> This document is the system-level vision and positioning document for the **Chronotope**
+> stack (workspace dir: `SpatialRobot/`; 5 members: `tempomem` / `worldsense` / `mindloop` /
+> `bodylink` / `skillforge`). "Chronotope" is the product/brand name; "SpatialRobot" is only
+> the engineering workspace directory.
+> Input basis: [research/embodied-brain-landscape-2026.md](research/embodied-brain-landscape-2026.md) (8-dimension, adversarially verified research) + a careful read of the actual member code in this repository.
 > All cited figures are handled per the report's verdict: **refuted ones are not adopted, updated ones use the updated value, uncertain ones are explicitly marked "to be verified".**
 > The single-package (memory core) vision is in [tempomem/docs/00-VISION.md](../../tempomem/docs/en/00-VISION.md); this document is its system-level superset, and the two do not conflict.
 > **v2 finalization note**: This version absorbs adversarial critique from three perspectives — engineering / business / strategy. Every vulnerability exposed by the critique is either already filled in the main text (with engineering evidence) or explicitly downgraded to an **[open question]** with the minimum criterion to close it. This document distinguishes two kinds of assertion: those marked **[verified]** come from a careful code read or research confirmed; those marked **[internal analysis]** are this project's own judgment and must not be treated externally as independent evidence; those marked **[open question]** are unclosed bets that require external validation.
+> **v3 delta**: rebrands the stack to its ratified product name **Chronotope** and grows the member set from three to **five** — `bodylink` (the brain↔body executor seam, reference `MockBody`) and `skillforge` (an autonomous self-learning lab, working name, walking-skeleton `v0.1.0a0`) join the original memory/eyes/brain triad. Positioning, niche, and open questions are unchanged; the two new members extend the closed loop downstream (act) and across episodes (learn) — see §2.1 and §3.
+
+---
+
+## Glossary (terms used before they are defined)
+
+| Term | Meaning |
+|---|---|
+| **dual-system** | the converged robot-brain structure: **S2** (slow VLM planner) + **S1** (fast control policy) |
+| **S2 / S1** | S2 = ~7B VLM, ~7–9 Hz, plans; S1 = ~80M policy, ~200 Hz, controls. Chronotope is the *external memory of S2* |
+| **wedge** | the differentiation entry point — the structural gap (no persistent spatial memory) Chronotope enters through |
+| **`.smem`** | Chronotope's single-file SQLite scene-graph memory format; survives restarts, incrementally updatable |
+| **`#id` / `cited_node_ids`** | scene-graph node references; the brain's `Answer` back-references the memory nodes it used (provenance) |
+| **BYO** | "bring your own" — perception / verbalizer / reasoner are pluggable protocol seams, not bundled defaults |
+| **ICP** | ideal customer profile — the first paying-party prototype (OQ-1, still unverified) |
+| **Open Core** | permissive core + separately-licensed enterprise layer commercialization model |
+| **recall@k** | evaluation metric: did the right memory nodes appear in the top-k retrieved set |
 
 ---
 
 ## One-Sentence Positioning
 
-**SpatialRobot is an engineering-grade, production-ready "external spatial hippocampus" — it fuses RGB-D perception into a persistent, queryable 3D scene-graph memory with `#id` references, mounts onto the S2 (slow-reasoning VLM) of any dual-system robot brain, and gives today's embodied brains — which structurally lack cross-frame spatial memory — the ability to "remember what is in the room, where it is, and how things relate."**
+**Chronotope is an engineering-grade, production-ready "external spatial hippocampus" — it fuses RGB-D perception into a persistent, queryable 3D scene-graph memory with `#id` references, mounts onto the S2 (slow-reasoning VLM) of any dual-system robot brain, and gives today's embodied brains — which structurally lack cross-frame spatial memory — the ability to "remember what is in the room, where it is, and how things relate."**
 
 We do not build a fourth VLA, do not build a brain large model, and do not build a robot body — we build **a structured spatial-memory and query service that any S2 can mount, that is neutral and commercially viable.**
 
@@ -69,7 +99,7 @@ Here we must distinguish **external first-hand evidence** from **internal analys
 
 > Wording discipline: the report marks "3DLLM-Mem is 6× higher than baseline" as **refuted** — the paper's main framing is an absolute **+16.5 percentage points**, and "6×" corresponds only to the hard subset. This document cites only the absolute value and the hard-subset 32.1% vs ~5%, and does not write "6×".
 
-**Conclusion: what is missing is not a stronger VLA, but an external persistent spatial-memory layer that all S2 can mount. This is SpatialRobot's technical niche.** But "the technical niche holds" ≠ "the commercial niche holds" — the latter depends on OQ-1/OQ-2/OQ-3, see §6.
+**Conclusion: what is missing is not a stronger VLA, but an external persistent spatial-memory layer that all S2 can mount. This is Chronotope's technical niche.** But "the technical niche holds" ≠ "the commercial niche holds" — the latter depends on OQ-1/OQ-2/OQ-3, see §6.
 
 ---
 
@@ -82,18 +112,34 @@ Chapter 3 of the report groups the field into three **orthogonal, complementary*
 - **Data / imagination pole** (world model, learned simulator + synthetic data);
 - **Persistent-state / memory pole** (spatial memory / 3D scene graph).
 
-SpatialRobot explicitly stands at the third pole and does three things:
+Chronotope explicitly stands at the third pole. Its anchor is the memory core; the
+other members are the seams that feed it and act on it. The stack is **five workspace
+members**:
 
 1. **Memory (`tempomem`, the memory core)** — a numpy-only `.smem` SQLite 3D scene graph: fuse → persist → query. It is the system's **only stateful object**, the hippocampus.
 2. **Perception (`worldsense`, the eyes)** — RGB-D → world-frame `Detection`; camera→world geometry lift, CLIP encoding (torch is only introduced behind the `[clip]` extra).
-3. **Brain (`mindloop`, the brain seam)** — the `Brain` cognitive loop + `Reasoner` + `CosmosReasonVerbalizer`, interfacing with the S2 of **any OpenAI-compatible `/v1/chat/completions`**.
+3. **Brain (`mindloop`, the brain seam)** — the `Brain` cognitive loop + `Reasoner` + `CosmosReasonVerbalizer`, interfacing with the S2 of **any OpenAI-compatible `/v1/chat/completions`**. It also ships the `ExecutorAdapter` *protocol* (the brain↔body seam).
+4. **Body seam (`bodylink`, the executor adapter)** [P0 reference impl] — fills `mindloop`'s `ExecutorAdapter` protocol: `MockBody` accepts the brain's `SubTask`s, echoes the driving node ids (B9 provenance), and reports typed success/failure — letting the L3 brain run **end-to-end with no robot and no network**. A real body is an out-of-tree device package differing only by its **Body Profile + verb set** ("swap the body, keep the mind", D3). It also ships the `CapabilityManifest` reference (`g1d_manifest`, a G1-D wheeled humanoid).
+5. **Self-learning lab (`skillforge`, the meta-orchestrator)** [research track · working name · walking skeleton `v0.1.0a0`] — the **only** member allowed to import all the others. It drives memory+brain+body+world in a closed **ENPIRE** loop (Environment / Policy-improvement / Rollout / Evolution) so a body can **acquire a skill from its own trials**, no human in the loop. Parallel to the `mindloop` DEV-PLAN, not on its critical path; the name is not yet owner-ratified.
 
-The three layers use the **three Protocols — `PerceptionAdapter` / `Verbalizer` / `Reasoner` — exposed by the core** as BYO seams. The system's closed-loop interface is already a prototype: `Brain.ask()` produces, via `serialize(format="prompt")`, a token-efficient **hierarchical scene graph** with `#id` references fed to the Reasoner, returning **`Answer(text, cited_node_ids)`**. This is precisely the engineering implementation of the "VLM planner + structured spatial context" paradigm.
+> **Dependency direction (the contract the whole pitch rests on):** `worldsense → core`,
+> `mindloop → core` (+ optional `mindloop[perception]`), `bodylink → mindloop`,
+> `skillforge → tempomem + mindloop + bodylink`. **The core (`tempomem`) imports none of
+> the others** — it only ships the protocols they fill. This is what keeps the core
+> numpy-only and edge-installable.
+
+The members plug into Chronotope through **the core's BYO protocol seams —
+`PerceptionAdapter` / `Verbalizer` / `Reasoner` — plus `mindloop`'s `ExecutorAdapter`**
+(filled by `bodylink`). The system's closed-loop interface is already a prototype:
+`Brain.ask()` produces, via `serialize(format="prompt")`, a token-efficient **hierarchical
+scene graph** with `#id` references fed to the Reasoner, returning **`Answer(text,
+cited_node_ids)`**. This is precisely the engineering implementation of the "VLM planner +
+structured spatial context" paradigm.
 
 ### 2.2 What We Explicitly Do Not Do (6.2 normative)
 
 - **No end-to-end VLA / no brain large model.** That is the red ocean of Physical Intelligence / Skild / Generalist / RoboBrain / Qianxun / X-Square; head-on competition is sure to lose.
-- **No robot body.** That is the capital-intensive arena of Unitree / AgiBot / Fourier / LimX.
+- **No robot body (hardware).** That is the capital-intensive arena of Unitree / AgiBot / Fourier / LimX. **Note the distinction**: `bodylink` is the *executor-adapter seam* (the `ExecutorAdapter` reference fill + a no-hardware `MockBody`), **not** a robot. We build the brain↔body *interface*; the physical body stays out-of-tree, vendor-supplied.
 - **No SLAM.** World-frame poses come from upstream (KISS-ICP/MIT, cuVSLAM, ARKit, simulation ground truth); we **absolutely do not link ORB-SLAM3 (GPLv3 contagion) into the distribution package**.
 - **No world model itself, but we provide its structured prior** (see §3).
 - **No "cloud-first".** Local-first, embeddable, BYO-LLM; a hosted layer is a later convenience, **but whether it generates revenue is an open question** (see §6 OQ-2, absorbing business critique: you cannot both reject the hosting moat and not provide an alternative stickiness).
@@ -138,21 +184,27 @@ Absorbing engineering critique **CRITICAL-2** and strategy critique **HIGH-2**. 
 
 ### 3.1 Relationship to dual-system: be the external memory of S2
 
-```
-        ┌─────────────── dual-system robot brain ─────────────┐
-        │                                                      │
-RGB-D ─►│  S2 (VLM, ~7-9Hz, planning) ◄──inject structured──┐  │──► S1 (policy, ~200Hz)
-        │         │                       spatial context   │  │      │
-        └─────────┼────────────────────────────────────────┼──┘      ▼
-                  │  serialize(format="prompt")             │      actuator/body
-                  ▼  hierarchical scene graph with #id      │      (out of scope)
-        ┌──────────────── SpatialRobot ───────────────┐ (token-budget bound)
-        │ perception → memory(.smem) ── query/answer ──┘    │ Answer.cited_node_ids
-        └──────────────────────────────────────────────────┘ back-references locatable nodes (best-effort)
+```mermaid
+flowchart LR
+    RGBD["RGB-D"]
+    subgraph chrono["Chronotope stack (what we build)"]
+        direction LR
+        WS["worldsense<br/>(eyes)"]
+        TM["tempomem<br/>memory · .smem"]
+        ML["mindloop<br/>Brain.ask()"]
+        BL["bodylink<br/>ExecutorAdapter · MockBody"]
+        WS -->|Detections| TM
+        TM -->|"serialize(prompt):<br/>scene graph + #id<br/>(token-budget bound)"| ML
+        ML -->|"SubTask(verb, node_ids)"| BL
+    end
+    RGBD --> WS
+    ML <==>|"/v1/chat/completions"| S2["S2 · external VLM reasoner<br/>BYO: Cosmos-Reason2 / RoboBrain / Gemini-ER"]
+    S2 -.->|"Answer.cited_node_ids<br/>(provenance, best-effort)"| TM
+    BL --> BODY["physical body + S1 control<br/>(out-of-tree, vendor-supplied)"]
 ```
 
-- **S2 = the external Reasoner the brain layer interfaces with** (Cosmos-Reason2 / RoboBrain / Gemini-ER / π0.5, etc., any OpenAI-compatible model);
-- **S1 = the downstream controller**, out of scope for this project (can interface with LeRobot's 5 official VLAs: Pi0Fast / Pi0.5 / GR00T N1.5 / SmolVLA / XVLA as downstream executors, confirmed);
+- **S2 = the external Reasoner `mindloop` interfaces with** (Cosmos-Reason2 / RoboBrain / Gemini-ER / π0.5, etc., any OpenAI-compatible model) — **BYO, not bundled**;
+- **S1 = the downstream controller** inside the physical body, out of scope; the brain reaches it through the `bodylink` `ExecutorAdapter` seam (a real body can wrap LeRobot's 5 official VLAs: Pi0Fast / Pi0.5 / GR00T N1.5 / SmolVLA / XVLA as the S1 executor, confirmed);
 - **the memory layer precisely fills "the cross-frame persistent spatial state that all these systems jointly lack"** (executive summary 2).
 
 We are **neutral and mountable** with respect to S2: because the interface is OpenAI-compatible `/v1/chat/completions` + protocol seams, the same memory layer can simultaneously serve any Reasoner on either the Chinese or US side (2.3 shared gap).
@@ -163,7 +215,7 @@ We are **neutral and mountable** with respect to S2: because the interface is Op
 
 The report explicitly judges: **world model and spatial memory are a complementary third pole, not a replacement relationship.**
 - World model (Cosmos 3, 1X WM, Wayve GAIA-1, Covariant RFM-1, X-Square WUM, V-JEPA 2) does **pixel-level imagination / synthetic data / forward prediction**, positioned as a learned simulator + synthetic data source;
-- SpatialRobot does **structured, explicit, queryable 3D object-relationship memory**.
+- Chronotope does **structured, explicit, queryable 3D object-relationship memory**.
 
 The value combinations of the two (not replacement):
 1. Use a world model to generate synthetic RGB-D to augment the perception training set;
@@ -187,7 +239,7 @@ The three-segment evidence chain (after distinguishing external evidence from in
 This repository's engineering choices happen to turn this academic capability into "an external hippocampus embeddable into any S2":
 - **numpy-only core** (the contract mandated by CLAUDE.md) → installable in any environment, including the edge (deployment matrix in §4.2);
 - **`.smem` single-file SQLite + sqlite-vec ANN** (with linear/keyword fallback behind heavy backends) → survives restarts, can be incrementally updated, zero infrastructure dependency;
-- **the three-protocol seams `PerceptionAdapter` / `Verbalizer` / `Reasoner`** → BYO, not locking in upstream perception / downstream models;
+- **the BYO protocol seams `PerceptionAdapter` / `Verbalizer` / `Reasoner` (+ `ExecutorAdapter`)** → not locking in upstream perception / downstream models / the physical body;
 - **`#id`-referenceable serialization + `Answer.cited_node_ids`** → moving toward "locatable, auditable" (currently best-effort extraction, see §2.4);
 - **the fuse-before-persist invariant** → engineering-correctness guarantee (a new mutator must first `_flush_pending()`).
 
@@ -200,7 +252,9 @@ Absorbing engineering critique **HIGH-5** — "numpy-only, installable on the ed
 | **core-only** | `pip install tempomem` | numpy (no torch, no CUDA) | CPU, can run from MCU-class up | edge / embedded / receiving upstream `Detection` | fusion + persistence + query (keyword/linear fallback); **no visual front-end** |
 | **+perception** | `+ [clip]` extra | torch + open-clip + (SAM2/GDINO) | GPU (CLIP inference) | on-machine with GPU / edge box | RGB-D → scene graph (with semantic encoding) |
 | **+brain** | `+ mindloop` | stdlib only (LLM remote) | depends on S2 deployment location | any (S2 can be in cloud / remote vLLM) | memory + reasoning closed loop |
+| **+body seam** | `+ bodylink` | stdlib only (depends on `mindloop`) | CPU (`MockBody` is hardware-free) | run/test the brain→body loop with no robot | memory + reasoning + dispatch `SubTask`s (mock or out-of-tree real body) |
 | **full stack** | all + local S2 | torch + CUDA + local vLLM/NIM | high (e.g. Cosmos-Reason2-8B needs RTX PRO 6000 class) | workstation / R&D | full closed loop running locally |
+| **+self-learning** (research track) | `+ skillforge` | depends on `tempomem`+`mindloop`+`bodylink` | CPU for the walking skeleton (`ScriptedAuthor`+`MockBody`); scales with a real author/sim | cross-episode skill acquisition experiments | ENPIRE loop: a body learns a skill from its own trials (`v0.1.0a0`, network-free) |
 
 **P1 acceptance must include**: (a) **an end-to-end smoke test of the GPU-free pure-numpy fallback path** (core-only configuration, BYO `Detection` → query); (b) simultaneously verifying the GPU path of the +perception configuration. Only when both pass is "tiered installability" a credible selling point.
 
@@ -374,7 +428,7 @@ Based on research 6.3 and absorbing the engineering critique (performance gate, 
 
 | Milestone | Acceptance criterion |
 |---|---|
-| First concrete `PerceptionAdapter` implementation (ConceptGraphs route: SAM 2 + GroundingDINO + OpenCLIP, all Apache/MIT, behind `[perception]` extra) | RGB-D sequence → `.smem` scene graph runs end-to-end; core stays numpy-only (pyright clean, no torch import into the core) |
+| First concrete `PerceptionAdapter` implementation (ConceptGraphs route: SAM 2 + GroundingDINO + OpenCLIP, all Apache/MIT, behind the `[clip]` extra) | RGB-D sequence → `.smem` scene graph runs end-to-end; core stays numpy-only (pyright clean, no torch import into the core) |
 | **PerceptionAdapter Protocol v2 design** (absorbing engineering critique HIGH-3) | the current protocol has only `process_frame()`, no lifecycle interface; v2 adds at least `__enter__`/`__exit__` (or `close()`/`flush()`) to manage the lifecycle of stateful encoders (CLIP model loading) |
 | **Retrieval-style context (query-filter the subgraph first, then serialize)** (absorbing engineering critique CRITICAL-1, OQ-6) | `Brain.ask()` no longer full-graph truncates; recalls the relevant subgraph in over-budget scenarios. The evaluation covers "over-budget scenarios", reporting separately the recall under the two strategies full-graph truncation vs query subgraph |
 | Cement dual Reasoner backends | both backends, Cosmos-Reason2 (local RTX PRO 6000, OpenAI-compatible `/v1`) and RoboBrain, can drive `Brain.ask()` to return an `Answer` with `cited_node_ids` |
@@ -396,7 +450,7 @@ Based on research 6.3 and absorbing the engineering critique (performance gate, 
 | Evaluation goes external + manual semantic annotation | the evaluation set is released externally, inviting 1–2 external teams to reproduce; **do the manual semantic-correctness annotation deferred from P1** |
 | **`cited_node_ids` two-layer evaluation + structured-output exploration** (absorbing engineering critique HIGH-4, OQ-7) | report the format-compliance rate + content-correctness rate separately; explore JSON mode / function call to replace regex extraction |
 
-**P2 exit criterion**: at least 1 external team runs through "after mounting SpatialRobot, S2's long-horizon task performance is **measurably improved**" on a real or semi-real robot body (not "it ran").
+**P2 exit criterion**: at least 1 external team runs through "after mounting Chronotope, S2's long-horizon task performance is **measurably improved**" on a real or semi-real robot body (not "it ran").
 
 ### P3 · Niche lock-in (6–12 months): make it the "embodied-memory standard interface" + the first commercial validation
 
@@ -407,7 +461,7 @@ Based on research 6.3 and absorbing the engineering critique (performance gate, 
 | **Adopted by default (two-layer acceptance)** (absorbing business critique 4) | **(a) technical adoption**: an open-source brain / robot-body vendor imports/forks it as the default memory layer; **(b) commercial commitment**: there is a license agreement or paid PoC (not take the open source and vanish) |
 | **Commercial baseline (close OQ-1/OQ-2)** | complete 1–2 real customer interviews, converging the hypothetical ICP into a concrete paying-customer prototype; decide the distribution license + Open Core dividing line + first commercial form; start the enterprise-ready path (hosting / support / data isolation) |
 
-**P3 exit criterion**: the north-star metric ≥ 1 external brain/body adopts SpatialRobot as the **default** (not optional) memory layer **and satisfies all three quality gates** (measurable improvement + ≥2 months maintenance + public citation), while OQ-1 has a credible paying-customer prototype.
+**P3 exit criterion**: the north-star metric ≥ 1 external brain/body adopts Chronotope as the **default** (not optional) memory layer **and satisfies all three quality gates** (measurable improvement + ≥2 months maintenance + public citation), while OQ-1 has a credible paying-customer prototype.
 
 ---
 
@@ -448,15 +502,15 @@ Absorbing strategy critique **MEDIUM-2**: license red lines (irreversible legal 
 
 ## Appendix: Relationship Between This Document and the Single-Package Vision
 
-- This document (system level) = the niche, paradigm relationships, roadmap, risks, and commercialization framework of the SpatialRobot three-layer whole;
+- This document (system level) = the niche, paradigm relationships, roadmap, risks, and commercialization framework of the Chronotope five-member whole;
 - [tempomem/docs/00-VISION.md](../../tempomem/docs/en/00-VISION.md) (single-package level) = the "Mem0-for-3D-space" narrative of the memory core as a standalone SDK;
 - The two are consistent: the system level places the single-package "spatial-memory SDK" into the full embodied-brain panorama of dual-system + world model, defining it as "the external hippocampus that all S2 can mount." In case of conflict, this document's research facts and code read prevail.
 
 ---
 
-## Appendix: v2 Finalization Ledger of Dispositions for the Three-Perspective Critique
+## Appendix (internal): v2 Finalization Ledger of Dispositions for the Three-Perspective Critique
 
-> Transparently records the disposition of each critique for ease of re-review. verdict: **adopted** (filled into the main text) / **downgraded to open question** (written into the §0 list) / **partially adopted**.
+> **Internal process record — not part of the external pitch.** Transparently records the disposition of each critique for ease of re-review; it exposes raw internal critique IDs (CRITICAL-1, HIGH-4, …) and is kept for re-audit, not external circulation. verdict: **adopted** (filled into the main text) / **downgraded to open question** (written into the §0 list) / **partially adopted**.
 
 **Engineering perspective:**
 - CRITICAL-1 (full-graph truncation) → **adopted**: §2.3 declares the limit + §8 P1 lists the "retrieval-style context" task + evaluation covers the over-budget scenario (OQ-6).

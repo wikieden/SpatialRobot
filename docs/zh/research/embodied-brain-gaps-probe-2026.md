@@ -6,9 +6,9 @@
 
 ---
 
-# SpatialRobot 二轮深挖报告：商业付费意愿 与 RoboOS/InternRobotics 场景图记忆
+# Chronotope 二轮深挖报告：商业付费意愿 与 RoboOS/InternRobotics 场景图记忆
 
-> 本报告基于两个经对抗验证（adversarial verification）的深挖数据集撰写。所有数字与推论均忠实标注其 verdict：`confirmed`（已证实）/`updated`（数字证实但推论需修正）/`uncertain`（来源不可靠或不适用）/`refuted`（被推翻，不采用）。被 refuted 的数字一律不作为论据，仅作为"反面教训/认知纠偏"列出。对应 VISION 文档为 `/Users/wiki/Documents/Claude/Projects/SpatialRobot/docs/VISION.md`（OQ-1 见 §6.1，OQ-5 见 §7.2）。
+> 本报告基于两个经对抗验证（adversarial verification）的深挖数据集撰写。所有数字与推论均忠实标注其 verdict：`confirmed`（已证实）/`updated`（数字证实但推论需修正）/`uncertain`（来源不可靠或不适用）/`refuted`（被推翻，不采用）。被 refuted 的数字一律不作为论据，仅作为"反面教训/认知纠偏"列出。对应 VISION 文档为 `docs/zh/VISION.md`（OQ-1 见 §6.1，OQ-5 见 §7.2）。
 
 ---
 
@@ -76,7 +76,7 @@
 
 | 栈 / 团队 | 是否有场景图 | 存储层 | 持久化 | 定位 | 与 .smem 关系 | 可信度 |
 |---|---|---|---|---|---|---|
-| **BAAI RoboOS 1.0**（arXiv:2505.03673，Apache-2.0，561★） | ✅ 动态场景图（floor/room/object 分层，节点含 position/affordance/label，由 RGB-D+SAM+CLIP 构建） | **Redis**（内存 KV，JSON+RAG） | ❌ 逐帧更新、不跨 session | 多机器人实时协调中间件 | **互补**——.smem 可做其持久化后端 | strong |
+| **BAAI RoboOS 1.0**（arXiv:2505.03673，Apache-2.0，561★（截至 2026-05；至 2026-06-10 已增至 571★，见 RoboOS/RoboBrain 深挖报告） | ✅ 动态场景图（floor/room/object 分层，节点含 position/affordance/label，由 RGB-D+SAM+CLIP 构建） | **Redis**（内存 KV，JSON+RAG） | ❌ 逐帧更新、不跨 session | 多机器人实时协调中间件 | **互补**——.smem 可做其持久化后端 | strong |
 | **BAAI RoboOS-NeXT / STEM**（arXiv:2510.26536，2025-10） | ✅ 最完整：queue-tree-graph-agent（root/region/carrier 树 + 对象关系图，谓词 ON/IN/LEFT/RIGHT/FRONT/BACK/NEAR） | 论文未明（设计层） | 论文级，**代码未开源** | 学术设计 | **最大潜在重叠**，待代码发布重判 | strong |
 | **BAAI RoboBrain 2.0/2.5**（arXiv:2507.02029，3B/7B/32B，Apache-2.0） | 场景图仅作 **LLM 输入 JSON token**，模型**消费**不**存储** | 无（持久化交给 RoboOS Redis） | ❌ | 大脑模型 | 不构成记忆竞品 | strong |
 | **InternRobotics（上海 AI Lab，原 OpenRobotLab）** | EmbodiedScan/OST-Bench/InternSR 均为**感知/评测工具**；InternUtopia 的 WKM 仅在仿真内存中 | 无运行时持久记忆模块 | ❌ | 感知/评测工具链 | **无替代竞品**（但 OST-Bench 显示在研此方向） | strong |
@@ -178,8 +178,8 @@
 
 ### 4.3 本仓库内部依据
 
-- OQ-1 / OQ-5 定义与关闭判据：`/Users/wiki/Documents/Claude/Projects/SpatialRobot/docs/VISION.md`（§6.1、§7.2、§8 里程碑表）
-- 系统级愿景：`/Users/wiki/Documents/Claude/Projects/SpatialRobot/docs/VISION.md`（定稿 v2）
-- 既有竞品调研：`/Users/wiki/Documents/Claude/Projects/SpatialRobot/docs/research/embodied-brain-landscape-2026.md`
-- 单包记忆核愿景与 Open Questions：`/Users/wiki/Documents/Claude/Projects/SpatialRobot/tempomem/docs/00-VISION.md`、`/Users/wiki/Documents/Claude/Projects/SpatialRobot/tempomem/docs/05-OPEN.md`（B3 Mem0 合作问题与本报告 §1 直接相关）
+- OQ-1 / OQ-5 定义与关闭判据：`docs/zh/VISION.md`（§6.1、§7.2、§8 里程碑表）
+- 系统级愿景：`docs/zh/VISION.md`（定稿 v3）
+- 既有竞品调研：`docs/zh/research/embodied-brain-landscape-2026.md`
+- 单包记忆核愿景与 Open Questions：`tempomem/docs/zh/00-VISION.md`、`tempomem/docs/zh/05-OPEN.md`（B3 Mem0 合作问题与本报告 §1 直接相关）
 

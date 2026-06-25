@@ -2,18 +2,24 @@
 
 # 具身大脑系统 · 国内外公司与开源项目深度调研（2026）
 
-> 由多 agent workflow 联网调研（exa）+ 对抗验证生成：8 维度 / 96 findings / 8 维。
+> 由多 agent workflow 联网调研（exa）+ 对抗验证生成：8 维度 / 96 findings / 4 verdict。
 > 数字按 verdict 处理：refuted 不采用、updated 用更新值、uncertain 标注待核实。
 
 ---
 
-本报告基于 8 个维度、经对抗验证（confirmed / updated / uncertain / refuted）的调研数据，为 SpatialRobot 项目定 vision 与架构提供输入。所有数字均按 verdict 处理：refuted 的不采用、updated 的用更新值、uncertain 的明确标注"待核实"。报告同时结合对本仓库三层（tempomem / worldsense / mindloop）实际代码的核读（关键事实：core 通过 `PerceptionAdapter` / `Verbalizer` / `Reasoner` 三个 Protocol 作为 BYO 接缝；`Brain.ask()` 经 `serialize(format="prompt")` 生成 token 高效、带 `#id` 引用的层级化场景图喂给 Reasoner，再以 `Answer(text, cited_node_ids)` 闭环回可定位节点 id；query 路由分层为 relational → intent → semantic-vec/keyword）。
+本报告基于 8 个维度、经对抗验证（confirmed / updated / uncertain / refuted）的调研数据，为 Chronotope 项目（5 个 workspace 成员）定 vision 与架构提供输入。所有数字均按 verdict 处理：refuted 的不采用、updated 的用更新值、uncertain 的明确标注"待核实"。报告同时结合对本仓库各成员（tempomem / worldsense / mindloop，后续加入 bodylink / skillforge）实际代码的核读（关键事实：core 通过 `PerceptionAdapter` / `Verbalizer` / `Reasoner` 三个 Protocol 作为 BYO 接缝；`Brain.ask()` 经 `serialize(format="prompt")` 生成 token 高效、带 `#id` 引用的层级化场景图喂给 Reasoner，再以 `Answer(text, cited_node_ids)` 闭环回可定位节点 id；query 路由分层为 relational → intent → semantic-vec/keyword）。
 
 ## 1. 执行摘要
 
+> **TL;DR** —— 赛道已收敛到 **dual-system（S2 VLM 规划 + S1 控制 policy）**，并裂成三个正交极：
+> **动作生成（VLA）**、**世界模型（想象/仿真）**、**持久记忆（3D 场景图）**。中美镜像分工（软件脑 vs
+> 硬件身），但两边都没有一层工程化、可持久、可查询的空间记忆。**那个空位正是 Chronotope 的：
+> "任意 S2 都能挂载的外置空间海马体。"** 定 vision 锚在架构 + 生态位，不锚在易陈旧的融资/出货数字
+> （第 8 条）。
+
 1. **格局判断：中美呈"软件大脑 vs 硬件本体"的镜像分工，但都在向中间收敛。** 美国头部（NVIDIA、Google DeepMind、Physical Intelligence、Figure、Skild、Generalist）以 foundation model / VLA / world model 软件层为锚，硬件多靠合作伙伴；中国头部（宇树、智元、优必选、傅利叶、星动、逐际、银河通用）以量产本体与出货量领跑，大脑层近一年由开源研究院（BAAI RoboBrain、上海 AI Lab InternRobotics、北京人形国地中心）和 VLA 创业（千寻、自变量、穹彻、银河通用）快速补强。**两边都缺一个工程化、可持久化、可查询的结构化空间记忆层——这正是 Chronotope 的稀缺位。**
 
-2. **技术范式已从"端到端 VLA"明确收敛到"分层 dual-system（S2 慢推理 VLM + S1 快执行 policy）"作为 2024–2025 工业事实趋同（注意：研究数据中"PsiBot 最早提出双系统"一项被 refuted，"事实标准"措辞证据偏强，宜表述为"头部公司趋同"）。** Figure Helix、π0.5/Hi Robot、NVIDIA GR00T N1、Gemini Robotics-ER 均是此结构。Chronotope 的三层与之天然对位：brain 层 = S2，控制器（不含）= S1，**memory 层填补了所有这些系统共同缺失的"跨帧持久空间状态"**。
+2. **技术范式已从"端到端 VLA"明确收敛到"分层 dual-system（S2 慢推理 VLM + S1 快执行 policy）"作为 2024–2025 工业事实趋同（注意：研究数据中"PsiBot 最早提出双系统"一项被 refuted，"事实标准"措辞证据偏强，宜表述为"头部公司趋同"）。** Figure Helix、π0.5/Hi Robot、NVIDIA GR00T N1、Gemini Robotics-ER 均是此结构。Chronotope 各成员与之天然对位：brain 接缝（`mindloop`）= S2，经 `bodylink` 执行器接缝触达的控制器 = S1，**memory 层（`tempomem`）填补了所有这些系统共同缺失的"跨帧持久空间状态"**。
 
 3. **世界模型（World Model）是与空间记忆互补而非竞争的第三极。** Cosmos 3、1X World Model、Wayve GAIA-1、Covariant RFM-1、自变量 WUM 做的是像素级 imagination / 合成数据 / 前向预测；Chronotope 做的是结构化、显式、可查询的 3D 对象关系记忆。二者结合（世界模型生成训练数据 + 场景图提供结构化先验降低搜索空间）是有价值的组合，不是替代关系。
 
@@ -88,7 +94,18 @@
 
 **取舍结论**：端到端 VLA 与 dual-system 是"动作生成"主线的两代；世界模型是"数据/想象"辅助极；空间记忆是"持久状态/记忆"极。**这三极正交互补**——Chronotope 应明确站在"空间记忆极"，做 dual-system S2 的外挂记忆与 world model 的结构化先验提供方，而不是去做第四个 VLA。本仓库代码已天然落在该位置：`serialize(format="prompt")` 产出带 `#id` 的层级场景图 → Reasoner 推理 → `Answer.cited_node_ids` 回指可定位节点，正是"VLM planner + 结构化空间上下文"范式的工程实现。
 
-## 4. 开源可复用组件清单（按三层归类）
+```mermaid
+flowchart TB
+    field["具身大脑赛道<br/>（三个正交、互补的极）"]
+    field --> P1["① 动作生成极<br/>端到端 VLA → dual-system<br/>(π0, Helix, GR00T, OpenVLA)"]
+    field --> P2["② 数据 / 想象极<br/>世界模型 · learned sim<br/>(Cosmos 3, GAIA-1, V-JEPA 2)"]
+    field --> P3["③ 持久状态 / 记忆极<br/>3D 场景图<br/>(ConceptGraphs, Hydra, 3DLLM-Mem)"]
+    P3 --- HERE["★ Chronotope 站这里<br/>S2 的外置记忆"]
+    HERE -.->|外挂记忆| P1
+    HERE -.->|结构化先验| P2
+```
+
+## 4. 开源可复用组件清单（按层归类）
 
 ### 4.1 Memory 层（最核心、与我们直接对位）
 
@@ -147,7 +164,7 @@
 - 复用 **CALVIN**（MIT，语言条件长时程）、**LIBERO**（MIT，终身学习前/后向迁移，与我们 decay/consolidate 直接对应）、**RLBench**（MIT，100+ 任务）、**SimplerEnv**（MIT/Apache，**sim-real 强相关已确认，但定位是"代理"非"替代"，主指标用 MMRV**）。
 - **自建项**：参照 Embodied-RAG（Embodied-Experiences）、3DLLM-Mem（3DMem-Bench）做一个**"空间记忆查询正确性 + cited_node_ids 召回率 + 跨 episode 持久性 + decay/forget 正确性"**的评测集。这是当前无人占据、且直接证明我们价值主张的空白，应优先自建。
 
-## 6. 对 SpatialRobot 的 Vision / 架构建议
+## 6. 对 Chronotope 的 Vision / 架构建议
 
 ### 6.1 差异化 wedge：空间记忆层确是稀缺位
 
