@@ -59,7 +59,7 @@ The table below lists all the bets this document admits are not yet closed. Each
 | OQ-1 | **Who is the first paying party?** | Completely blank (research: not a single party procures spatial memory as a standalone line item) | 1 customer prototype willing to pay for some product form (even a hypothetical ICP + 1 real interview as corroboration) | §6 |
 | OQ-2 | **Open-source license + Open Core dividing line** | Blank | Decide the distribution license + at least 1 "enterprise-only" feature list + first commercial product form | §6 |
 | OQ-3 | **Why won't robot-body vendors / brain vendors build it themselves?** | Only a "time window" argument (weak) | At least 1 **organizational / economic structural** reason; otherwise honestly mark it a "time-window bet" | §4.3 |
-| OQ-4 | **The tipping point at which next-gen S2 internalizes memory** | Signals have appeared (π0.7 added MEM) | Write an explicit "wedge failure tipping condition", and use it to draw the line between "safe scenarios / fragile scenarios" | §7.1 |
+| OQ-4 | **The tipping point at which next-gen S2 internalizes memory** | Signals have appeared (π0.7 steers via prompt context — the memory mount point — but ships no persistent memory) | Write an explicit "wedge failure tipping condition", and use it to draw the line between "safe scenarios / fragile scenarios" | §7.1 |
 | OQ-5 | **Whether RoboOS / InternRobotics ship their own scene graph** | Not verified (decides "complementary" vs "subsumed") | A one-week spike research doc at the end of P1; the conclusion decides the P2 direction | §7.2, §8 |
 | OQ-6 | **The real recall of `Brain.ask()` in large scenes** | Currently full-graph truncation (the code has been verified to have this flaw) | "query-filter the subgraph first, then serialize" engineering delivery + an over-budget evaluation scenario | §2.3, §8 |
 | OQ-7 | **The reliability of `cited_node_ids`** | Pure regex extraction; any format drift silently yields `[]` | Two-layer evaluation (format-compliance rate + content-correctness rate); ship structured output in P2/P3 | §2.4, §8 |
@@ -83,7 +83,7 @@ The leading 2024–2025 companies (Figure Helix, Physical Intelligence π0.5/Hi 
 Here we must distinguish **external first-hand evidence** from **internal analysis** (absorbing strategy critique CRITICAL-1, avoiding self-circular argument):
 
 *External first-hand signals (publicly verifiable, not self-attested by this project):*
-- Physical Intelligence only added a history vision encoder (MEM) **in π0.7** — a leading team admitted the memory gap through a product action;
+- Physical Intelligence's flagship **π0.7** steers via diverse prompt-context conditioning — the natural slot for external memory — yet ships no persistent memory; a leading team leans on the context slot but has not filled the gap;
 - 1X explicitly mentions in its public materials the need for **memory context** to handle drift / partial observability;
 - BAAI's **RoboOS writes "cross-robot spatial memory sharing" directly into its architecture doc**;
 - On the academic side, 3DLLM-Mem on 3DMem-Bench scores **32.1% on hard tasks vs ~5% baseline** (measured in the paper, confirmed) — this is **external third-party data** that "a memory layer brings real, measurable gains."
@@ -93,7 +93,7 @@ Here we must distinguish **external first-hand evidence** from **internal analys
 - Dyna's on-the-job continual learning "needs" persistent environment knowledge — same as above; [internal analysis]
 - Galbot's retail shelf-state tracking "is equivalent to" our capability — same as above. [internal analysis]
 
-> **Closing the wedge self-circularity (half of OQ-3)**: the above "internal analysis" items cannot serve as proof that the wedge holds; they can only serve as leads "worth validating via customer interviews." The real external support for the wedge is only three items: π0.7's product action, RoboOS's architecture doc, and 3DLLM-Mem's third-party data. **When communicating the wedge externally, cite only these three.**
+> **Closing the wedge self-circularity (half of OQ-3)**: the above "internal analysis" items cannot serve as proof that the wedge holds; they can only serve as leads "worth validating via customer interviews." The real external support for the wedge is only three items: π0.7's prompt-context reliance (the mount point, with no persistent memory), RoboOS's architecture doc, and 3DLLM-Mem's third-party data. **When communicating the wedge externally, cite only these three.**
 
 **1.4 Academia is already a clear paradigm, but almost no one has engineered it into a pluggable, embeddable, commercially viable standalone component.** [verified · research confirmed] ConceptGraphs, Hydra/Clio, HOV-SG, Embodied-RAG, 3DLLM-Mem, RoboMemory are all implementations of this paradigm, but all are research code or heavy C++/ROS stacks.
 
@@ -231,7 +231,7 @@ The value combinations of the two (not replacement):
 
 The three-segment evidence chain (after distinguishing external evidence from internal analysis, see the discipline in §1.3):
 1. End-to-end VLA and dual-system S2 **structurally lack persistent cross-frame spatial state** — [verified · research confirmed];
-2. Leading companies need it in fact — the **external evidence** is only the three items π0.7 adding MEM, the RoboOS architecture, and 3DLLM-Mem data; the rest is [internal analysis];
+2. Leading companies need it in fact — the **external evidence** is only the three items π0.7's prompt-context reliance (no persistent memory), the RoboOS architecture, and 3DLLM-Mem data; the rest is [internal analysis];
 3. Academia is already a paradigm but **almost no one has built it into a standalone, pluggable, commercially viable, numpy-only engineering component** — [verified · research confirmed].
 
 > **Honest restatement of the nature of the wedge**: the judgment that the wedge holds is **[internal analysis]**, not external independent confirmation. When communicating externally, one must say: "the technical gap is corroborated by three external signals; commercial willingness to pay is not yet verified (OQ-1); the moat's sustainability depends on OQ-3."
@@ -369,7 +369,7 @@ The P2→P3 jump from "release the evaluation set → be adopted by default" lac
 
 ### 7.1 Top risk: next-gen S2 internalizing memory capability + an explicit tipping condition (absorbing strategy critique CRITICAL-2, OQ-4)
 
-The report lists this item as **the wedge's largest long-term risk**: whether next-gen S2 such as Cosmos 3 / RoboBrain 2.5 will internalize memory capability — **the signal has appeared: π0.7 has begun to internalize MEM (history vision encoder).** PI's iteration speed means π1.0 / RoboBrain 3.x have **a fairly high probability of internalizing "30-minute session-level spatial state"** by the end of 2026. The defensive narrative ("play the auditable differentiation") is insufficient to respond; one must give an **explicit failure tipping point**:
+The report lists this item as **the wedge's largest long-term risk**: whether next-gen S2 such as Cosmos 3 / RoboBrain 2.5 will internalize memory capability — **the signal has appeared: π0.7 steers via prompt context — the obvious slot to bolt a memory module onto next.** PI's iteration speed means π1.0 / RoboBrain 3.x have **a fairly high probability of internalizing "30-minute session-level spatial state"** by the end of 2026. The defensive narrative ("play the auditable differentiation") is insufficient to respond; one must give an **explicit failure tipping point**:
 
 **[OQ-4 · internalization tipping-point definition]** When some external S2 simultaneously has **all** of the following capabilities, this project's wedge fails in "the scenarios that S2 serves":
 1. Cross-episode **persistence** (not just a single-session context window);

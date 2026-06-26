@@ -122,6 +122,25 @@ tapping their internal latent is the future track (§6).
 Resume only after the language interface works on real hardware. Summary of the deferred
 plan so it is not lost:
 
+**Goal of fusing the layers.** Sharpen L3's *language + image joint semantics* so the task
+goal is expressed more clearly — the `instruction` / `goal_image` the brain hands to L2
+becomes crisper and more grounded, not just "a verb + ids". Clearer L3 intent → a tighter
+target for the reactive L2 loop.
+
+**Training-data division (the key enabler).** The layers train on *different* data, jointly:
+
+- **L3 planning ← human-task + egocentric (ego) video** — abundant, robot-free; it teaches
+  what the goal *looks like* and how to phrase / condition it. The high-level planner never
+  needs a robot to learn from.
+- **L2 / L1 control ← robot-embodiment data** (teleop / real-robot) — the scarce data,
+  needed only by the low-level controller.
+- **Joint training** back-propagates the action loss across the layers. Because only L2/L1
+  depends on scarce robot data while the planner rides abundant human/ego video, **the
+  end-to-end data barrier drops sharply** — this is what makes the latent track tractable at
+  all (and mirrors how VLA pretraining already leans on human/ego corpora).
+
+The latent *interface* is then built in three escalating tiers:
+
 - **Grounded latent (first):** latent = pooled embedding of the query-relevant subgraph
   (carries `node_ids`, so it keeps partial provenance) → a small trainable **projection
   head** → GR00T **System1** conditioning input. No LLM-service change needed.
@@ -134,6 +153,51 @@ plan so it is not lost:
   (can an action be traced to `node_ids`), linear probing of the latent for scene-graph
   attributes, symbolic↔latent consistency, and ablation (how much does the latent
   actually contribute).
+
+### The grounding red line — why "going latent" is *not* becoming Helix / π0.7
+
+Helix 02 (S2 → S1 → S0, all coupled by **semantic latents**, [figure.ai/news/helix-02](https://www.figure.ai/news/helix-02))
+and π0.7 (4B Gemma-3 VLM backbone + 860M action expert, steered by **prompt context
+conditioning**, [arXiv 2604.15483](https://arxiv.org/abs/2604.15483)) are **latent-only**:
+the latent is the *sole* scene representation, learned end-to-end, with **no explicit
+persistent memory behind it**. Chronotope stays different **only as long as every latent is
+derived from — and lives alongside — the explicit `.smem` graph**:
+
+- Each latent is a **projection of query-relevant nodes that carry `node_ids`** → provenance
+  survives; you can always trace latent → nodes.
+- The explicit graph stays the **source of truth** (persistent, queryable, auditable,
+  cross-episode / cross-robot). The latent is a derived *fast path*, **never** the primary store.
+- **Tier 3 (joint end-to-end) is the red line.** Co-training the LLM + VLA on robot data makes
+  the latent the primary representation, co-bound to one VLA — killing body-swap (D3), audit
+  (B9), the remote brain, and the numpy-only core. At that point Chronotope is just an
+  under-funded Helix. Tiers 1–2 keep the hybrid edge (explicit memory **and** dense latent
+  conditioning); tier 3 stays "last / optional" and may never clear ROI.
+- The interpretability-first evaluation above is exactly the mechanism that keeps the latent
+  **accountable to** the explicit graph. Helix / π0.7 do not do this.
+
+### Latent-izing the scene map itself (the memory representation, not just the bridge)
+
+The same red line applies one layer down — to how the *memory* is represented. The scene map
+can go vector/latent **as a derived layer on top of the symbolic graph, never as a replacement**:
+
+| Layer | Form | Nature |
+|---|---|---|
+| **L0 symbolic graph** | nodes / edges / ids / attributes (`.smem`) | **source of truth** — explicit, queryable, auditable, persistent |
+| **L1 node embeddings** | per-node CLIP / semantic vector + ANN | **already shipped** (semantic-vec query) |
+| **L2 graph encoder** *(new)* | GNN / graph-transformer → structure-aware node / subgraph / scene latents (relations encoded, `node_ids` preserved) | **this is "the scene map as latent"** |
+| **L3 bridge latent** | pooled subgraph latent → policy conditioning | the grounded latent (tier 1 above) |
+
+One investment pays twice: the **L2 graph encoder** gives richer structure-aware *retrieval*
+**and** its pooled subgraph embedding **is** the L3→L2 grounded latent. Avoid the trap of a
+single dense neural field / scene latent that dissolves L0 (loses audit / persistence /
+queryability and forces torch into the core).
+
+**numpy-only core constraint (unchanged):** the core stores numpy vectors and runs ANN; the
+*encoders* (CLIP, the L2 GNN, any dense field) are torch and live **behind an extra / in
+`worldsense` / in a separate encoder layer — never in `tempomem`**. The core only ever
+receives pre-computed vectors. Prior art to mirror: 3D-scene-graph + GNN embeddings (keeps
+structure); CLIP-Fields / LERF / feature-splatting (dense fields — heavier, less auditable,
+keep optional); Embodied-RAG / 3DLLM-Mem (retrieval over scene memory).
 
 References that match this exact pattern: Figure **Helix** (System2 VLM emits one latent
 vector conditioning a fast System1 policy), **LCB** (Latent Codes as Bridges — a learned

@@ -25,7 +25,7 @@
 
 4. **空间记忆 / 3D 场景图已是一个清晰的学术范式，且学术主流的技术选择与 Chronotope 高度一致但更工程化。** ConceptGraphs、Hydra/Clio、HOV-SG、Embodied-RAG、3DLLM-Mem、RoboMemory 都是这一范式的实现；Chronotope 的 numpy-only core + sqlite-vec ANN + PerceptionAdapter 协议 + `#id` 可引用序列化，是把这套学术能力做成可装、可嵌、可商用工程组件的差异化路径。
 
-5. **对我们最关键的启示：Chronotope 不应去和 VLA / 本体 / 大脑大模型正面竞争，而应做"所有 S2 都能挂载的外置空间海马体"。** 几乎每个竞品（π0.7 的 MEM、1X 提到 memory context、FieldAI 无地图导航、DYNA 的在职持续学习、Galbot 货架状态、BAAI RoboOS 的"跨机器人空间记忆共享"）都在事实上需要、但都没有做成独立可复用的持久化空间记忆层。
+5. **对我们最关键的启示：Chronotope 不应去和 VLA / 本体 / 大脑大模型正面竞争，而应做"所有 S2 都能挂载的外置空间海马体"。** 几乎每个竞品（π0.7 靠 prompt 上下文 steer 但无持久记忆、1X 提到 memory context、FieldAI 无地图导航、DYNA 的在职持续学习、Galbot 货架状态、BAAI RoboOS 的"跨机器人空间记忆共享"）都在事实上需要、但都没有做成独立可复用的持久化空间记忆层。
 
 6. **许可与可复用性上，我们的"numpy-only core + 协议接缝"路线天然适配开源生态。** 可直接 fork/port 的高价值开源组件（LeRobot、openpi、ConceptGraphs、Hydra、SAM 2、GroundingDINO、OpenCLIP、Cosmos-Reason、RoboBrain）多为 Apache-2.0 / MIT / BSD；要避开的陷阱是 ORB-SLAM3（GPLv3 传染）、AgiBot World / RoboCasa 部分数据集（CC BY-NC-SA 非商业）、以及 LLaMA-2 衍生权重（7 亿 MAU 条款）。
 
@@ -42,8 +42,8 @@
 | NVIDIA Isaac GR00T + Cosmos | 全栈具身 AI 基础设施 | 双系统 VLA（S2 VLM + S1 DiT）+ World Foundation Model + Isaac 仿真 | 开放权重（N1.7 Apache-2.0；N1/N1.5 为 NVIDIA 非商业许可，**注意权重禁商用**） | 上市公司，未单列具身估值 | GR00T 1.7 Early Access；生态伙伴 Figure/Agility/1X/Unitree | arxiv.org/abs/2503.14734 |
 | Google DeepMind Gemini Robotics | LLM 大厂延伸物理世界 | 双模型：VLA + Robotics-ER（具身推理 VLM） | 闭源 API；ER 1.5 已开放 API；部分基准（ERQA）开源 | Alphabet 内部 | ER 1.5 在 15 项学术基准 SOTA（已确认）；合作 Apptronik/BD/Agility | deepmind.google/blog/gemini-robotics-15... |
 | Tesla Optimus | 车厂跨界量产人形 | FSD 纯视觉 Transformer + RL 仿真 | 闭源 | 内部消化，无独立估值 | **2025 目标 1 万台（非"数千台"）落空，2026.1 Musk 承认零台有用工作** | electrek.co/2026/04/22/... |
-| Figure AI（Helix） | 独立 VLA 创业领跑者 | 端侧双系统 VLA（7B S2 + 80M S1，共享 latent） | 闭源 | **Series C >$10 亿，估值 $39B（≈15× Series B 的 $2.6B，已确认）** | 向 BMW 交付（唯一公开工业客户）；BotQ 量产筹建 | figure.ai/news/series-c |
-| Physical Intelligence（π） | 纯软件机器人 foundation model | PaliGemma VLM + flow matching；π0.7 引入 history vision encoder（MEM） | π0/π0-FAST/π0.5 Apache-2.0（openpi）；π0.6+ 闭源 | Series B $600M，估值 $5.6B；Series C 谈判中（约 $11B+，**待核实**） | π0.6 工厂演示（咖啡机 13h/30+ 杯，**第三方博客来源，待核实**）；企业私测 | github.com/Physical-Intelligence/openpi |
+| Figure AI（Helix） | 独立 VLA 创业领跑者 | 端侧三层 VLA（Helix 02）：S2 语义推理 + S1（200Hz visuomotor）+ S0（1kHz 全身控制），semantic-latent 耦合（[figure.ai/news/helix-02](https://www.figure.ai/news/helix-02)） | 闭源 | **Series C >$10 亿，估值 $39B（≈15× Series B 的 $2.6B，已确认）** | 向 BMW 交付（唯一公开工业客户）；BotQ 量产筹建 | figure.ai/news/series-c |
+| Physical Intelligence（π） | 纯软件机器人 foundation model | PaliGemma VLM + flow matching；π0.7 = 4B Gemma-3 VLM 主干 + 860M action expert（~5B），Knowledge Insulation + prompt context conditioning（[arXiv 2604.15483](https://arxiv.org/abs/2604.15483)） | π0/π0-FAST/π0.5 Apache-2.0（openpi）；π0.6+ 闭源 | Series B $600M，估值 $5.6B；Series C 谈判中（约 $11B+，**待核实**） | π0.6 工厂演示（咖啡机 13h/30+ 杯，**第三方博客来源，待核实**）；企业私测 | github.com/Physical-Intelligence/openpi |
 | Skild AI | "Omni-bodied Brain" | 仿真+人类视频双引擎，omni-bodied | 闭源 | **Series C $14B 估值有间接证据但融资历程与 $30M ARR/盈利均待核实** | 安防/配送/仓储多场景部署（自报） | nvidia.com/case-studies/skild-ai |
 | 1X Technologies | 视频世界模型驱动人形 NEO | 14B 视频生成 WM + IDM；70h 机器人数据 fine-tune（**非严格 zero-shot，需 embodiment fine-tune；推理 11s/5s 动作**） | 闭源 | Series B $100M；传 $1B 轮 $10B 估值 | NEO $20K，2026 消费者交付；订阅 $499/月 | 1x.tech/discover/world-model-self-learning |
 | Wayve | 自动驾驶端到端 + 世界模型 | GAIA-1（9B WM）+ E2E mapless AI Driver | 闭源 | **Series D $1.2B，估值 $8.6B（非"Series C $1.05B"）** | Nissan/Stellantis/Uber 均已签约，**Stellantis 落地 2028 北美（非 2027 日本）** | wayve.ai/press/series-c/ |
@@ -88,7 +88,7 @@
 | 范式 | 代表作 | 核心机制 | 优势 | 劣势 | 趋势取舍 |
 |---|---|---|---|---|---|
 | **端到端 VLA** | RT-2、OpenVLA(7B)、π0、MolmoAct 2、RDT-1B、GR-3、Spirit | 视觉+语言+动作统一单网络，一次前向出动作 token（离散/扩散/流匹配） | 简单、低延迟、无协调开销；OpenVLA 7B 以编码器选择超 RT-2-X 55B **16.5%（已确认；"省 70% GPU 时间"被 updated 为约 87.5%/8x）** | 难 debug 局部故障、跨机型泛化差、长程任务随步数衰减、**无显式场景记忆/无跨帧持久状态** | 仍是 SOTA 基线，但单体路线在长程任务上触顶，正被双系统吸收 |
-| **分层 dual-system（S1+S2）** | Figure Helix、π0.5/Hi Robot、GR00T N1、Gemini Robotics-ER、Fast-in-Slow | S2（7B VLM，7-9Hz，规划）+ S1（80M policy，200Hz，控制），中间用 latent/NL 子指令/action chunk 桥接 | 多时间尺度推理、安全性好、易长程；**2024-25 头部公司趋同（"事实标准"措辞证据偏强；"PsiBot 最早提出"被 refuted）** | 协调延迟、S1/S2 对齐困难、工程复杂；**S2 仍无持久空间记忆** | 工业主流。Fast-in-Slow 用参数共享消协调开销（RLBench 69% vs π0 55%）；三系统加 Critic 提升 OOD |
+| **分层 dual-system（S1+S2）** | Figure Helix、π0.5/Hi Robot、GR00T N1、Gemini Robotics-ER、Fast-in-Slow | S2（7B VLM，7-9Hz，规划）+ S1（80M policy，200Hz，控制），中间用 latent/NL 子指令/action chunk 桥接（**Figure Helix 02 扩成 3 层：+ S0 1kHz 全身控制**） | 多时间尺度推理、安全性好、易长程；**2024-25 头部公司趋同（"事实标准"措辞证据偏强；"PsiBot 最早提出"被 refuted）** | 协调延迟、S1/S2 对齐困难、工程复杂；**S2 仍无持久空间记忆** | 工业主流。Fast-in-Slow 用参数共享消协调开销（RLBench 69% vs π0 55%）；三系统加 Critic 提升 OOD |
 | **世界模型（World Model）** | Cosmos 3、Genie 2/3、1X WM、Wayve GAIA-1、Covariant RFM-1、自变量 WUM、V-JEPA 2 | 视频生成模型模拟环境动态，在 imagination 中 rollout/规划/生成合成数据 | 缓解数据瓶颈、安全评估、策略改进；**Cosmos 3 统一单系统已确认（"30s 预测"待核实）** | 动作一致性、长程误差累积、实时推理代价大、评估指标不统一 | 快速发展；定位为 learned simulator / 合成数据源，**而非替代感知+记忆层** |
 | **空间记忆 / 3D 场景图** | ConceptGraphs、Hydra/Clio、HOV-SG、Embodied-RAG、3DLLM-Mem、RoboMemory、**Chronotope** | RGB-D → 持久化可查询 3D 对象图，为 VLM/LLM 规划器注入结构化空间上下文 | 解决 VLM 无跨帧记忆痛点；轻量、可查询、可引用；3DLLM-Mem 困难任务 **32.1% vs 基线约 5%（已确认）** | 学术为主、少商业产品；稠密 vs 稀疏表示尚未定型；依赖上游感知质量 | 从稀疏对象图→稠密 3D patch、从静态→动态；趋势是与 dual-system 的 S2 集成 |
 
@@ -168,7 +168,7 @@ flowchart TB
 
 ### 6.1 差异化 wedge：空间记忆层确是稀缺位
 
-证据链清晰：(1) 端到端 VLA 与 dual-system S2 **结构性地无持久跨帧空间状态**（OpenVLA/π0/Helix/GR00T/Gemini-ER 均单帧或短上下文）；(2) 头部公司在事实上需要它——π0.7 才补 history vision encoder（MEM）、1X 明确提"需要 memory context 处理 drift/partial observability"、Field AI 无地图导航的定位/重规划痛点、DYNA 的在职持续学习需要持久环境知识、Galbot 货架状态追踪、BAAI RoboOS 把"跨机器人空间记忆实时共享"写进架构；(3) 学术已成范式但**几乎没有人把它做成独立、可装、可商用、numpy-only 的工程组件**（ConceptGraphs/Hydra/Clio/Embodied-RAG/3DLLM-Mem/RoboMemory 都是研究代码或重 C++/ROS 栈）。本仓库的工程选择（numpy-only core、sqlite-vec ANN、`.smem` 单文件、`PerceptionAdapter`/`Verbalizer`/`Reasoner` 三协议接缝、`#id` 可引用序列化、fuse-before-persist 不变量）恰好把这套学术能力做成了**可嵌入任意 S2 的外置海马体**。**结论：wedge 成立，且是中立生态位（中美双方、任意 OpenAI 兼容 Reasoner 都能挂载）。**
+证据链清晰：(1) 端到端 VLA 与 dual-system S2 **结构性地无持久跨帧空间状态**（OpenVLA/π0/Helix/GR00T/Gemini-ER 均单帧或短上下文）；(2) 头部公司在事实上需要它——π0.7 靠 prompt context conditioning（外置记忆的天然挂载口）但自身无持久记忆、1X 明确提"需要 memory context 处理 drift/partial observability"、Field AI 无地图导航的定位/重规划痛点、DYNA 的在职持续学习需要持久环境知识、Galbot 货架状态追踪、BAAI RoboOS 把"跨机器人空间记忆实时共享"写进架构；(3) 学术已成范式但**几乎没有人把它做成独立、可装、可商用、numpy-only 的工程组件**（ConceptGraphs/Hydra/Clio/Embodied-RAG/3DLLM-Mem/RoboMemory 都是研究代码或重 C++/ROS 栈）。本仓库的工程选择（numpy-only core、sqlite-vec ANN、`.smem` 单文件、`PerceptionAdapter`/`Verbalizer`/`Reasoner` 三协议接缝、`#id` 可引用序列化、fuse-before-persist 不变量）恰好把这套学术能力做成了**可嵌入任意 S2 的外置海马体**。**结论：wedge 成立，且是中立生态位（中美双方、任意 OpenAI 兼容 Reasoner 都能挂载）。**
 
 ### 6.2 与各范式的关系（明确不做什么）
 
@@ -210,7 +210,7 @@ flowchart TB
 **需进一步调研的空白：**
 - 各开源场景图组件（Clio、3DLLM-Mem、RoboMemory、Embodied-RAG）的**确切许可证**（多为"待确认"），fork/port 前必须逐仓核 LICENSE。
 - **空间记忆层的商业付费意愿**：现有证据都是"技术上需要"，但没有一家把它作为独立采购项——需做 1–2 个客户访谈验证 GTM。
-- **Cosmos 3 / RoboBrain 2.5 等新一代 S2 是否会内化记忆能力**，从而压缩外置记忆层的空间（π0.7 已开始内化 MEM）——这是 wedge 的最大长期风险，需持续监测。
+- **Cosmos 3 / RoboBrain 2.5 等新一代 S2 是否会内化记忆能力**，从而压缩外置记忆层的空间（π0.7 的 prompt-context 是他们下一步最容易接记忆/RAG 模块的口）——这是 wedge 的最大长期风险，需持续监测。
 - 国内"一脑多形"研究院开源栈（RoboOS / InternRobotics）是否已自带场景图记忆，决定我们是"互补"还是"被覆盖"。
 
 ## 8. 来源（合并去重）

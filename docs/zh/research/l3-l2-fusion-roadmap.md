@@ -106,6 +106,21 @@ flowchart TB
 
 等语言接口真机跑通再捡起。把推迟的方案记下免得丢：
 
+**融合分层的目标。** 让 L3 的*语言 + 图像联合语义*更清晰地表达任务目标——大脑交给 L2 的
+`instruction` / `goal_image` 更锐利、更接地，而不只是"一个动词 + ids"。L3 意图更清晰 → 给
+反应式 L2 环一个更紧的目标。
+
+**分层数据分工（关键使能）。** 各层用*不同*数据，联合训练：
+
+- **L3 规划 ← 人类任务 + 第一视角（ego）视频**——海量、无需机器人本体；它教"目标长什么样"
+  以及怎么措辞 / 条件化。高层规划器从不需要机器人来学。
+- **L2 / L1 控制 ← 机器人本体数据**（遥操作 / 真机）——稀缺数据，仅底层控制器需要。
+- **联合训练**把动作 loss 跨层反传。因为只有 L2/L1 依赖稀缺机器人数据、而规划层吃海量人类/ego
+  视频，**端到端数据门槛大幅下降**——这正是让隐轨道在实践上可行的关键（也呼应 VLA 预训练本就
+  倚重人类/ego 语料）。
+
+隐*接口*再分三级阶梯递进搭建：
+
 - **接地隐（先）：** latent = 查询相关子图的池化 embedding（带 `node_ids`，保部分溯源）
   → 小的可训**投影头** → GR00T **System1** 条件口。不需改 LLM 服务。
 - **LLM-hidden 隐（次）：** 把 Cosmos-Reason 重服务化暴露 pooled hidden（vLLM
@@ -114,6 +129,43 @@ flowchart TB
   反传。上之前评 ROI——它打破远程脑、换身、审计。
 - **可解释性优先评测**（选的优先项）：溯源完整率（动作能否回指 `node_ids`）、对 latent
   做线性探针测它编码了什么场景图属性、符号↔隐一致性、消融（latent 真贡献多少）。
+
+### grounding 红线 —— 为什么"走 latent"≠ 变成 Helix / π0.7
+
+Helix 02（S2 → S1 → S0，全靠 **semantic latent** 耦合，[figure.ai/news/helix-02](https://www.figure.ai/news/helix-02)）
+与 π0.7（4B Gemma-3 VLM 主干 + 860M action expert，靠 **prompt context conditioning** steer，
+[arXiv 2604.15483](https://arxiv.org/abs/2604.15483)）都是 **latent-only**：latent 是*唯一*的场景
+表示，端到端学出来，**背后没有显式持久记忆**。Chronotope 保持不同，**前提是每个 latent 都从显式
+`.smem` 图派生、且图仍并存**：
+
+- 每个 latent 都是**带 `node_ids` 的查询相关节点的投影** → 溯源存活，永远能 latent → 节点反查。
+- 显式图仍是 **source of truth**（持久、可查、可审计、跨回合/跨机）。latent 只是派生的*快路*，
+  **永不**作主存储。
+- **Tier 3（联合端到端）是红线。** 把 LLM + VLA 在机器人数据上共训,会让 latent 变成主表示、
+  绑死一个特定 VLA —— 杀换身(D3)、审计(B9)、远程脑、numpy-only 核。这时 Chronotope 就是个没钱版
+  Helix。Tier 1–2 保住混合优势（显式记忆 **+** 稠密 latent 条件）；tier 3 仍标"最后/可选",可能永
+  远不值。
+- 上面的可解释优先评测,正是逼 latent **对显式图负责**的机制。Helix / π0.7 不做这个。
+
+### 把场景图本身 latent 化（记忆表示，不只是桥）
+
+同一条红线往下一层 —— 落到*记忆*怎么表示。场景图可以走向量/latent，**但作为符号图之上的派生层,
+绝不替代它**：
+
+| 层 | 形态 | 性质 |
+|---|---|---|
+| **L0 符号图** | 节点 / 边 / id / 属性（`.smem`） | **source of truth** —— 显式、可查、可审计、持久 |
+| **L1 节点嵌入** | 每节点 CLIP / 语义向量 + ANN | **已交付**（语义向量查询） |
+| **L2 图编码器** *（新）* | GNN / graph-transformer → 结构感知的节点 / 子图 / 整图 latent（关系也编进去，保 `node_ids`） | **这才是"场景图变 latent"** |
+| **L3 桥 latent** | 池化子图 latent → 策略条件 | 接地隐（上面的 tier 1） |
+
+一份投入两份收益：**L2 图编码器**给出结构感知的更准*检索*,**且**它的池化子图 embedding **就是**
+L3→L2 的接地隐。避开陷阱：单一稠密神经场 / 整图 latent 溶掉 L0（丢审计/持久/可查 + 逼 torch 进核）。
+
+**numpy-only 核约束（不变）：** 核只存 numpy 向量 + 跑 ANN；*编码器*（CLIP、L2 GNN、任何稠密场）是
+torch，住在 **extra 后 / `worldsense` / 单独编码层 —— 绝不进 `tempomem`**。核拿到的永远是算好的向量。
+可对标先验：3D-scene-graph + GNN 嵌入（保结构）；CLIP-Fields / LERF / feature-splatting（稠密场——
+更重、可审计差，做可选）；Embodied-RAG / 3DLLM-Mem（场景记忆检索）。
 
 对标此模式的工作：Figure **Helix**（System2 VLM 出单个隐向量条件化快 System1 策略）、
 **LCB**（Latent Codes as Bridges——学一个 `<ACT>` token 桥接 LLM 与策略，端到端训）、
