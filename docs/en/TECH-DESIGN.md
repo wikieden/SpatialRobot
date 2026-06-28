@@ -7,7 +7,7 @@ A consolidated, *current-state* view of the stack as built. Vision lives in
 pieces fit, what is contractual, and what is still pending. Detailed specs are
 cross-linked, not duplicated.
 
-**Date:** 2026-06-28. **Milestones reached:** M-L3.1 (P1) ✅, M-L3.2 (P2+P3) ✅.
+**Date:** 2026-06-28. **Milestones reached:** M-L3.1 (P1) ✅, M-L3.2 (P2+P3) ✅, M-L3.3 (P4+P5) ✅.
 
 ---
 
@@ -81,7 +81,8 @@ What's implemented per phase:
 | **P2** ✅ | Episteme skill-card library (procedural knowledge as data) | [P2](../../mindloop/docs/en/devplan/specs/P2-episteme-skill-cards.md) |
 | **P3** ✅ | Phylax policy tier (semantic safety gate) | [P3](../../mindloop/docs/en/devplan/specs/P3-phylax-policy.md) |
 | **P4** ✅ | L4 trace + failure-driven replanning (bounded; B3 typed errors) | [P4](../../mindloop/docs/en/devplan/specs/P4-trace-replanning.md) |
-| P5–P6 | dialogue + full loop · production reasoner + eval | pending |
+| **P5** ✅ | dialogue + full S2 loop (multi-turn + L5 prefs; e2e reproduced) | [P5](../../mindloop/docs/en/devplan/specs/P5-dialogue-full-loop.md) |
+| P6 | production reasoner + eval + cloud bootstrap | pending |
 | **P7** | edge fallback — on-body offline AI chain (LLM + ASR + TTS) | [P7](../../mindloop/docs/en/devplan/specs/P7-edge-fallback.md) · planned |
 
 ---
@@ -145,12 +146,12 @@ The seam is governed by ratified decisions — the load-bearing invariants:
 
 ## 6. What's done vs pending
 
-**Done:** P0 seam · P1 plan · P2 skill cards · P3 safety gate (M-L3.1, M-L3.2) ·
-bodylink multi-model framework (4 builtins, SDK, conformance) · Genesis sim
-(host + mac) · P4 L4 trace + bounded replanning · the planner/reasoner LLM deployment.
+**Done:** P0 seam · P1 plan · P2 skill cards · P3 safety gate · P4 trace + bounded
+replanning · **P5 dialogue + full S2 loop (M-L3.1, M-L3.2, M-L3.3)** · bodylink
+multi-model framework (4 builtins, SDK, conformance) · Genesis sim (host + mac) ·
+the planner/reasoner LLM deployment.
 
 **Pending:**
-- **P5** — dialogue + the full S2 loop.
 - **P6** — production reasoner + eval harness + cloud bootstrap.
 - **Body** — a true *hardware* adapter (real robot transport, not the sim); and
   deepening the coarse sim (per-robot IK / MJCF keyframes like B2R's 49-DOF G1).
