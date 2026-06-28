@@ -11,6 +11,10 @@ A bipedal humanoid and a wheeled humanoid differ to the brain **only in their
 declared verbs**. How `navigate` is realized — legs vs wheels — lives below L2, in
 the device package, invisible to the planner.
 
+> This is the **how-to**. For *why* it is shaped this way (the D3 rationale,
+> alternatives, scaling/versioning/security), see the design doc:
+> [multi-model-adaptation-design.md](multi-model-adaptation-design.md).
+
 ## Two pieces
 
 ### 1. A `CapabilityManifest` — the model, as data

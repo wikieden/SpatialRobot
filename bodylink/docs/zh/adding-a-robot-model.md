@@ -9,6 +9,9 @@ Chronotope 的大脑（`mindloop`）以**技能动词**规划、派发携带场�
 双足人形和轮式人形对大脑的区别**只在声明的动词**。`navigate` 怎么实现 —— 腿还是轮 ——
 在 L2 以下、设备包里，规划器看不见。
 
+> 这是**怎么做**。要看*为什么*这样设计（D3 依据、备选权衡、扩展/版本/安全），见设计方案：
+> [multi-model-adaptation-design.md](multi-model-adaptation-design.md)。
+
 ## 两件东西
 
 ### 1. 一个 `CapabilityManifest` —— 机型即数据

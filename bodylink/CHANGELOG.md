@@ -32,6 +32,9 @@ versions follow SemVer (pre-1.0, the API may change between minor releases).
     body runs to prove it honors the seam (manifest well-formed, dispatch reaches
     terminal, node ids echoed B9, undeclared verb refused D3, typed error B3).
     The two reference bodies (g1d, h1) pass it.
+  - **Docs** — `docs/en|zh/multi-model-adaptation-design.md` (design rationale: D3,
+    alternatives, scaling/versioning/security) + `docs/en|zh/adding-a-robot-model.md`
+    (how-to).
 
 ### Changed
 
