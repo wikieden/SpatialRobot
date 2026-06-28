@@ -15,7 +15,10 @@ dependencies = ["mindloop"]
 [project.optional-dependencies]
 # Physics sim (Genesis/Isaac) lives behind [sim] (D5) — not a core dependency.
 sim = []
-dev = ["pytest", "pytest-cov", "ruff", "pyright"]
+# Load a vendor CapabilityManifest from a *.yaml file (load_manifest("path.yaml")).
+# Builtin profiles (g1d/h1) need no dep; this is only for external YAML manifests.
+manifests = ["pyyaml"]
+dev = ["pytest", "pytest-cov", "ruff", "pyright", "pyyaml"]
 
 [project.urls]
 Brain = "https://github.com/wikieden/mindloop"
