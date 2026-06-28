@@ -81,6 +81,7 @@ What's implemented per phase:
 | **P2** ✅ | Episteme skill-card library (procedural knowledge as data) | [P2](../../mindloop/docs/en/devplan/specs/P2-episteme-skill-cards.md) |
 | **P3** ✅ | Phylax policy tier (semantic safety gate) | [P3](../../mindloop/docs/en/devplan/specs/P3-phylax-policy.md) |
 | P4–P6 | trace + replanning · dialogue + full loop · production reasoner + eval | pending |
+| **P7** | edge fallback — on-body offline AI chain (LLM + ASR + TTS) | [P7](../../mindloop/docs/en/devplan/specs/P7-edge-fallback.md) · planned |
 
 ---
 
@@ -151,3 +152,10 @@ bodylink multi-model framework (4 builtins, SDK, conformance) · Genesis sim
 - **Body** — a true *hardware* adapter (real robot transport, not the sim); and
   deepening the coarse sim (per-robot IK / MJCF keyframes like B2R's 49-DOF G1).
 - **Phylax** — the symbolic-BT (bodylink) + reflex (firmware) tiers of D4.
+- **P7 edge fallback** — on-body offline AI chain: `FailoverVerbalizer`
+  (remote → on-body LLM on a `QueryError`, reusing the `Verbalizer` seam) + new
+  `Listener` (ASR) / `Speaker` (TTS) seams + a connectivity-aware mode arbiter.
+  When the network drops, the robot still hears, plans (skill-card or on-body
+  LLM), passes the local safety gate, acts, and speaks — safety and memory are
+  already local, so they never go offline. Spec:
+  [P7-edge-fallback](../../mindloop/docs/en/devplan/specs/P7-edge-fallback.md).

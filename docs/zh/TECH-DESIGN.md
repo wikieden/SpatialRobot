@@ -74,6 +74,7 @@ instruction
 | **P2** ✅ | Episteme 技能卡库（程序性知识即数据） | [P2](../../mindloop/docs/zh/devplan/specs/P2-episteme-skill-cards.md) |
 | **P3** ✅ | Phylax 策略层（语义安全 gate） | [P3](../../mindloop/docs/zh/devplan/specs/P3-phylax-policy.md) |
 | P4–P6 | 痕迹+重规划 · 对话+完整回路 · 生产 reasoner+eval | 待做 |
+| **P7** | 边缘回退 —— 本体离线 AI 链路（LLM + ASR + TTS） | [P7](../../mindloop/docs/zh/devplan/specs/P7-edge-fallback.md) · 计划中 |
 
 ---
 
@@ -135,3 +136,8 @@ bodylink 多机型框架（4 内置、SDK、一致性）· Genesis 仿真（主�
 - **身体** —— 真正的*硬件* adapter（真机传输，非仿真）；并深化粗粒度仿真（逐机器人 IK /
   MJCF 关键帧，如 B2R 的 49-DOF G1）。
 - **Phylax** —— D4 的符号-BT（bodylink）+ 反射（固件）两层。
+- **P7 边缘回退** —— 本体离线 AI 链路：`FailoverVerbalizer`（遇 `QueryError` 远端→本体
+  LLM，复用 `Verbalizer` seam）+ 新 `Listener`（ASR）/ `Speaker`（TTS）seam + 连通性感知
+  模式仲裁。断网时机器人仍听到、规划（技能卡或本体 LLM）、过本地安全 gate、动作、说话 ——
+  安全与记忆本就本地、永不离线。spec：
+  [P7-edge-fallback](../../mindloop/docs/zh/devplan/specs/P7-edge-fallback.md)。
