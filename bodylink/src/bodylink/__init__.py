@@ -16,6 +16,13 @@ from .adapter import BaseExecutorAdapter, UnsupportedVerbError
 from .conformance import check_executor_adapter
 from .manifest import list_profiles, load_manifest, manifest_from_dict
 from .mock import MockBody, g1d_manifest
+from .sim import (
+    GenesisSimBackend,
+    MockSimBackend,
+    SceneObject,
+    SimBackend,
+    make_sim_backend,
+)
 
 __version__ = "0.1.0a0"
 
@@ -27,12 +34,17 @@ def h1_manifest():
 
 __all__ = [
     "BaseExecutorAdapter",
+    "GenesisSimBackend",
     "MockBody",
+    "MockSimBackend",
+    "SceneObject",
+    "SimBackend",
     "UnsupportedVerbError",
     "check_executor_adapter",
     "g1d_manifest",
     "h1_manifest",
     "list_profiles",
     "load_manifest",
+    "make_sim_backend",
     "manifest_from_dict",
 ]

@@ -41,6 +41,18 @@ versions follow SemVer (pre-1.0, the API may change between minor releases).
     pluggable `backend` transport seam (where a real robot's HTTP/ROS bridge
     plugs in; defaults to an in-process sim). Maps a backend failure to a typed
     `COMM_LOST`, supports injected typed faults for replan tests (P4).
+  - **Physics-simulator backends** (`bodylink.sim`, behind the `sim` extra, D5) —
+    a `backend` for `SimDeviceAdapter` that realizes a gated verb in a physics
+    world. `MockSimBackend` (no deps, records calls — the CI default) and
+    `GenesisSimBackend` (a real Genesis scene: `gs.init` → `gs.Scene` →
+    `add_entity` → `build` → `step`, mirroring Brain2Robot's `GenesisL1`).
+    `make_sim_backend("mock"|"genesis", …)` selects the backend the way B2R
+    selects `L1_BACKEND`; Isaac slots in later. Verb realization is a coarse
+    walking-skeleton (locomotion approaches the target object + steps physics,
+    others settle N steps) — per-robot kinematics deepen later; the brain sends
+    node ids only (B8), the backend resolves them via `node_map`. GPU-free tests
+    exercise the Genesis path through an injected fake module; the real sim runs
+    via `examples/genesis_demo.py` (`BODYLINK_SIM=genesis`).
   - **Multi-model demo** (`examples/multi_model_demo.py`, CI-tested) — one brain +
     the P2 laundry skill card driving every builtin body through `SimDeviceAdapter`:
     g1d (wheeled) and h1/gr1 (bipedal) run the identical plan to SUCCESS; arm6
