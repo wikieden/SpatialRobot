@@ -132,6 +132,10 @@ The seam is governed by ratified decisions — the load-bearing invariants:
 - **Planner / IntentRouter**: a strong instruction-follower (Qwen3.6, thinking
   off via `extra_body`) for clean verb sequences — the dual-model split is the
   quality sweet spot; a single Cosmos also works (with the `default_speak` floor).
+- **On-body (P7 edge fallback)**: the **same Qwen-aligned split, smaller** —
+  Reasoner = Cosmos-Reason2 (2B/8B), Planner = Qwen3.x-8B, plus Qwen3-ASR /
+  Qwen3-TTS (small) for speech — reached via `FailoverVerbalizer` when the network
+  drops (no brain change).
 - **Sim**: Genesis (CPU backend) on the host and locally on macOS.
 - Tests are **network-free**: `ScriptedReasoner`, hash encoders, dict skill cards,
   injected fake-genesis — no LLM or model download in any test.

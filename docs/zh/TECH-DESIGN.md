@@ -117,6 +117,9 @@ seam 由已批准决策治理 —— 承重不变量：
   `CosmosReasonVerbalizer`（stdlib，任意 `/v1/chat`）。
 - **Planner / IntentRouter**：强指令遵循模型（Qwen3.6，`extra_body` 关思考）出干净动词序列 ——
   双模型裂解是质量甜点；单 Cosmos 也行（靠 `default_speak` 兜底）。
+- **本体（P7 边缘回退）**：**与线上同款 Qwen 对齐双裂解、只是更小** —— Reasoner =
+  Cosmos-Reason2（2B/8B），Planner = Qwen3.x-8B，加 Qwen3-ASR / Qwen3-TTS（small）做语音 ——
+  断网时经 `FailoverVerbalizer` 接入（大脑零改动）。
 - **仿真**：Genesis（CPU backend）主机 + 本地 macOS。
 - 测试**无网络**：`ScriptedReasoner`、hash encoder、dict 技能卡、注入 fake-genesis ——
   任何测试不碰 LLM 或模型下载。
