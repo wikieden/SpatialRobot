@@ -7,7 +7,9 @@ A consolidated, *current-state* view of the stack as built. Vision lives in
 pieces fit, what is contractual, and what is still pending. Detailed specs are
 cross-linked, not duplicated.
 
-**Date:** 2026-06-28. **Milestones reached:** M-L3.1 (P1) ✅, M-L3.2 (P2+P3) ✅, M-L3.3 (P4+P5) ✅.
+**Date:** 2026-06-28. **Milestones:** M-L3.1 (P1) ✅, M-L3.2 (P2+P3) ✅, M-L3.3
+(P4+P5) ✅, M-L3.4 (P6) ◐ (eval + real-LLM drive; Thor pending), M-L3.5 (P7) ◐
+(failover + voice; engines pending). Brain suite: 110 network-free tests.
 
 ---
 
@@ -72,6 +74,17 @@ are deterministic. The chain is one-directional and never falls back to a rule
   (lower must-not overrides upper want-to). Opt-in.
 - **⑤ dispatch:** verb-level only; the body realizes verbs below L2.
 
+**Stages between compile and dispatch (later phases, opt-in):** an **L5 preference
+overlay** (P5 — a person's prefs override card defaults, manifest-gated) sits
+between ③ and ④. The dispatch step ⑤ is a **loop**, not one shot: a typed `FAILED`
+feeds the **bounded replanner** (P4); a confirmed success writes its effects to a
+symbolic **world-state overlay** (P2, injected into the next context so a multi-step
+task stays grounded without re-perceiving); a step the world-state already satisfies
+is **idempotently skipped** (P3-dyn); and **active perception** may re-look between
+steps and trigger a bounded **tail re-plan** from fresh context (P4-dyn). This is
+the perceive-act-update cycle —
+[dynamic scene context](../../mindloop/docs/en/research/dynamic-scene-context.md).
+
 What's implemented per phase:
 
 | Phase | What | Spec |
@@ -82,8 +95,9 @@ What's implemented per phase:
 | **P3** ✅ | Phylax policy tier (semantic safety gate) | [P3](../../mindloop/docs/en/devplan/specs/P3-phylax-policy.md) |
 | **P4** ✅ | L4 trace + failure-driven replanning (bounded; B3 typed errors) | [P4](../../mindloop/docs/en/devplan/specs/P4-trace-replanning.md) |
 | **P5** ✅ | dialogue + full S2 loop (multi-turn + L5 prefs; e2e reproduced) | [P5](../../mindloop/docs/en/devplan/specs/P5-dialogue-full-loop.md) |
-| P6 | production reasoner + eval + cloud bootstrap | pending |
-| **P7** | edge fallback — on-body offline AI chain (LLM + ASR + TTS) | [P7](../../mindloop/docs/en/devplan/specs/P7-edge-fallback.md) · planned |
+| **P6** ◐ | eval harness + real Cosmos+Qwen drive validated (Thor pending HW) | [P6 §DEV-PLAN](../../mindloop/docs/en/devplan/DEV-PLAN.md) |
+| **P7** ◐ | edge fallback — `FailoverVerbalizer` (P7.1) + voice seams (P7.2) done; engines/HW pending | [P7](../../mindloop/docs/en/devplan/specs/P7-edge-fallback.md) |
+| **dyn-scene** ✅ | dynamic scene context — seam + world-state write-back + idempotent skip + active perception | [research](../../mindloop/docs/en/research/dynamic-scene-context.md) |
 
 ---
 
@@ -147,12 +161,17 @@ The seam is governed by ratified decisions — the load-bearing invariants:
 ## 6. What's done vs pending
 
 **Done:** P0 seam · P1 plan · P2 skill cards · P3 safety gate · P4 trace + bounded
-replanning · **P5 dialogue + full S2 loop (M-L3.1, M-L3.2, M-L3.3)** · bodylink
-multi-model framework (4 builtins, SDK, conformance) · Genesis sim (host + mac) ·
-the planner/reasoner LLM deployment.
+replanning · **P5 dialogue + full S2 loop (M-L3.1, M-L3.2, M-L3.3)** · P6 eval
+harness + real Cosmos+Qwen drive validated · P7.1 LLM failover + P7.2 voice seams ·
+**dynamic scene context (4 phases — world-state write-back, idempotent skip, active
+perception)** · bodylink multi-model framework (4 builtins, SDK, conformance) ·
+Genesis sim (host + mac) · the planner/reasoner LLM deployment. **110 brain tests.**
 
 **Pending:**
-- **P6** — production reasoner + eval harness + cloud bootstrap.
+- **P6 tail** — make Cosmos the standard reasoner end-to-end + the cloud→Thor
+  switch (needs the host kept live / Thor hardware); ratify eval thresholds.
+- **P7 tail** — P7.3 on-body engines (Qwen3-ASR/TTS + edge LLM on Jetson) + P7.4
+  degradation/telemetry (needs edge hardware).
 - **Body** — a true *hardware* adapter (real robot transport, not the sim); and
   deepening the coarse sim (per-robot IK / MJCF keyframes like B2R's 49-DOF G1).
 - **Phylax** — the symbolic-BT (bodylink) + reflex (firmware) tiers of D4.
