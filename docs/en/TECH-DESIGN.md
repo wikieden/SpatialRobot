@@ -80,7 +80,8 @@ What's implemented per phase:
 | **P1** ✅ | intent routing + two-stage planning (LLM verbs → rule compile) | [P1](../../mindloop/docs/en/devplan/specs/P1-intent-planning.md) |
 | **P2** ✅ | Episteme skill-card library (procedural knowledge as data) | [P2](../../mindloop/docs/en/devplan/specs/P2-episteme-skill-cards.md) |
 | **P3** ✅ | Phylax policy tier (semantic safety gate) | [P3](../../mindloop/docs/en/devplan/specs/P3-phylax-policy.md) |
-| P4–P6 | trace + replanning · dialogue + full loop · production reasoner + eval | pending |
+| **P4** ✅ | L4 trace + failure-driven replanning (bounded; B3 typed errors) | [P4](../../mindloop/docs/en/devplan/specs/P4-trace-replanning.md) |
+| P5–P6 | dialogue + full loop · production reasoner + eval | pending |
 | **P7** | edge fallback — on-body offline AI chain (LLM + ASR + TTS) | [P7](../../mindloop/docs/en/devplan/specs/P7-edge-fallback.md) · planned |
 
 ---
@@ -146,11 +147,9 @@ The seam is governed by ratified decisions — the load-bearing invariants:
 
 **Done:** P0 seam · P1 plan · P2 skill cards · P3 safety gate (M-L3.1, M-L3.2) ·
 bodylink multi-model framework (4 builtins, SDK, conformance) · Genesis sim
-(host + mac) · the planner/reasoner LLM deployment.
+(host + mac) · P4 L4 trace + bounded replanning · the planner/reasoner LLM deployment.
 
 **Pending:**
-- **P4** — L4 trace + replanning (consume B3 typed errors + negation learning;
-  this is where B2R's `negation_constraints` SubTask field lands).
 - **P5** — dialogue + the full S2 loop.
 - **P6** — production reasoner + eval harness + cloud bootstrap.
 - **Body** — a true *hardware* adapter (real robot transport, not the sim); and

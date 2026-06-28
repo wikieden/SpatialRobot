@@ -73,7 +73,8 @@ instruction
 | **P1** ✅ | 意图路由 + 两段式规划（LLM 动词 → 规则编译） | [P1](../../mindloop/docs/zh/devplan/specs/P1-intent-planning.md) |
 | **P2** ✅ | Episteme 技能卡库（程序性知识即数据） | [P2](../../mindloop/docs/zh/devplan/specs/P2-episteme-skill-cards.md) |
 | **P3** ✅ | Phylax 策略层（语义安全 gate） | [P3](../../mindloop/docs/zh/devplan/specs/P3-phylax-policy.md) |
-| P4–P6 | 痕迹+重规划 · 对话+完整回路 · 生产 reasoner+eval | 待做 |
+| **P4** ✅ | L4 痕迹 + 失败驱动重规划（有界；B3 类型化错误） | [P4](../../mindloop/docs/zh/devplan/specs/P4-trace-replanning.md) |
+| P5–P6 | 对话+完整回路 · 生产 reasoner+eval | 待做 |
 | **P7** | 边缘回退 —— 本体离线 AI 链路（LLM + ASR + TTS） | [P7](../../mindloop/docs/zh/devplan/specs/P7-edge-fallback.md) · 计划中 |
 
 ---
@@ -128,12 +129,11 @@ seam 由已批准决策治理 —— 承重不变量：
 
 ## 6. 已完成 vs 待做
 
-**已完成：** P0 seam · P1 规划 · P2 技能卡 · P3 安全 gate（M-L3.1、M-L3.2）·
-bodylink 多机型框架（4 内置、SDK、一致性）· Genesis 仿真（主机 + mac）· planner/reasoner 部署。
+**已完成：** P0 seam · P1 规划 · P2 技能卡 · P3 安全 gate（M-L3.1、M-L3.2）· P4 L4 痕迹 +
+有界重规划 · bodylink 多机型框架（4 内置、SDK、一致性）· Genesis 仿真（主机 + mac）·
+planner/reasoner 部署。
 
 **待做：**
-- **P4** —— L4 痕迹 + 重规划（消费 B3 typed error + 否定性学习；B2R 的 `negation_constraints`
-  SubTask 字段在此落地）。
 - **P5** —— 对话 + 完整 S2 回路。
 - **P6** —— 生产 reasoner + eval harness + 云引导。
 - **身体** —— 真正的*硬件* adapter（真机传输，非仿真）；并深化粗粒度仿真（逐机器人 IK /
