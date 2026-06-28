@@ -54,6 +54,11 @@ def g1d_manifest() -> CapabilityManifest:
             VerbSpec("detect"),
             VerbSpec("open_door", params=("target",)),
             VerbSpec("charging"),
+            VerbSpec(
+                "operate_appliance",
+                params=("target", "program"),
+                appliance_types=("washer", "stove", "microwave", "dishwasher"),
+            ),
         ),
     )
 

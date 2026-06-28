@@ -10,6 +10,7 @@ resolution-markers = [
 members = [
     "bodylink",
     "mindloop",
+    "skillforge",
     "tempomem",
     "worldsense",
 ]
@@ -586,10 +587,14 @@ dev = [
     { name = "pyright" },
     { name = "pytest" },
     { name = "pytest-cov" },
+    { name = "pyyaml" },
     { name = "ruff" },
 ]
 perception = [
     { name = "worldsense" },
+]
+skills = [
+    { name = "pyyaml" },
 ]
 
 [package.metadata]
@@ -598,11 +603,13 @@ requires-dist = [
     { name = "pyright", marker = "extra == 'dev'" },
     { name = "pytest", marker = "extra == 'dev'" },
     { name = "pytest-cov", marker = "extra == 'dev'" },
+    { name = "pyyaml", marker = "extra == 'dev'" },
+    { name = "pyyaml", marker = "extra == 'skills'" },
     { name = "ruff", marker = "extra == 'dev'" },
     { name = "tempomem", editable = "tempomem" },
     { name = "worldsense", marker = "extra == 'perception'", editable = "worldsense" },
 ]
-provides-extras = ["perception", "dev"]
+provides-extras = ["perception", "skills", "dev"]
 
 [[package]]
 name = "mpmath"
@@ -1400,6 +1407,36 @@ sdist = { url = "https://pypi.tuna.tsinghua.edu.cn/packages/58/15/8b3609fd3830ef
 wheels = [
     { url = "https://pypi.tuna.tsinghua.edu.cn/packages/e0/f9/0595336914c5619e5f28a1fb793285925a8cd4b432c9da0a987836c7f822/shellingham-1.5.4-py2.py3-none-any.whl", hash = "sha256:7ecfff8f2fd72616f7481040475a65b2bf8af90a56c89140852d1120324e8686", size = 9755, upload-time = "2023-10-24T04:13:38.866Z" },
 ]
+
+[[package]]
+name = "skillforge"
+version = "0.1.0a0"
+source = { editable = "skillforge" }
+dependencies = [
+    { name = "bodylink" },
+    { name = "mindloop" },
+    { name = "tempomem" },
+]
+
+[package.optional-dependencies]
+dev = [
+    { name = "pyright" },
+    { name = "pytest" },
+    { name = "pytest-cov" },
+    { name = "ruff" },
+]
+
+[package.metadata]
+requires-dist = [
+    { name = "bodylink", editable = "bodylink" },
+    { name = "mindloop", editable = "mindloop" },
+    { name = "pyright", marker = "extra == 'dev'" },
+    { name = "pytest", marker = "extra == 'dev'" },
+    { name = "pytest-cov", marker = "extra == 'dev'" },
+    { name = "ruff", marker = "extra == 'dev'" },
+    { name = "tempomem", editable = "tempomem" },
+]
+provides-extras = ["llm", "dev"]
 
 [[package]]
 name = "sqlite-vec"

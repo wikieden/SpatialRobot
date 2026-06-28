@@ -16,3 +16,10 @@ versions follow SemVer (pre-1.0, the API may change between minor releases).
   Raises `UnsupportedVerbError` for a verb outside the manifest (a planner bug).
 - **`g1d_manifest()`** — the B10 reference `CapabilityManifest` (G1-D wheeled
   humanoid, 32 DOF, 2-D base, the declared verb set).
+
+### Changed
+
+- **`g1d_manifest()` adds the `operate_appliance` verb** (params `target`,
+  `program`; `appliance_types` washer/stove/microwave/dishwasher) so the brain's
+  Episteme skill cards (P2 — laundry, cooking) can drive appliances against
+  `MockBody`. `dispatch()` is verb-agnostic, so no executor change was needed.

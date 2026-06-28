@@ -54,4 +54,5 @@ def test_custom_manifest_overrides_default() -> None:
         "detect",
         "open_door",
         "charging",
+        "operate_appliance",
     }
