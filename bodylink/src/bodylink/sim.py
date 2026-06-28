@@ -92,10 +92,13 @@ def _import_genesis(injected: Any | None = None) -> Any:
         return injected
     try:
         import genesis as gs  # type: ignore[import-not-found]
-    except ModuleNotFoundError as e:  # pragma: no cover - exercised via the extra
+    except ImportError as e:  # pragma: no cover - exercised via the extra
+        # ImportError (not just ModuleNotFoundError): genesis raises a plain
+        # ImportError when genesis is present but torch is missing — the 'sim'
+        # extra ships both, so the same hint covers either gap.
         raise RuntimeError(
-            "bodylink.sim Genesis backend needs the 'sim' extra: "
-            "pip install 'bodylink[sim]'  (or: uv sync --extra sim)"
+            "bodylink.sim Genesis backend needs the 'sim' extra (genesis-world + "
+            "torch): pip install 'bodylink[sim]'  (or: uv sync --extra sim)"
         ) from e
     return gs
 

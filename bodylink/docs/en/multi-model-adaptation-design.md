@@ -246,7 +246,8 @@ the trust decision is deferred to the policy tier, not the loader.
 | State | Item |
 |---|---|
 | ✅ done | manifest catalog, `BaseExecutorAdapter`, conformance kit, builtins across all 3 base_types (g1d wheeled, h1+gr1 bipedal, arm6 fixed), vendor YAML path, how-to guide, **`SimDeviceAdapter`** (realistic streaming reference adapter w/ transport seam, past `MockBody`), **multi-model demo** (one brain + P2 laundry card drives every body; g1d/h1/gr1 identical plan, arm6 D3-degraded) |
-| next | a true **hardware** adapter — a device package whose `backend` drives a real robot (HTTP/ROS), not the in-process sim; `SimDeviceAdapter` is the reference *shape*, not a driver |
+| ✅ done | **physics-simulator backend** (`bodylink.sim`, `sim` extra) — `MockSimBackend` + `GenesisSimBackend` (real Genesis scene, mirrors B2R `GenesisL1`); `make_sim_backend("mock"\|"genesis")`. `examples/genesis_demo.py` runs H1 + the laundry card through real Genesis physics, **verified on a Linux RTX PRO 6000 host and macOS Apple Silicon** |
+| next | a true **hardware** adapter — a device package whose `backend` drives a real robot (HTTP/ROS), not the sim; and deepening the coarse sim (per-robot IK / MJCF G1 keyframes like B2R). `SimDeviceAdapter` is the reference *shape*, not a driver |
 | later | richer `VerbSpec` (typed param schemas, ranges, units); capability *negotiation* (body advertises limits, planner respects payload/reach); more `base_type`s (quadruped, dual-arm fixed); sim adapter behind `[sim]` (D5) |
 | open | should `base_type` ever influence planning (e.g. stair-aware navigation), or stay strictly metadata? (current answer: metadata; revisit only with evidence) |
 

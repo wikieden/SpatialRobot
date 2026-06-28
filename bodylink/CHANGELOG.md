@@ -50,9 +50,13 @@ versions follow SemVer (pre-1.0, the API may change between minor releases).
     selects `L1_BACKEND`; Isaac slots in later. Verb realization is a coarse
     walking-skeleton (locomotion approaches the target object + steps physics,
     others settle N steps) — per-robot kinematics deepen later; the brain sends
-    node ids only (B8), the backend resolves them via `node_map`. GPU-free tests
-    exercise the Genesis path through an injected fake module; the real sim runs
-    via `examples/genesis_demo.py` (`BODYLINK_SIM=genesis`).
+    node ids only (B8), the backend resolves them via `node_map`. The `sim` extra
+    ships `genesis-world` + `torch` (genesis needs torch but does not pin it).
+    GPU-free CI tests exercise the Genesis path through an injected fake module;
+    the **real sim** runs via `examples/genesis_demo.py` (`BODYLINK_SIM=genesis`)
+    and was verified end-to-end on **both** a Linux RTX PRO 6000 host and macOS
+    Apple Silicon (CPU backend) — H1 runs the laundry card, every verb stepping
+    real physics.
   - **Multi-model demo** (`examples/multi_model_demo.py`, CI-tested) — one brain +
     the P2 laundry skill card driving every builtin body through `SimDeviceAdapter`:
     g1d (wheeled) and h1/gr1 (bipedal) run the identical plan to SUCCESS; arm6

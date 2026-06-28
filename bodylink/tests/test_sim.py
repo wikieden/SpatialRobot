@@ -43,8 +43,20 @@ def test_factory_kinds() -> None:
         make_sim_backend("nope")
 
 
-def test_genesis_without_install_raises_with_hint() -> None:
-    # real genesis is not installed in this env -> a clear, actionable error
+def test_genesis_missing_dep_raises_hint(monkeypatch: pytest.MonkeyPatch) -> None:
+    # force the genesis import to fail (whether or not it is installed) so the
+    # 'sim' extra hint is verified deterministically — covers genesis OR torch
+    # missing (genesis raises a plain ImportError when torch is absent).
+    import builtins
+
+    real_import = builtins.__import__
+
+    def _fail_genesis(name: str, *args: object, **kwargs: object) -> object:
+        if name == "genesis":
+            raise ImportError("simulated: genesis/torch not installed")
+        return real_import(name, *args, **kwargs)  # type: ignore[arg-type]
+
+    monkeypatch.setattr(builtins, "__import__", _fail_genesis)
     with pytest.raises(RuntimeError, match=r"sim extra|bodylink\[sim\]"):
         GenesisSimBackend()
 
