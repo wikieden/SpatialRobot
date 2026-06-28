@@ -59,7 +59,11 @@ dev = [
     { name = "pyright" },
     { name = "pytest" },
     { name = "pytest-cov" },
+    { name = "pyyaml" },
     { name = "ruff" },
+]
+manifests = [
+    { name = "pyyaml" },
 ]
 
 [package.metadata]
@@ -68,9 +72,11 @@ requires-dist = [
     { name = "pyright", marker = "extra == 'dev'" },
     { name = "pytest", marker = "extra == 'dev'" },
     { name = "pytest-cov", marker = "extra == 'dev'" },
+    { name = "pyyaml", marker = "extra == 'dev'" },
+    { name = "pyyaml", marker = "extra == 'manifests'" },
     { name = "ruff", marker = "extra == 'dev'" },
 ]
-provides-extras = ["sim", "dev"]
+provides-extras = ["sim", "manifests", "dev"]
 
 [[package]]
 name = "certifi"
