@@ -27,3 +27,6 @@ __pycache__/
 *.swp
 .idea/
 .vscode/
+
+# editor/app backups
+*.bak
