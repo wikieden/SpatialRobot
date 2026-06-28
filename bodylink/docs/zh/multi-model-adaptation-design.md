@@ -207,8 +207,8 @@ IO、无代码执行（YAML 走 `safe_load`），所以加载 manifest 无副作
 
 | 状态 | 项 |
 |---|---|
-| ✅ 已完成 | manifest 目录、`BaseExecutorAdapter`、一致性套件、g1d + h1 内置、厂商 YAML 路径、how-to 指南 |
-| 接下来 | 第 2/3 个**真机** adapter（Unitree H1 / Fourier GR-1）越过 `MockBody`；在 H1 上跑 P2 卡作多机型 demo |
+| ✅ 已完成 | manifest 目录、`BaseExecutorAdapter`、一致性套件、覆盖三种 base_type 的内置（g1d 轮式、h1+gr1 双足、arm6 固定）、厂商 YAML 路径、how-to 指南、**`SimDeviceAdapter`**（带 transport seam 的真实流式参考 adapter，越过 `MockBody`）、**多机型 demo**（一个大脑 + P2 洗衣卡驱动所有本体；g1d/h1/gr1 同一计划，arm6 经 D3 降级）|
+| 接下来 | 真正的**硬件** adapter —— 一个 `backend` 驱动真机（HTTP/ROS）的设备包，非进程内 sim；`SimDeviceAdapter` 是参考*形态*、不是驱动 |
 | 后续 | 更丰富 `VerbSpec`（类型化参数 schema、范围、单位）；能力*协商*（本体声明上限，规划器尊重载荷/可达）；更多 `base_type`（四足、双臂固定）；`[sim]` 后的 sim adapter（D5） |
 | 待定 | `base_type` 是否该影响规划（如台阶感知导航），还是严格元数据？（当前答案：元数据；有证据再议） |
 

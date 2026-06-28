@@ -245,8 +245,8 @@ the trust decision is deferred to the policy tier, not the loader.
 
 | State | Item |
 |---|---|
-| ✅ done | manifest catalog, `BaseExecutorAdapter`, conformance kit, g1d + h1 builtins, vendor YAML path, how-to guide |
-| next | a 2nd/3rd **real** adapter (Unitree H1 / Fourier GR-1) past `MockBody`; run P2 cards on H1 as the multi-model demo |
+| ✅ done | manifest catalog, `BaseExecutorAdapter`, conformance kit, builtins across all 3 base_types (g1d wheeled, h1+gr1 bipedal, arm6 fixed), vendor YAML path, how-to guide, **`SimDeviceAdapter`** (realistic streaming reference adapter w/ transport seam, past `MockBody`), **multi-model demo** (one brain + P2 laundry card drives every body; g1d/h1/gr1 identical plan, arm6 D3-degraded) |
+| next | a true **hardware** adapter — a device package whose `backend` drives a real robot (HTTP/ROS), not the in-process sim; `SimDeviceAdapter` is the reference *shape*, not a driver |
 | later | richer `VerbSpec` (typed param schemas, ranges, units); capability *negotiation* (body advertises limits, planner respects payload/reach); more `base_type`s (quadruped, dual-arm fixed); sim adapter behind `[sim]` (D5) |
 | open | should `base_type` ever influence planning (e.g. stair-aware navigation), or stay strictly metadata? (current answer: metadata; revisit only with evidence) |
 
