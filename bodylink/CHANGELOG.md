@@ -19,11 +19,14 @@ versions follow SemVer (pre-1.0, the API may change between minor releases).
 - **Multi-model adaptation framework (D3)** — supporting a new robot is now adding
   a manifest, not code:
   - **`manifest` catalog** — `load_manifest(name|path)` resolves builtin profiles
-    (`g1d` wheeled humanoid, `h1` bipedal/legged humanoid — `list_profiles()`)
     from stdlib dicts (no dependency), or an external vendor `*.yaml`
-    (`manifest_from_dict` + lazy PyYAML behind the `manifests` extra). `h1`
-    declares a bipedal-only `climb_stair` verb a wheeled base lacks — the D3 gate
-    handles the difference with no brain change. `manifests/_TEMPLATE.yaml` +
+    (`manifest_from_dict` + lazy PyYAML behind the `manifests` extra). Builtins
+    (`list_profiles()`) span all three base_types: `g1d` (wheeled humanoid, 32
+    DOF), `h1` + `gr1` (bipedal/legged humanoids — Unitree H1 19 DOF, Fourier GR-1
+    40 DOF — both declare a `climb_stair` verb a wheeled base lacks), and `arm6` (a
+    fixed 6-DOF manipulator that omits `navigate`/`charging`/`climb_stair`,
+    proving the framework covers non-locomotion bodies). The D3 gate handles every
+    capability difference with no brain change. `manifests/_TEMPLATE.yaml` +
     `manifests/fourier_gr1.yaml` are copy-me authoring templates.
   - **`BaseExecutorAdapter` SDK** — a device package subclasses it and implements
     only `_execute()`; the base handles the verb gate (D3), the RUNNING→terminal
@@ -31,7 +34,18 @@ versions follow SemVer (pre-1.0, the API may change between minor releases).
   - **`check_executor_adapter()` conformance kit** — a portable contract check any
     body runs to prove it honors the seam (manifest well-formed, dispatch reaches
     terminal, node ids echoed B9, undeclared verb refused D3, typed error B3).
-    The two reference bodies (g1d, h1) pass it.
+    All builtin bodies (g1d, h1, gr1, arm6) pass it.
+  - **`SimDeviceAdapter` reference adapter** (`examples/sim_device.py`) — the
+    realistic shape a real vendor device package follows, past `MockBody`: streams
+    RUNNING → intermediate progress → terminal, and routes actuation through a
+    pluggable `backend` transport seam (where a real robot's HTTP/ROS bridge
+    plugs in; defaults to an in-process sim). Maps a backend failure to a typed
+    `COMM_LOST`, supports injected typed faults for replan tests (P4).
+  - **Multi-model demo** (`examples/multi_model_demo.py`, CI-tested) — one brain +
+    the P2 laundry skill card driving every builtin body through `SimDeviceAdapter`:
+    g1d (wheeled) and h1/gr1 (bipedal) run the identical plan to SUCCESS; arm6
+    (fixed) has `navigate` dropped by the D3 gate — graceful degradation, no brain
+    change.
   - **Docs** — `docs/en|zh/multi-model-adaptation-design.md` (design rationale: D3,
     alternatives, scaling/versioning/security) + `docs/en|zh/adding-a-robot-model.md`
     (how-to).

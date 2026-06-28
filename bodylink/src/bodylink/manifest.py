@@ -48,6 +48,22 @@ _COMMON_VERBS: tuple[dict[str, Any], ...] = (
     },
 )
 
+# Verbs for a fixed-base manipulator: manipulation + appliance use only. A bolted
+# arm cannot move its base, so the locomotion/charging verbs (navigate, charging,
+# climb_stair) of _COMMON_VERBS are deliberately omitted — demonstrating that the
+# D3 verb tier, not code, is what gates what the brain may plan on a body.
+_ARM_VERBS: tuple[dict[str, Any], ...] = (
+    {"name": "grasp", "params": ["target"]},
+    {"name": "place", "params": ["target", "location"]},
+    {"name": "detect"},
+    {"name": "open_door", "params": ["target"]},
+    {
+        "name": "operate_appliance",
+        "params": ["target", "program"],
+        "appliance_types": ["washer", "stove", "microwave", "dishwasher"],
+    },
+)
+
 # Builtin model profiles (stdlib dicts — the canonical no-dependency source).
 # Add a model here, or ship a YAML and `load_manifest(path)` it.
 _BUILTIN_PROFILES: dict[str, dict[str, Any]] = {
@@ -67,6 +83,25 @@ _BUILTIN_PROFILES: dict[str, dict[str, Any]] = {
         # honor — the D3 gate lets a skill card use `climb_stair` only on bodies
         # that declare it, with no brain change.
         "verbs": [*_COMMON_VERBS, {"name": "climb_stair", "params": ["target"]}],
+    },
+    "gr1": {
+        "profile_id": "gr1",
+        "display_name": "Fourier GR-1",
+        "dof": 40,
+        # legged: a bipedal dexterous humanoid — like h1 it walks, so it declares
+        # the same locomotion verb (climb_stair) a wheeled base cannot honor.
+        "base_type": "legged",
+        "verbs": [*_COMMON_VERBS, {"name": "climb_stair", "params": ["target"]}],
+    },
+    "arm6": {
+        "profile_id": "arm6",
+        "display_name": "Reference 6-DOF Arm",
+        "dof": 6,
+        # fixed: a bolted-down 6-DOF manipulator with no mobility — its verb set
+        # (_ARM_VERBS) omits navigate/charging/climb_stair, proving the framework
+        # covers non-locomotion bodies, not just humanoids.
+        "base_type": "fixed",
+        "verbs": list(_ARM_VERBS),
     },
 }
 
@@ -98,7 +133,7 @@ def manifest_from_dict(data: Mapping[str, Any]) -> CapabilityManifest:
 
 
 def list_profiles() -> tuple[str, ...]:
-    """The builtin model profile ids (``("g1d", "h1")``)."""
+    """The builtin model profile ids (``("g1d", "h1", "gr1", "arm6")``)."""
     return tuple(_BUILTIN_PROFILES)
 
 
