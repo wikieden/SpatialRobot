@@ -11,7 +11,7 @@
 # the PyPI releases.
 
 [tool.uv.workspace]
-members = ["tempomem", "mindloop", "worldsense", "bodylink", "skillforge"]
+members = ["tempomem", "mindloop", "worldsense", "bodylink", "skillforge", "voicelink"]
 
 [tool.uv.sources]
 tempomem = { workspace = true }
@@ -19,6 +19,7 @@ worldsense = { workspace = true }
 mindloop = { workspace = true }
 bodylink = { workspace = true }
 skillforge = { workspace = true }
+voicelink = { workspace = true }
 
 # Shared dev toolchain — one install covers lint/type/test for every member.
 [dependency-groups]
