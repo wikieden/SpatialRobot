@@ -13,3 +13,9 @@
 [submodule "bodylink"]
 	path = bodylink
 	url = https://github.com/wikieden/bodylink.git
+[submodule "skillforge"]
+	path = skillforge
+	url = https://github.com/wikieden/skillforge.git
+[submodule "voicelink"]
+	path = voicelink
+	url = https://github.com/wikieden/voicelink.git
