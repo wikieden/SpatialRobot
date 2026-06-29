@@ -11,7 +11,7 @@ M-L3.4 (P6) ◐（评测 + 真 LLM 驱动；Thor 待）、M-L3.5 (P7) ◐（fail
 
 ---
 
-## 1. 栈 —— 五个包，一个身体隐喻
+## 1. 栈 —— 六个包，一个身体隐喻
 
 ```
 RGB(-D) ─► worldsense (眼) ─► Detection[] ─┐
@@ -32,12 +32,13 @@ RGB(-D) ─► worldsense (眼) ─► Detection[] ─┐
 |---|---|---|
 | **tempomem** | 记忆核 —— `.smem` 场景图、fuse-before-persist、分层 query | 稳定核 |
 | **worldsense** | 眼 —— RGB(-D) → 世界系 `Detection`（CLIP 在 `[clip]` 后） | 稳定 |
-| **mindloop** | 大脑 —— S2 认知回路（P0–P3 完成） | **进行中** |
+| **mindloop** | 大脑 —— 完整 S2 认知回路（P0–P6 + 动态场景） | **进行中** |
 | **bodylink** | 身体 seam —— 填 `ExecutorAdapter`；多机型 + 仿真 | **进行中** |
+| **voicelink** | 语音 seam —— 填 `Listener`/`Speaker`（ASR/TTS）；离线链路（P7） | 进行中 |
 | **skillforge** | 自学习实验室（ENPIRE walking skeleton，v0.1.0a0） | 研究 |
 
 依赖方向：`worldsense → tempomem`、`mindloop → tempomem`、`bodylink → mindloop`、
-`skillforge → 全部`。核心从不 import 其它 —— 只发它们填充的*协议*（`PerceptionAdapter`、
+`voicelink → mindloop`、`skillforge → 全部`。核心从不 import 其它 —— 只发它们填充的*协议*（`PerceptionAdapter`、
 `Verbalizer`；`mindloop` 发 `ExecutorAdapter`）。
 
 ---

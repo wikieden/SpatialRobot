@@ -11,9 +11,11 @@ is just this workspace directory (repos not yet renamed). The split mirrors a bo
 numpy-only memory core, optional GPU-heavy eyes, an LLM brain that drives the loop, a
 body/executor seam, and a self-learning lab on top. The root itself is **not a git repo
 and not a package** — it is a [uv workspace](https://docs.astral.sh/uv/concepts/projects/workspaces/)
-that gives all members a single shared environment. There are **five workspace members**
-(three core + two newer): `bodylink` (P0 reference impl) and `skillforge` (research track,
-working name, `v0.1.0a0` walking skeleton) joined the original triad.
+that gives all members a single shared environment. There are **six workspace members**:
+the original triad (`tempomem`/`worldsense`/`mindloop`) plus `bodylink` (executor seam),
+`voicelink` (voice seam — ASR/TTS, P7), and `skillforge` (research track, working name,
+`v0.1.0a0` walking skeleton). `tempomem`/`worldsense`/`mindloop`/`bodylink` are their own
+git repos (root submodules); `voicelink` + `skillforge` live in the root repo for now.
 
 ```
 RGB(-D) ─► worldsense (eyes) ─► Detections
@@ -36,6 +38,7 @@ RGB(-D) ─► worldsense (eyes) ─► Detections
 | `worldsense/` | `worldsense` | Eyes — RGB(-D) → world-frame `Detection`s; camera→world geometry lift, CLIP encoders. | behind `[clip]` (torch) |
 | `mindloop/` | `mindloop` | Brain — `Brain` cognitive loop + `Reasoner` + `CosmosReasonVerbalizer`; ships the `ExecutorAdapter` protocol. | none in core; LLM is remote/self-hosted |
 | `bodylink/` | `bodylink` | Body seam — fills `mindloop`'s `ExecutorAdapter`: `MockBody` (no-hardware ref) + `CapabilityManifest` (`g1d_manifest`). "Swap the body, keep the mind." | none (stdlib; depends on `mindloop`) |
+| `voicelink/` | `voicelink` | Voice seam — fills `mindloop`'s `Listener`/`Speaker` (ASR ears + TTS mouth): `EndpointListener`/`EndpointSpeaker` over an OpenAI-compatible audio endpoint (Qwen3-ASR/TTS). The offline AI chain (P7). | none (stdlib; depends on `mindloop`) |
 | `skillforge/` | `skillforge` | Self-learning lab (research track, working name) — ENPIRE loop (Environment/Policy/Rollout/Evolution) over mem+brain+body+world. The **only** member that imports all others. | none (`v0.1.0a0` walking skeleton, network-free) |
 
 **Dependency direction:** `worldsense → core`, `mindloop → core` (+ optional

@@ -13,7 +13,7 @@ cross-linked, not duplicated.
 
 ---
 
-## 1. The stack — five packages, one body metaphor
+## 1. The stack — six packages, one body metaphor
 
 ```
 RGB(-D) ─► worldsense (eyes) ─► Detection[] ─┐
@@ -34,12 +34,13 @@ RGB(-D) ─► worldsense (eyes) ─► Detection[] ─┐
 |---|---|---|
 | **tempomem** | memory core — `.smem` scene-graph, fuse-before-persist, layered query | stable core |
 | **worldsense** | eyes — RGB(-D) → world-frame `Detection`s (CLIP behind `[clip]`) | stable |
-| **mindloop** | brain — the S2 cognitive loop (P0–P3 done) | **active** |
+| **mindloop** | brain — the full S2 cognitive loop (P0–P6 + dyn-scene) | **active** |
 | **bodylink** | body seam — fills `ExecutorAdapter`; multi-model + sim | **active** |
+| **voicelink** | voice seam — fills `Listener`/`Speaker` (ASR/TTS); offline chain (P7) | active |
 | **skillforge** | self-learning lab (ENPIRE walking skeleton, v0.1.0a0) | research |
 
 Dependency direction: `worldsense → tempomem`, `mindloop → tempomem`,
-`bodylink → mindloop`, `skillforge → all`. The core never imports the others — it
+`bodylink → mindloop`, `voicelink → mindloop`, `skillforge → all`. The core never imports the others — it
 only ships the *protocols* they fill (`PerceptionAdapter`, `Verbalizer`;
 `mindloop` ships `ExecutorAdapter`).
 
