@@ -14,8 +14,9 @@ and not a package** — it is a [uv workspace](https://docs.astral.sh/uv/concept
 that gives all members a single shared environment. There are **six workspace members**:
 the original triad (`tempomem`/`worldsense`/`mindloop`) plus `bodylink` (executor seam),
 `voicelink` (voice seam — ASR/TTS, P7), and `skillforge` (research track, working name,
-`v0.1.0a0` walking skeleton). `tempomem`/`worldsense`/`mindloop`/`bodylink` are their own
-git repos (root submodules); `voicelink` + `skillforge` live in the root repo for now.
+`v0.1.0a0` walking skeleton). **All six are their own git repos** (root submodules,
+private); the root repo holds only the workspace wiring (`pyproject.toml`,
+`uv.lock`, `.gitmodules`) + cross-cutting `docs/`.
 
 ```
 RGB(-D) ─► worldsense (eyes) ─► Detections
