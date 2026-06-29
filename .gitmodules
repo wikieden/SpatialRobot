@@ -10,3 +10,6 @@
 	path = worldsense
 	url = https://github.com/wikieden/worldsense.git
 	branch = main
+[submodule "bodylink"]
+	path = bodylink
+	url = https://github.com/wikieden/bodylink.git
