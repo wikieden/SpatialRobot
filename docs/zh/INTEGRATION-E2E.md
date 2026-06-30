@@ -78,6 +78,11 @@ skillforge 是 import 全部成员的那个 —— 驱动 mem+brain+body+world �
 
 ## 附录 —— 暂缓的软件轨（轻量计划）
 
+> **范围扩展（规划）。** 三个新任务族（导览导游 · 多样家务 · 寻找遗失物）、执行动态
+> （打断 · 失败重规划 · 问询人类）、数据/训练闭环，均规划于 [TASK-FAMILIES.md](../en/TASK-FAMILIES.md)；
+> 全部流程图（组件 · 主干 · 动态 · 任务族 · 数据闭环）在 [FLOWS.md](../en/FLOWS.md)。
+> 它们扩展本压轴的场景集 + 指标 —— 同一套六标准 go/no-go 门。
+
 **轨 2 —— 收尾剩余大脑软件**
 - *动态场景第 4 步（主动感知）：* focus 陈旧或 reasoner 请求时，步间重 `observe` → fuse → 重查新
   context → 重规划尾部。钩子已有（`_dispatch_plan`、版本 bump）。脚本感知器网络隔离可测。

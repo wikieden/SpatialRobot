@@ -90,6 +90,12 @@ A small, growing suite exercising every faculty:
 
 ## Appendix — deferred software tracks (light plan)
 
+> **Scope expansion (planned).** Three new task families (tour-guide · household chores ·
+> find-lost-object), execution dynamics (barge-in · failure-replan · ask-human), and the
+> data/training closed-loop are planned in [TASK-FAMILIES.md](TASK-FAMILIES.md); all flow
+> diagrams (component · spine · dynamics · families · data-loop) are in [FLOWS.md](FLOWS.md).
+> They extend this capstone's scenario set + metrics — same six-criteria go/no-go gate.
+
 **Track 2 — finish the remaining brain software**
 - *Dynamic scene phase 4 (active perception):* on a stale focus or reasoner request,
   re-`observe` between steps → fuse → re-query fresh context → re-plan the tail. Hooks

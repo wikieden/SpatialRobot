@@ -1,0 +1,76 @@
+<svg viewBox="0 0 860 440" xmlns="http://www.w3.org/2000/svg" font-family="-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif" role="img">
+  <title>Task-family flows: tour, chores, find lost object</title>
+  <desc>Three household task families. Tour: plan navigate-present per region, skip private regions for guests. Chores: ordered multi-step, adult-only verbs blocked for children. Find: answer from last_seen with recency, hedge when stale, active search when unknown.</desc>
+  <rect x="0" y="0" width="860" height="440" fill="#ffffff"/>
+  <defs>
+    <marker id="m" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0 0L10 5L0 10z" fill="#666"/>
+    </marker>
+  </defs>
+  <text x="16" y="22" font-size="9.5" fill="#888">teal = tour · amber = decision · green = safe outcome · red = blocked · every spoken claim cites node ids</text>
+
+  <!-- ============ TOUR ============ -->
+  <text x="16" y="50" font-size="12" font-weight="700" fill="#1aa179">导览 · Tour / Guide</text>
+  <rect x="16" y="60" width="120" height="40" rx="20" fill="#e0f5f1" stroke="#1aa179"/>
+  <text x="76" y="84" text-anchor="middle" font-size="10.5" fill="#1a1a1a">show guest around</text>
+  <rect x="152" y="60" width="150" height="40" rx="8" fill="#f5f5f5" stroke="#cfcfcf"/>
+  <text x="227" y="78" text-anchor="middle" font-size="10.5" fill="#1a1a1a">plan: navigate→present</text>
+  <text x="227" y="93" text-anchor="middle" font-size="8.5" fill="#888">↻ repeat per region</text>
+  <path d="M320 80 l46 -22 l46 22 l-46 22 z" fill="#fdf0d5" stroke="#e0a106"/>
+  <text x="366" y="84" text-anchor="middle" font-size="10" fill="#1a1a1a">private?</text>
+  <rect x="436" y="46" width="180" height="28" rx="8" fill="#f5f5f5" stroke="#cfcfcf"/>
+  <text x="526" y="64" text-anchor="middle" font-size="10" fill="#1a1a1a">guest → skip + reason</text>
+  <rect x="436" y="86" width="180" height="28" rx="8" fill="#e0f5f1" stroke="#1aa179"/>
+  <text x="526" y="104" text-anchor="middle" font-size="10" fill="#1a1a1a">else → present, cite ids</text>
+  <line x1="136" y1="80" x2="150" y2="80" stroke="#666" marker-end="url(#m)"/>
+  <line x1="302" y1="80" x2="318" y2="80" stroke="#666" marker-end="url(#m)"/>
+  <line x1="412" y1="74" x2="434" y2="62" stroke="#666" marker-end="url(#m)"/>
+  <line x1="412" y1="88" x2="434" y2="100" stroke="#666" marker-end="url(#m)"/>
+
+  <!-- ============ CHORES ============ -->
+  <text x="16" y="178" font-size="12" font-weight="700" fill="#9a6f00">家务 · Household chores</text>
+  <rect x="16" y="190" width="128" height="40" rx="8" fill="#fdf0d5" stroke="#e0a106"/>
+  <text x="80" y="208" text-anchor="middle" font-size="9.5" fill="#1a1a1a">tidy·wash·wipe</text>
+  <text x="80" y="222" text-anchor="middle" font-size="9.5" fill="#1a1a1a">water·trash</text>
+  <rect x="160" y="190" width="158" height="40" rx="8" fill="#f5f5f5" stroke="#cfcfcf"/>
+  <text x="239" y="208" text-anchor="middle" font-size="10" fill="#1a1a1a">plan: ordered,</text>
+  <text x="239" y="222" text-anchor="middle" font-size="10" fill="#1a1a1a">multi-object</text>
+  <path d="M336 210 l50 -24 l50 24 l-50 24 z" fill="#fdf0d5" stroke="#e0a106"/>
+  <text x="386" y="207" text-anchor="middle" font-size="9.5" fill="#1a1a1a">adult-only</text>
+  <text x="386" y="219" text-anchor="middle" font-size="9.5" fill="#1a1a1a">verb?</text>
+  <rect x="456" y="176" width="118" height="28" rx="8" fill="#fce8e6" stroke="#d93025"/>
+  <text x="515" y="194" text-anchor="middle" font-size="10" fill="#1a1a1a">child → block</text>
+  <rect x="456" y="216" width="388" height="28" rx="8" fill="#e6f4ea" stroke="#1e8e3e"/>
+  <text x="650" y="234" text-anchor="middle" font-size="9.5" fill="#1a1a1a">ok → open→place→operate · grasp→place region · wipe · pour · dispose</text>
+  <line x1="144" y1="210" x2="158" y2="210" stroke="#666" marker-end="url(#m)"/>
+  <line x1="318" y1="210" x2="334" y2="210" stroke="#666" marker-end="url(#m)"/>
+  <line x1="436" y1="202" x2="454" y2="190" stroke="#666" marker-end="url(#m)"/>
+  <line x1="436" y1="218" x2="454" y2="230" stroke="#666" marker-end="url(#m)"/>
+
+  <!-- ============ FIND ============ -->
+  <text x="16" y="308" font-size="12" font-weight="700" fill="#3b6fd4">寻物 · Find lost object</text>
+  <rect x="16" y="320" width="128" height="40" rx="8" fill="#e8f0fe" stroke="#4285f4"/>
+  <text x="80" y="344" text-anchor="middle" font-size="10" fill="#1a1a1a">where are my keys?</text>
+  <path d="M160 340 l58 -26 l58 26 l-58 26 z" fill="#fdf0d5" stroke="#e0a106"/>
+  <text x="218" y="337" text-anchor="middle" font-size="9.5" fill="#1a1a1a">last_seen</text>
+  <text x="218" y="349" text-anchor="middle" font-size="9.5" fill="#1a1a1a">recent?</text>
+  <rect x="300" y="300" width="184" height="26" rx="8" fill="#e6f4ea" stroke="#1e8e3e"/>
+  <text x="392" y="317" text-anchor="middle" font-size="9.5" fill="#1a1a1a">known → answer + cite id</text>
+  <rect x="300" y="332" width="184" height="26" rx="8" fill="#f5f5f5" stroke="#cfcfcf"/>
+  <text x="392" y="349" text-anchor="middle" font-size="9.5" fill="#1a1a1a">stale → hedge (may have moved)</text>
+  <rect x="300" y="364" width="184" height="26" rx="8" fill="#f5f5f5" stroke="#cfcfcf"/>
+  <text x="392" y="381" text-anchor="middle" font-size="9.5" fill="#1a1a1a">unknown → search: nav→detect (K)</text>
+  <path d="M512 377 l40 -20 l40 20 l-40 20 z" fill="#fdf0d5" stroke="#e0a106"/>
+  <text x="552" y="380" text-anchor="middle" font-size="9.5" fill="#1a1a1a">found?</text>
+  <rect x="612" y="352" width="160" height="24" rx="8" fill="#e6f4ea" stroke="#1e8e3e"/>
+  <text x="692" y="368" text-anchor="middle" font-size="9" fill="#1a1a1a">yes → answer + cite</text>
+  <rect x="612" y="384" width="232" height="24" rx="8" fill="#e6f4ea" stroke="#1e8e3e"/>
+  <text x="728" y="400" text-anchor="middle" font-size="9" fill="#1a1a1a">no → honest not-found = success</text>
+  <line x1="144" y1="340" x2="158" y2="340" stroke="#666" marker-end="url(#m)"/>
+  <line x1="276" y1="332" x2="298" y2="316" stroke="#666" marker-end="url(#m)"/>
+  <line x1="276" y1="340" x2="298" y2="345" stroke="#666" marker-end="url(#m)"/>
+  <line x1="276" y1="350" x2="298" y2="375" stroke="#666" marker-end="url(#m)"/>
+  <line x1="484" y1="377" x2="510" y2="377" stroke="#666" marker-end="url(#m)"/>
+  <line x1="592" y1="370" x2="610" y2="363" stroke="#666" marker-end="url(#m)"/>
+  <line x1="592" y1="384" x2="610" y2="394" stroke="#666" marker-end="url(#m)"/>
+</svg>

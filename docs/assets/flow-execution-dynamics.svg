@@ -1,0 +1,85 @@
+<svg viewBox="0 0 800 470" xmlns="http://www.w3.org/2000/svg" font-family="-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif" role="img">
+  <title>Execution dynamics state machine</title>
+  <desc>The preemptible dispatch loop: check interrupt then classify barge-in (resume, supersede, abort, correct), or dispatch a step then recover on failure via retry, skip, ask-human, or escalate.</desc>
+  <rect x="0" y="0" width="800" height="470" fill="#ffffff"/>
+  <defs>
+    <marker id="c" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0 0L10 5L0 10z" fill="#666"/>
+    </marker>
+  </defs>
+
+  <text x="16" y="20" font-size="9.5" fill="#888">blue = loop control · green = safe outcome · amber = recovery · red = stop</text>
+
+  <rect x="40" y="40" width="120" height="44" rx="8" fill="#e8f0fe" stroke="#4285f4"/>
+  <text x="100" y="66" text-anchor="middle" font-size="12" font-weight="700" fill="#1a1a1a">NextStep</text>
+
+  <rect x="220" y="40" width="140" height="44" rx="8" fill="#e8f0fe" stroke="#4285f4"/>
+  <text x="290" y="60" text-anchor="middle" font-size="11.5" font-weight="600" fill="#1a1a1a">CheckInterrupt</text>
+  <text x="290" y="75" text-anchor="middle" font-size="9" fill="#555">inbox?</text>
+  <line x1="160" y1="62" x2="218" y2="62" stroke="#666" marker-end="url(#c)"/>
+  <text x="189" y="56" text-anchor="middle" font-size="8.5" fill="#888">steps left</text>
+
+  <rect x="430" y="34" width="150" height="56" rx="8" fill="#fdf0d5" stroke="#e0a106"/>
+  <text x="505" y="55" text-anchor="middle" font-size="11.5" font-weight="700" fill="#1a1a1a">Classify barge-in</text>
+  <text x="505" y="71" text-anchor="middle" font-size="9" fill="#555">human spoke</text>
+  <text x="505" y="84" text-anchor="middle" font-size="9" fill="#555">BargeClassifier (D2)</text>
+  <line x1="360" y1="56" x2="428" y2="56" stroke="#666" marker-end="url(#c)"/>
+  <text x="394" y="50" text-anchor="middle" font-size="8.5" fill="#888">utterance</text>
+
+  <rect x="636" y="20" width="150" height="30" rx="6" fill="#f5f5f5" stroke="#cfcfcf"/>
+  <text x="711" y="39" text-anchor="middle" font-size="10" fill="#1a1a1a">chitchat → Answer → resume</text>
+  <rect x="636" y="56" width="150" height="30" rx="6" fill="#f5f5f5" stroke="#cfcfcf"/>
+  <text x="711" y="75" text-anchor="middle" font-size="10" fill="#1a1a1a">new instr → supersede</text>
+  <rect x="636" y="92" width="150" height="30" rx="6" fill="#f5f5f5" stroke="#cfcfcf"/>
+  <text x="711" y="111" text-anchor="middle" font-size="10" fill="#1a1a1a">correction → replan-fix</text>
+  <rect x="636" y="128" width="150" height="30" rx="6" fill="#fce8e6" stroke="#d93025"/>
+  <text x="711" y="147" text-anchor="middle" font-size="10" fill="#1a1a1a">stop → Aborted</text>
+  <line x1="580" y1="58" x2="634" y2="40" stroke="#aaa" marker-end="url(#c)"/>
+  <line x1="580" y1="66" x2="634" y2="70" stroke="#aaa" marker-end="url(#c)"/>
+  <line x1="580" y1="74" x2="634" y2="105" stroke="#aaa" marker-end="url(#c)"/>
+  <line x1="580" y1="84" x2="634" y2="140" stroke="#aaa" marker-end="url(#c)"/>
+  <path d="M636 32 L600 32 L600 18 L290 18 L290 38" fill="none" stroke="#aaa" stroke-dasharray="4 3" marker-end="url(#c)"/>
+  <text x="430" y="14" text-anchor="middle" font-size="8.5" fill="#888">resume (cursor kept)</text>
+
+  <rect x="220" y="150" width="140" height="46" rx="8" fill="#e8f0fe" stroke="#4285f4"/>
+  <text x="290" y="170" text-anchor="middle" font-size="12" font-weight="700" fill="#1a1a1a">Dispatch step</text>
+  <text x="290" y="186" text-anchor="middle" font-size="9" fill="#555">to body (D3)</text>
+  <line x1="290" y1="84" x2="290" y2="148" stroke="#666" marker-end="url(#c)"/>
+  <text x="312" y="120" text-anchor="middle" font-size="8.5" fill="#888">inbox empty</text>
+  <path d="M220 173 L100 173 L100 86" fill="none" stroke="#666" marker-end="url(#c)"/>
+  <rect x="120" y="150" width="86" height="26" rx="6" fill="#e6f4ea" stroke="#1e8e3e"/>
+  <text x="163" y="168" text-anchor="middle" font-size="9.5" fill="#1a1a1a">SUCCESS</text>
+
+  <rect x="220" y="250" width="140" height="56" rx="8" fill="#fdf0d5" stroke="#e0a106"/>
+  <text x="290" y="270" text-anchor="middle" font-size="11.5" font-weight="700" fill="#1a1a1a">Recover (P4)</text>
+  <text x="290" y="286" text-anchor="middle" font-size="9" fill="#555">typed error</text>
+  <text x="290" y="299" text-anchor="middle" font-size="9" fill="#555">bounded caps</text>
+  <line x1="290" y1="196" x2="290" y2="248" stroke="#666" marker-end="url(#c)"/>
+  <text x="322" y="226" text-anchor="middle" font-size="8.5" fill="#888">FAILED</text>
+  <path d="M220 268 L120 268 L120 196 L218 178" fill="none" stroke="#aaa" stroke-dasharray="4 3" marker-end="url(#c)"/>
+  <text x="120" y="240" text-anchor="middle" font-size="8.5" fill="#888">retry/adjust/reroute</text>
+  <path d="M250 250 L250 100 L160 78" fill="none" stroke="#aaa" stroke-dasharray="3 3" marker-end="url(#c)"/>
+  <text x="232" y="150" text-anchor="middle" font-size="8.5" fill="#888">skip</text>
+
+  <rect x="430" y="248" width="150" height="58" rx="8" fill="#fdf0d5" stroke="#e0a106"/>
+  <text x="505" y="268" text-anchor="middle" font-size="11.5" font-weight="700" fill="#1a1a1a">Ask human</text>
+  <text x="505" y="284" text-anchor="middle" font-size="9" fill="#555">Speaker asks · Listener answers</text>
+  <text x="505" y="297" text-anchor="middle" font-size="9" fill="#555">re-vet via Phylax · budget≤2</text>
+  <line x1="360" y1="278" x2="428" y2="278" stroke="#666" marker-end="url(#c)"/>
+  <text x="394" y="272" text-anchor="middle" font-size="8.5" fill="#888">no hint, reachable</text>
+  <path d="M505 248 L505 210 L362 180" fill="none" stroke="#aaa" stroke-dasharray="4 3" marker-end="url(#c)"/>
+  <text x="470" y="206" text-anchor="middle" font-size="8.5" fill="#888">resolved</text>
+
+  <rect x="430" y="350" width="150" height="44" rx="8" fill="#fce8e6" stroke="#d93025"/>
+  <text x="505" y="370" text-anchor="middle" font-size="11.5" font-weight="700" fill="#1a1a1a">Escalate</text>
+  <text x="505" y="385" text-anchor="middle" font-size="9" fill="#555">honest stop + speak</text>
+  <line x1="320" y1="306" x2="450" y2="348" stroke="#666" marker-end="url(#c)"/>
+  <text x="372" y="334" text-anchor="middle" font-size="8.5" fill="#888">unrecoverable / cap</text>
+  <line x1="505" y1="306" x2="505" y2="348" stroke="#666" marker-end="url(#c)"/>
+  <text x="546" y="330" text-anchor="middle" font-size="8.5" fill="#888">budget out</text>
+
+  <rect x="220" y="408" width="360" height="36" rx="8" fill="#e6f4ea" stroke="#1e8e3e"/>
+  <text x="400" y="430" text-anchor="middle" font-size="11.5" font-weight="700" fill="#1a1a1a">Done — plan exhausted · aborted · honest give-up all terminal</text>
+  <line x1="290" y1="306" x2="290" y2="406" stroke="#aaa" stroke-dasharray="3 3"/>
+  <line x1="505" y1="394" x2="505" y2="406" stroke="#666" marker-end="url(#c)"/>
+</svg>

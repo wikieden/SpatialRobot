@@ -1,0 +1,56 @@
+<svg viewBox="0 0 780 380" xmlns="http://www.w3.org/2000/svg" font-family="-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif" role="img">
+  <title>Chronotope data and training closed loop</title>
+  <desc>Runtime Brain emits cited traces, curated into a dataset, fed to the skillforge ENPIRE lab, gated by eval, then promoted back into the Brain.</desc>
+  <rect x="0" y="0" width="780" height="380" fill="#ffffff"/>
+  <defs>
+    <marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0 0L10 5L0 10z" fill="#666"/>
+    </marker>
+  </defs>
+
+  <rect x="24" y="40" width="150" height="60" rx="8" fill="#e8f0fe" stroke="#4285f4"/>
+  <text x="99" y="64" text-anchor="middle" font-size="13" font-weight="600" fill="#1a1a1a">Runtime Brain</text>
+  <text x="99" y="82" text-anchor="middle" font-size="10.5" fill="#555">route·plan·safety·dispatch</text>
+
+  <rect x="214" y="40" width="140" height="60" rx="8" fill="#f5f5f5" stroke="#cfcfcf"/>
+  <text x="284" y="64" text-anchor="middle" font-size="13" font-weight="600" fill="#1a1a1a">TraceStore</text>
+  <text x="284" y="82" text-anchor="middle" font-size="10.5" fill="#555">episodes cite node ids</text>
+
+  <rect x="394" y="40" width="150" height="60" rx="8" fill="#f5f5f5" stroke="#cfcfcf"/>
+  <text x="469" y="64" text-anchor="middle" font-size="13" font-weight="600" fill="#1a1a1a">Dataset curation</text>
+  <text x="469" y="82" text-anchor="middle" font-size="10.5" fill="#555">labeled cases</text>
+
+  <line x1="174" y1="70" x2="210" y2="70" stroke="#666" marker-end="url(#ar)"/>
+  <line x1="354" y1="70" x2="390" y2="70" stroke="#666" marker-end="url(#ar)"/>
+
+  <rect x="584" y="40" width="172" height="186" rx="8" fill="#fdf0d5" stroke="#e0a106"/>
+  <text x="670" y="62" text-anchor="middle" font-size="13" font-weight="700" fill="#1a1a1a">skillforge · ENPIRE lab</text>
+  <rect x="602" y="74" width="136" height="26" rx="6" fill="#ffffff" stroke="#cfcfcf"/>
+  <text x="670" y="91" text-anchor="middle" font-size="10.5" fill="#1a1a1a">Environment + PolicyAuthor</text>
+  <rect x="602" y="106" width="136" height="26" rx="6" fill="#ffffff" stroke="#cfcfcf"/>
+  <text x="670" y="123" text-anchor="middle" font-size="10.5" fill="#1a1a1a">Rollout · AttemptTree</text>
+  <rect x="602" y="138" width="136" height="26" rx="6" fill="#ffffff" stroke="#cfcfcf"/>
+  <text x="670" y="155" text-anchor="middle" font-size="10.5" fill="#1a1a1a">Reward = 6 criteria</text>
+  <rect x="602" y="170" width="136" height="26" rx="6" fill="#ffffff" stroke="#cfcfcf"/>
+  <text x="670" y="187" text-anchor="middle" font-size="10.5" fill="#1a1a1a">Evolution → crystallize</text>
+  <line x1="544" y1="70" x2="580" y2="80" stroke="#666" marker-end="url(#ar)"/>
+
+  <line x1="670" y1="226" x2="670" y2="262" stroke="#666" marker-end="url(#ar)"/>
+
+  <rect x="560" y="266" width="196" height="60" rx="8" fill="#e6f4ea" stroke="#1e8e3e"/>
+  <text x="658" y="290" text-anchor="middle" font-size="13" font-weight="600" fill="#1a1a1a">Eval gate</text>
+  <text x="658" y="308" text-anchor="middle" font-size="10.5" fill="#555">IntegrationReport.meets</text>
+
+  <rect x="330" y="266" width="170" height="60" rx="8" fill="#e6f4ea" stroke="#1e8e3e"/>
+  <text x="415" y="290" text-anchor="middle" font-size="13" font-weight="600" fill="#1a1a1a">Promote</text>
+  <text x="415" y="308" text-anchor="middle" font-size="10.5" fill="#555">into planner / overlay</text>
+
+  <line x1="560" y1="296" x2="504" y2="296" stroke="#666" marker-end="url(#ar)"/>
+  <text x="532" y="288" text-anchor="middle" font-size="9" fill="#888">pass</text>
+
+  <path d="M330 296 L99 296 L99 104" fill="none" stroke="#666" stroke-dasharray="5 4" marker-end="url(#ar)"/>
+  <text x="160" y="312" text-anchor="middle" font-size="9" fill="#888">self-improve loop</text>
+
+  <path d="M658 266 L658 246 L756 246" fill="none" stroke="#aaa" stroke-dasharray="3 3"/>
+  <text x="700" y="242" text-anchor="middle" font-size="8.5" fill="#888">fail → iterate</text>
+</svg>
