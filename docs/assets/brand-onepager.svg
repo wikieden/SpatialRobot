@@ -1,0 +1,149 @@
+<svg viewBox="0 0 1000 1330" xmlns="http://www.w3.org/2000/svg" font-family="'PingFang SC','Noto Sans SC','Microsoft YaHei',sans-serif">
+  <defs>
+    <linearGradient id="band" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#9A7B4F"/>
+      <stop offset="1" stop-color="#C9A86E"/>
+    </linearGradient>
+  </defs>
+  <!-- paper -->
+  <rect x="0" y="0" width="1000" height="1330" fill="#FBF8F1"/>
+  <rect x="0" y="0" width="1000" height="1330" fill="none" stroke="#E3DACB" stroke-width="2"/>
+
+  <!-- ===== header ===== -->
+  <rect x="60" y="48" width="34" height="34" fill="#9A7B4F"/>
+  <text x="108" y="73" font-size="22" letter-spacing="6" fill="#6E5836" font-weight="700">CHRONOTOPE</text>
+  <text x="940" y="73" font-size="20" fill="#8C857A" text-anchor="end">会记得的家务机器人</text>
+  <text x="60" y="150" font-size="66" fill="#2B2A26" font-family="'Songti SC','Noto Serif SC',serif" font-weight="700">时见 · Ever</text>
+  <text x="60" y="190" font-size="21" fill="#6E5836">记忆-first 的具身大脑 · 越住越懂你 · 越教越会</text>
+  <rect x="60" y="208" width="880" height="5" fill="url(#band)"/>
+
+  <!-- ===== 定位 ===== -->
+  <g>
+    <text x="60" y="252" font-size="15" letter-spacing="3" fill="#9A7B4F" font-weight="700">定位</text>
+    <text x="60" y="288" font-size="24" fill="#2B2A26" font-weight="600">别家转身即忘；它记得你的家 —— 东西在哪、该放哪、家怎么运转。</text>
+  </g>
+
+  <!-- ===== 护城河链 ===== -->
+  <text x="60" y="340" font-size="15" letter-spacing="3" fill="#9A7B4F" font-weight="700">护城河 · 记忆 → 经验 → 自学习 → 进化</text>
+  <g font-size="15.5" fill="#2B2A26" text-anchor="middle">
+    <!-- node 1 -->
+    <rect x="60" y="358" width="200" height="74" rx="10" fill="#F4EFE6" stroke="#E3DACB"/>
+    <text x="160" y="388" font-weight="700" font-size="17">记忆</text>
+    <text x="160" y="412" font-size="14" fill="#6E5836">.smem 跨天可查可审</text>
+    <!-- node 2 -->
+    <rect x="285" y="358" width="200" height="74" rx="10" fill="#F4EFE6" stroke="#E3DACB"/>
+    <text x="385" y="388" font-weight="700" font-size="17">经验</text>
+    <text x="385" y="412" font-size="14" fill="#6E5836">每次交互 = 可复用</text>
+    <!-- node 3 -->
+    <rect x="510" y="358" width="200" height="74" rx="10" fill="#F4EFE6" stroke="#E3DACB"/>
+    <text x="610" y="388" font-weight="700" font-size="17">自学习</text>
+    <text x="610" y="412" font-size="14" fill="#6E5836">skillforge 结晶成技能</text>
+    <!-- node 4 -->
+    <rect x="735" y="358" width="205" height="74" rx="10" fill="#2B2A26"/>
+    <text x="837" y="388" font-weight="700" font-size="17" fill="#FBF8F1">进化</text>
+    <text x="837" y="412" font-size="14" fill="#C9A86E">越用越聪明</text>
+    <!-- arrows -->
+    <g fill="#9A7B4F">
+      <path d="M267 395 l12 -6 v12 z"/>
+      <path d="M492 395 l12 -6 v12 z"/>
+      <path d="M717 395 l12 -6 v12 z"/>
+    </g>
+  </g>
+  <text x="500" y="468" font-size="20" fill="#C8842B" font-weight="700" text-anchor="middle">记忆是燃料 · 自学习是引擎 · 对手没燃料</text>
+
+  <!-- ===== 五支柱 ===== -->
+  <text x="60" y="520" font-size="15" letter-spacing="3" fill="#9A7B4F" font-weight="700">五支柱</text>
+  <g>
+    <!-- col template width ~172, gap 8, start x=60 -->
+    <g text-anchor="middle">
+      <circle cx="146" cy="556" r="15" fill="#9A7B4F"/><text x="146" y="561" font-size="15" fill="#FBF8F1" font-weight="700" text-anchor="middle">1</text>
+      <circle cx="326" cy="556" r="15" fill="#9A7B4F"/><text x="326" y="561" font-size="15" fill="#FBF8F1" font-weight="700" text-anchor="middle">2</text>
+      <circle cx="506" cy="556" r="15" fill="#C8842B"/><text x="506" y="561" font-size="15" fill="#FBF8F1" font-weight="700" text-anchor="middle">3</text>
+      <circle cx="686" cy="556" r="15" fill="#9A7B4F"/><text x="686" y="561" font-size="15" fill="#FBF8F1" font-weight="700" text-anchor="middle">4</text>
+      <circle cx="866" cy="556" r="15" fill="#6F8A6B"/><text x="866" y="561" font-size="15" fill="#FBF8F1" font-weight="700" text-anchor="middle">5</text>
+    </g>
+    <g fill="#2B2A26" font-weight="700" font-size="16.5" text-anchor="middle">
+      <text x="146" y="600">记得</text>
+      <text x="326" y="600">越住越懂你</text>
+      <text x="506" y="600">看得见删得掉</text>
+      <text x="686" y="600">它收拾</text>
+      <text x="866" y="600">可教·越教越会</text>
+    </g>
+    <g fill="#6E5836" font-size="13" text-anchor="middle">
+      <text x="146" y="624">持久跨年</text><text x="146" y="641">非单帧失忆</text>
+      <text x="326" y="624">学布局·习惯</text><text x="326" y="641">动线</text>
+      <text x="506" y="624">可查改删</text><text x="506" y="641">一键遗忘</text>
+      <text x="686" y="624">因知道</text><text x="686" y="641">东西该放哪</text>
+      <text x="866" y="624">技能卡+自学习</text><text x="866" y="641">教一次就记住</text>
+    </g>
+  </g>
+
+  <!-- ===== 对手分界 ===== -->
+  <text x="60" y="700" font-size="15" letter-spacing="3" fill="#9A7B4F" font-weight="700">对手分界</text>
+  <g font-size="16">
+    <!-- header row -->
+    <text x="190" y="734" fill="#8C857A" font-weight="700" text-anchor="middle">Figure Helix / 1X / π0.7</text>
+    <text x="700" y="734" fill="#6E5836" font-weight="700" text-anchor="middle">Chronotope · 时见</text>
+    <line x1="60" y1="748" x2="940" y2="748" stroke="#E3DACB" stroke-width="1.5"/>
+    <!-- rows -->
+    <g fill="#2B2A26">
+      <text x="60" y="782" fill="#9A7B4F" font-weight="700">记忆</text>
+      <text x="190" y="782" text-anchor="middle" fill="#8C857A">单帧 / 失忆 latent</text>
+      <text x="700" y="782" text-anchor="middle" font-weight="600">持久 · 可查 · 可审</text>
+
+      <text x="60" y="818" fill="#9A7B4F" font-weight="700">学习</text>
+      <text x="190" y="818" text-anchor="middle" fill="#8C857A">厂商集中再训练</text>
+      <text x="700" y="818" text-anchor="middle" font-weight="600">在你家持续个性化进化</text>
+
+      <text x="60" y="854" fill="#9A7B4F" font-weight="700">信任</text>
+      <text x="190" y="854" text-anchor="middle" fill="#8C857A">不透明 latent</text>
+      <text x="700" y="854" text-anchor="middle" font-weight="600">可审计 · 可删 · 可改</text>
+    </g>
+    <line x1="450" y1="756" x2="450" y2="868" stroke="#E3DACB" stroke-width="1.5"/>
+  </g>
+
+  <!-- ===== 用户可教阶梯 ===== -->
+  <text x="60" y="918" font-size="15" letter-spacing="3" fill="#9A7B4F" font-weight="700">用户可教 · 诚实分级</text>
+  <g font-size="15.5">
+    <!-- L1 -->
+    <rect x="60" y="936" width="210" height="58" rx="9" fill="#EBF0E9" stroke="#6F8A6B"/>
+    <text x="76" y="962" fill="#2B2A26" font-weight="700">L1 技能卡 Episteme</text>
+    <text x="76" y="982" font-size="13" fill="#4F6B4C">真能用 · 零代码组合已有动作</text>
+    <!-- L2 -->
+    <rect x="285" y="936" width="210" height="58" rx="9" fill="#EBF0E9" stroke="#6F8A6B"/>
+    <text x="301" y="962" fill="#2B2A26" font-weight="700">L2 个性化记忆</text>
+    <text x="301" y="982" font-size="13" fill="#4F6B4C">真能用 · 记偏好/位置/家规</text>
+    <!-- L3 -->
+    <rect x="510" y="936" width="210" height="58" rx="9" fill="#FBF0DF" stroke="#C8842B"/>
+    <text x="526" y="962" fill="#2B2A26" font-weight="700">L3 结晶 crystallize</text>
+    <text x="526" y="982" font-size="13" fill="#9A6418">半自动 · 经验→LLM起草→人审</text>
+    <!-- L4 -->
+    <rect x="735" y="936" width="205" height="58" rx="9" fill="#F0ECE3" stroke="#A99C86"/>
+    <text x="751" y="962" fill="#2B2A26" font-weight="700">L4 skillforge 自学习</text>
+    <text x="751" y="982" font-size="13" fill="#7C7363">研究/alpha · ENPIRE 闭环</text>
+  </g>
+  <text x="60" y="1024" font-size="15" fill="#6E5836">边界：教的是规矩 + 偏好 + 流程（用已有技能执行），不是从零的新底层运动技能。</text>
+
+  <!-- ===== 诚实护栏 ===== -->
+  <rect x="60" y="1050" width="880" height="56" rx="9" fill="#F4EFE6" stroke="#E3DACB"/>
+  <text x="80" y="1085" font-size="18" fill="#2B2A26" font-family="'Songti SC','Noto Serif SC',serif" font-style="italic">「我上次看到…周二」 —— 不说完美记忆，诚实即营销。教得会 · 改得了 · 删得掉 · 忘得掉。</text>
+
+  <!-- ===== 决策 footer ===== -->
+  <rect x="0" y="1140" width="1000" height="190" fill="#2B2A26"/>
+  <rect x="0" y="1140" width="1000" height="5" fill="url(#band)"/>
+  <text x="60" y="1188" font-size="15" letter-spacing="3" fill="#C9A86E" font-weight="700">已拍板</text>
+  <g font-size="17" fill="#FBF8F1">
+    <rect x="60" y="1206" width="280" height="74" rx="10" fill="#39342B"/>
+    <text x="80" y="1238" fill="#C9A86E" font-size="13" font-weight="700">地域</text>
+    <text x="80" y="1264" font-weight="600">中国优先 → 全球</text>
+
+    <rect x="360" y="1206" width="280" height="74" rx="10" fill="#39342B"/>
+    <text x="380" y="1238" fill="#C9A86E" font-size="13" font-weight="700">产品名</text>
+    <text x="380" y="1264" font-weight="600">时见 / Ever（暂定）</text>
+
+    <rect x="660" y="1206" width="280" height="74" rx="10" fill="#39342B"/>
+    <text x="680" y="1238" fill="#C9A86E" font-size="13" font-weight="700">引擎</text>
+    <text x="680" y="1264" font-weight="600">Memory by Chronotope</text>
+  </g>
+  <text x="940" y="1316" font-size="12" fill="#8C857A" text-anchor="end">Chronotope · 2026-06-29 · 家务服务机器人（类 Figure）</text>
+</svg>

@@ -1,0 +1,70 @@
+<svg viewBox="0 0 1200 690" xmlns="http://www.w3.org/2000/svg" font-family="'PingFang SC','Noto Sans SC','Microsoft YaHei',sans-serif">
+  <rect x="0" y="0" width="1200" height="690" fill="#FBF8F1"/>
+  <rect x="0" y="0" width="1200" height="690" fill="none" stroke="#E3DACB" stroke-width="2"/>
+
+  <!-- header -->
+  <text x="36" y="62" font-size="34" font-weight="700" fill="#1F2A3D">具身大脑 · 小脑：想清楚，做利落</text>
+  <text x="36" y="92" font-size="16" fill="#6E5836">记忆-first 的家用具身智能 —— 围绕家庭 · 家电 · 家务场景</text>
+  <rect x="36" y="106" width="1128" height="5" fill="#1FB6C1"/>
+
+  <!-- 大脑 card -->
+  <rect x="36" y="128" width="560" height="216" rx="10" fill="#121E33"/>
+  <g>
+    <text x="60" y="166" font-size="20" font-weight="700" fill="#FFFFFF">大脑 · 慢思考 S2<tspan font-size="12" font-weight="400" fill="#9CC4E4">   秒级 · LLM/VLM · 云→Thor</tspan></text>
+    <g font-size="14" fill="#C9D9F0">
+      <text x="60" y="200">· 懂意图 —— 听懂「把客厅收拾一下」</text>
+      <text x="60" y="228">· 记空间 —— .smem 跨天记住东西在哪、该放哪</text>
+      <text x="60" y="256">· 会规划 —— 拆成步骤、排好先后</text>
+      <text x="60" y="284">· 自学习 —— 从成功经验结晶新技能</text>
+    </g>
+    <text x="60" y="322" font-size="15" font-weight="700" fill="#1FB6C1">想清楚：做什么 · 在哪 · 该放哪</text>
+  </g>
+
+  <!-- 小脑 card -->
+  <rect x="604" y="128" width="560" height="216" rx="10" fill="#FFFFFF" stroke="#1FB6C1" stroke-width="2"/>
+  <g>
+    <text x="628" y="166" font-size="20" font-weight="700" fill="#1F2A3D">小脑 · 快反射 S1 / S0<tspan font-size="12" font-weight="400" fill="#8C857A">   ~100ms→毫秒 · 本体固定</tspan></text>
+    <g font-size="14" fill="#2B2A26">
+      <text x="628" y="200">· 执行技能 —— 抓取、行走、开关门柜</text>
+      <text x="628" y="228">· 运动控制 —— 力控、平衡、防跌</text>
+      <text x="628" y="256">· 实时反射 —— 碰到就让、滑了就稳</text>
+      <text x="628" y="284">· 越练越熟 —— 技能库随本体打磨</text>
+    </g>
+    <text x="628" y="322" font-size="15" font-weight="700" fill="#C8842B">做利落：抓稳 · 走稳 · 放准</text>
+  </g>
+
+  <!-- memory band -->
+  <rect x="36" y="360" width="1128" height="48" rx="8" fill="#9A7B4F"/>
+  <text x="600" y="390" font-size="16" font-weight="700" fill="#FBF8F1" text-anchor="middle">记忆 = 脊梁　大脑记你的家（越住越懂你）· 小脑记你的动作（越练越熟）· 对手转身即忘</text>
+
+  <!-- 4 chips -->
+  <g font-family="'PingFang SC','Noto Sans SC',sans-serif">
+    <g>
+      <rect x="36" y="428" width="273" height="58" rx="8" fill="#F4EFE6" stroke="#E3DACB"/>
+      <text x="54" y="453" font-size="15" font-weight="700" fill="#1F2A3D">慢快双系统</text>
+      <text x="54" y="474" font-size="12" fill="#6E5836">大脑慢想 · 小脑快做</text>
+    </g>
+    <g>
+      <rect x="321" y="428" width="273" height="58" rx="8" fill="#F4EFE6" stroke="#E3DACB"/>
+      <text x="339" y="453" font-size="15" font-weight="700" fill="#1F2A3D">记忆-first</text>
+      <text x="339" y="474" font-size="12" fill="#6E5836">跨天可查可审</text>
+    </g>
+    <g>
+      <rect x="606" y="428" width="273" height="58" rx="8" fill="#F4EFE6" stroke="#E3DACB"/>
+      <text x="624" y="453" font-size="15" font-weight="700" fill="#1F2A3D">换身体不换脑</text>
+      <text x="624" y="474" font-size="12" fill="#6E5836">bodylink · 脑通用</text>
+    </g>
+    <g>
+      <rect x="891" y="428" width="273" height="58" rx="8" fill="#F4EFE6" stroke="#E3DACB"/>
+      <text x="909" y="453" font-size="15" font-weight="700" fill="#1F2A3D">可教可审</text>
+      <text x="909" y="474" font-size="12" fill="#6E5836">教得会 · 删得掉</text>
+    </g>
+  </g>
+
+  <!-- scene strip -->
+  <rect x="36" y="502" width="1128" height="150" rx="10" fill="#121E33"/>
+  <text x="60" y="542" font-size="15" font-weight="700" fill="#C9A86E">一件家务怎么跑通<tspan font-weight="400" fill="#FFFFFF">　「把茶几上的杯子收走」→ 大脑：认出杯子 · 想起归厨房水槽 · 避开孩子规划路径 →</tspan></text>
+  <text x="60" y="572" font-size="15" fill="#FFFFFF">小脑：绕障 · 抓取 · 端稳 · 放到水槽 → 记忆：更新杯子位置，下次更快</text>
+  <text x="60" y="612" font-size="13" fill="#9CC4E4">家电延伸：大脑还是家庭总调度 —— 洗碗机 / 扫地机 / 空调都是它的手脚，本体干不完的活交给电器</text>
+  <text x="1140" y="640" font-size="11" fill="#5B6B82" text-anchor="end">Chronotope · 具身大脑 × 小脑 · 家务场景</text>
+</svg>
