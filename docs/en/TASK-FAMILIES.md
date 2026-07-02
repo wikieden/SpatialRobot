@@ -1206,37 +1206,39 @@ replan (RETRY/ADJUST/REROUTE/SKIP/ESCALATE) for step 7 only — steps 1–6 (don
 
 ## 8. Build order (when greenlit)
 
-0. **Plan** — this doc. ✅
-1. **Verbs (bodylink + mindloop)** — add `present, wipe, pour, dispose` (§1-3) +
+> Live status: [DEV-STATUS.md](DEV-STATUS.md). Markers: ✅ done · ◐ partial · ▢ not started.
+
+0. ✅ **Plan** — this doc. ✅
+1. ▢ **Verbs (bodylink + mindloop)** — add `present, wipe, pour, dispose` (§1-3) +
    `sweep, mop, warn_wet_floor, restock` (§4) + `greet, take_order, offer, deliver` (§5)
    to manifest + `MockBody` + `SimDeviceAdapter` (conformance green) **and** `_VERB_TABLE`
    entries (`pre`/`eff`/`skill`) in `mindloop/plan.py` (review fix A); extend `place`
    effect to encode the region (fix B). *No LLM.*
-2. **Memory (tempomem)** — add `last_seen(name)` (§3) + Tier-1 scene-semantics interfaces
+2. ◐ **Memory (tempomem)** *(Tier-1 semantic layer landed 2026-07-02; verify/complete `last_seen`/`last_changed`/`current_occupants`)* — add `last_seen(name)` (§3) + Tier-1 scene-semantics interfaces
    (§5c.4): `state`/`set_state` (node attribute bag), `last_changed(region)`,
    `current_occupants(region)`, `add_event`/`query_events` (new `events` table in `.smem`).
    Region helpers already exist. All numpy-only, no network. *No LLM.*
-3. **Safety (mindloop/Phylax)** — region-access + person-scoped privacy dimensions +
+3. ▢ **Safety (mindloop/Phylax)** — region-access + person-scoped privacy dimensions +
    **param-scoped gating** `(verb, param)` for stove/sharp (D1). Region-access keys on the
    **existing** `Role {adult,child,guest,stranger}` (already in `phylax.py`) — no new trust
    enum. *No LLM.*
-3b. **Execution dynamics (mindloop)** — preemptible dispatch stepper + resume cursor +
+3b. ▢ **Execution dynamics (mindloop)** — preemptible dispatch stepper + resume cursor +
    `InterruptSource` + `BargeClassifier` (D2); brain-level `Clarifier` seam (D3) with
    `ReplanAction.ASK_HUMAN` as one entry + ask budget; route dead-end ESCALATE →
    Clarifier when reachable. Re-vet clarifications via Phylax. *No LLM.*
-4. **Harness (skillforge)** — `Scenario.regions` + `define_region` in `_build_memory`
+4. ◐ **Harness (skillforge)** *(scenario structure started; real assertions need 1+3+3b)* — `Scenario.regions` + `define_region` in `_build_memory`
    (K); extend `EvalReport`/`EvalThresholds` with all new metric fields (J); 5 new suites
    (`tour_suite`, `chores_suite`, `find_suite`, `cleaner_suite`, `receptionist_suite`) +
    an `execution_dynamics` suite (text barge-in / fail-ask / ask-budget); baseline
    go/no-go on all of it against the §7e thresholds. *No LLM, autonomous.*
-5. **Real-LLM validation** — run the new suites on host `192.168.31.89` (Cosmos+Qwen)
+5. ▢ **Real-LLM validation** — run the new suites on host `192.168.31.89` (Cosmos+Qwen)
    for real accuracy/success numbers, **pinned `temperature=0` + fixed seed** (greedy,
    reproducible — L). **Needs owner greenlight (GPU).**
-6. **Data & training closed-loop (skillforge)** — trace→dataset curation; LLM
+6. ◐ **Data & training closed-loop (skillforge)** *(acceptance gate `gate.py` landed early)* — trace→dataset curation; LLM
    `PolicyAuthor` on host; reward = the six criteria numeric (incl. honesty);
    skill→Episteme crystallization; promote-back gated by `IntegrationReport.meets`.
    Curation + baseline are autonomous; LLM rollouts need the host. See FLOWS Diagram 5.
-7. **Deferred** — voice-narrated tour (VoiceLoop), guest-following + active-search
+7. ▢ **Deferred** — voice-narrated tour (VoiceLoop), guest-following + active-search
    perception (dynamic-scene P4).
 
 Steps 1–4 are autonomously buildable and network-free. Step 5 alone needs the host.

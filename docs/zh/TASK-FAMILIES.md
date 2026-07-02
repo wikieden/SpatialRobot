@@ -943,26 +943,28 @@ ENPIRE 奖励 = `w_task * task_success + w_handle * handled_success + w_honesty 
 
 ## 8. 落地顺序（获批后）
 
-0. **规划** — 本文。✅
-1. **动词（bodylink + mindloop）** — manifest + `MockBody` + `SimDeviceAdapter` 加
+> 实时状态见 [DEV-STATUS.md](DEV-STATUS.md)。标记：✅ 完成 · ◐ 部分 · ▢ 未启动。
+
+0. ✅ **规划** — 本文。
+1. ▢ **动词（bodylink + mindloop）** — manifest + `MockBody` + `SimDeviceAdapter` 加
    `present, wipe, pour, dispose`（§1-3）+ `sweep, mop, warn_wet_floor, restock`（§4）+
    `greet, take_order, offer, deliver`（§5）（一致性套件通过）**且** `mindloop/plan.py` 的
    `_VERB_TABLE` 补条目（`pre`/`eff`/`skill`，修正 A）；扩 `place` effect 编码区域（修正 B）。*无 LLM。*
-2. **记忆（tempomem）** — 加 `last_seen(name)`（§3）+ Tier-1 场景语义接口（§5c.4）：
+2. ◐ **记忆（tempomem）** *（语义 Tier-1 已落 2026-07-02；核验/补齐 `last_seen`/`last_changed`/`current_occupants`）* — 加 `last_seen(name)`（§3）+ Tier-1 场景语义接口（§5c.4）：
    `state`/`set_state`（节点属性包）、`last_changed(region)`、`current_occupants(region)`、
    `add_event`/`query_events`（`.smem` 新增 `events` 表）。区域助手已有。全部 numpy-only，无网络。*无 LLM。*
-3. **安全（mindloop/Phylax）** — 区域访问 + 按人隐私维度 + 灶/利器的**参数级门控** `(verb, param)`（D1）。
+3. ▢ **安全（mindloop/Phylax）** — 区域访问 + 按人隐私维度 + 灶/利器的**参数级门控** `(verb, param)`（D1）。
    区域访问 key 在**现有** `Role {adult,child,guest,stranger}`（`phylax.py` 已有）—— 不新造信任枚举。*无 LLM。*
-3b. **执行动态（mindloop）** — 可抢占调度步进器 + 恢复游标 + `InterruptSource` + `BargeClassifier`（D2）；
+3b. ▢ **执行动态（mindloop）** — 可抢占调度步进器 + 恢复游标 + `InterruptSource` + `BargeClassifier`（D2）；
    大脑级 `Clarifier` 接缝（D3），`ReplanAction.ASK_HUMAN` 为其一入口 + 问询预算；可达时把死胡同
    ESCALATE → Clarifier。澄清经 Phylax 复审。*无 LLM。*
-4. **评测台（skillforge）** — `Scenario.regions` + `_build_memory` 调 `define_region`（K）；
+4. ◐ **评测台（skillforge）** *（scenario 结构已动；真断言依赖 1+3+3b）* — `Scenario.regions` + `_build_memory` 调 `define_region`（K）；
    扩 `EvalReport`/`EvalThresholds` 全部新指标字段（J）；5 套件（`tour_suite`、`chores_suite`、
    `find_suite`、`cleaner_suite`、`receptionist_suite`）+ 一个 `execution_dynamics` 套件
    （文本打断 / 失败问询 / 问询预算）；按 §7e 门槛全部基线 go/no-go。*无 LLM，可自主。*
-5. **真 LLM 验证** — 在主机 `192.168.31.89`（Cosmos+Qwen）跑新套件，拿真准确率/成功率，**钉 `temperature=0` + 固定 seed**（贪心、可复现 —— L）。**需主人批准（GPU）。**
-6. **数据与训练闭环（skillforge）** — trace→数据集整理；主机 LLM `PolicyAuthor`；奖励=六标准数值化（含诚实）；
+5. ▢ **真 LLM 验证** — 在主机 `192.168.31.89`（Cosmos+Qwen）跑新套件，拿真准确率/成功率，**钉 `temperature=0` + 固定 seed**（贪心、可复现 —— L）。**需主人批准（GPU）。**
+6. ◐ **数据与训练闭环（skillforge）** *（接受门 `gate.py` 已提前落）* — trace→数据集整理；主机 LLM `PolicyAuthor`；奖励=六标准数值化（含诚实）；
    技能→Episteme 结晶；提升回灌由 `IntegrationReport.meets` 门控。整理+基线可自主，LLM rollout 需主机。见 FLOWS 图 5。
-7. **延后** — 语音讲解导览（VoiceLoop）、跟随访客 + 主动搜索感知（动态场景 P4）。
+7. ▢ **延后** — 语音讲解导览（VoiceLoop）、跟随访客 + 主动搜索感知（动态场景 P4）。
 
 第 1–4 步可自主落地、无网络。仅第 5 步需主机。

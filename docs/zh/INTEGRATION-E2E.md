@@ -68,8 +68,12 @@ skillforge 是 import 全部成员的那个 —— 驱动 mem+brain+body+world �
 
 ## 6. 分期
 
-1. **Harness + 基线**（网络隔离、确定）：`Scenario`、`ScenarioRunner`、`IntegrationReport`、
-   场景套件、测试。CI go/no-go。
+> 各期实时状态见 [DEV-STATUS.md](../zh/DEV-STATUS.md)。
+
+1a. **Harness + 基线**（网络隔离、确定）：`Scenario`、`ScenarioRunner`、`IntegrationReport`、
+   4 场景家庭套件、测试。CI go/no-go。**✅ 已完成 —— GO，全指标 100%。**
+1b. **任务族套件扩展**：TASK-FAMILIES 6 套件（导览/家务/寻物/保洁/接待/执行动态）+ 新指标。
+   **▢ 进行中**（真断言依赖 TASK-FAMILIES §8 步骤 1+3+3b）。
 2. **真 LLM 验证 pass**：换 `FailoverVerbalizer`→主机；在 GPU 主机跑；取准确率+成功率+时延；归档 report。
 3. **仿真身体**：套件经 `SimDeviceAdapter`+Genesis（物理步进）跑，补 MockBody。
 4. **语音**：可选地经 `VoiceLoop`（voicelink fill）驱动轮次。

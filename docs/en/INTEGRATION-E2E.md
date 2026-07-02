@@ -78,8 +78,14 @@ A small, growing suite exercising every faculty:
 
 ## 6. Phasing
 
-1. **Harness + baseline** (network-free, deterministic): `Scenario`,
-   `ScenarioRunner`, `IntegrationReport`, the scenario suite, tests. CI go/no-go.
+> Live status across all phases: [DEV-STATUS.md](DEV-STATUS.md).
+
+1a. **Harness + baseline** (network-free, deterministic): `Scenario`,
+   `ScenarioRunner`, `IntegrationReport`, the 4-scenario household suite, tests.
+   CI go/no-go. **✅ done — GO, all metrics 100%.**
+1b. **Family-suite extension**: the six TASK-FAMILIES suites (tour/chores/find/
+   cleaner/receptionist/execution-dynamics) + new metrics. **▢ in progress**
+   (real assertions need TASK-FAMILIES §8 steps 1+3+3b).
 2. **Real-LLM validation pass**: swap in `FailoverVerbalizer`→host; run on the GPU
    host; capture accuracy + success-rate + latency; archive the report.
 3. **Sim body**: run the suite through `SimDeviceAdapter`+Genesis (physics stepping)
