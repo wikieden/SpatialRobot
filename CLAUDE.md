@@ -88,7 +88,7 @@ a real LLM or model download in a test.
 
 ## Architecture notes that span files
 
-**`tempomem` (the core) is the only stateful object.** `SpatialMemory` in
+**`tempomem` (the core) is the only stateful object.** `TempoMem` in
 `tempomem/src/tempomem/__init__.py` is the entire public surface; everything
 else (`store`, `fusion`, `query`, `serialize`, `relations`, `persist`) is a
 stateless module it composes. `__all__` is the API contract — anything not

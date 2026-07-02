@@ -171,7 +171,7 @@ Absorbing engineering critique **HIGH-4**. **Code facts:** `reason.py:18` uses `
 
 ### 2.5 [verified · architectural boundary] Cross-robot "real-time sharing" vs "offline merge"
 
-Absorbing engineering critique **CRITICAL-2** and strategy critique **HIGH-2**. **Code facts:** the comment at `brain.py:8–9` explicitly states "v0 is single-threaded; serialize all access (the core store is one sqlite connection)"; `SpatialMemory.merge()` (`__init__.py:633`) is a **session-replay-style offline merge**, not real-time concurrent sync. The SQLite single-writer lock immediately becomes a bottleneck under concurrent writes from multiple robots.
+Absorbing engineering critique **CRITICAL-2** and strategy critique **HIGH-2**. **Code facts:** the comment at `brain.py:8–9` explicitly states "v0 is single-threaded; serialize all access (the core store is one sqlite connection)"; `TempoMem.merge()` (`__init__.py:633`) is a **session-replay-style offline merge**, not real-time concurrent sync. The SQLite single-writer lock immediately becomes a bottleneck under concurrent writes from multiple robots.
 
 **Conclusion (must be declared simultaneously when citing RoboOS's "cross-robot real-time sharing"):**
 - **Implemented**: cross-episode / cross-robot **offline merge** (one robot's `.smem` replayed into another memory);

@@ -156,7 +156,7 @@ Chronotope 明确站在第三极。其锚点是记忆核；其他成员是喂给
 
 ### 2.5 [已验证·架构边界] 跨机器人"实时共享" vs "离线 merge"
 
-吸收工程批判 **CRITICAL-2** 与战略批判 **HIGH-2**。**代码事实：** `brain.py:8–9` 注释明言"v0 is single-threaded; serialize all access (the core store is one sqlite connection)"；`SpatialMemory.merge()`（`__init__.py:633`）是 **session-replay 式离线合并**，不是实时并发同步。SQLite 单写锁在多机器人并发写时会立即成瓶颈。
+吸收工程批判 **CRITICAL-2** 与战略批判 **HIGH-2**。**代码事实：** `brain.py:8–9` 注释明言"v0 is single-threaded; serialize all access (the core store is one sqlite connection)"；`TempoMem.merge()`（`__init__.py:633`）是 **session-replay 式离线合并**，不是实时并发同步。SQLite 单写锁在多机器人并发写时会立即成瓶颈。
 
 **结论（必须在引用 RoboOS"跨机器人实时共享"时同步声明）：**
 - **已实现**：跨 episode / 跨机器人的**离线 merge**（一台机器人的 `.smem` 回放进另一份记忆）；
