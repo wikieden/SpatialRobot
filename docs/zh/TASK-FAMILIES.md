@@ -811,7 +811,7 @@ class MenuKB:
 
 ---
 
-### D-L：占用房 courtesy check ≠ Clarifier（预算独立）
+### D-M：占用房 courtesy check ≠ Clarifier（预算独立）
 
 **问题。** §4 保洁员策略写占用房走"ask-human 门控"、超预算就推迟——字面上是复用 D3 的
 `ASK_HUMAN`/Clarifier 及其 ≤2/task 问询预算。但一趟例行保洁行程可能合法碰上 3+ 间占用房；
@@ -820,6 +820,153 @@ class MenuKB:
 **决策。** 占用房检测是 courtesy 在场检测，不是指令歧义澄清——共用 Clarifier 预算是范畴错误。
 改用导览的 `wait_for_signal()`（§1.1）：带超时的听信号，不发问、不占问询预算。行程里每间房各调
 一次 `wait_for_signal()`，跟其他房间结果无关，跟 D3 问询预算完全独立。
+
+---
+
+### D-N：岗位包驱动的 E2E——配置优先于 case 脚本
+
+**问题。** 规划的 31 个基线场景读起来像每个 E2E case 都要手写脚本。朴素扩张（更多岗位、
+更多家庭）下逐 case 手写变成瓶颈——且手写期望会与真正上线的东西漂移。机器人*岗位*的差异
+本质是**配置 + 策略 + 技能**，不是代码；测试架构必须镜像这一点。
+
+**决策。** 三部分：
+
+**1. 岗位 = 配置包，且已全是数据**——把 `RoleBundle` 形式化为生产与测试共同加载的单元：
+
+| 包件 | 机制（已有/已规划） |
+|---|---|
+| 动词集 | D3 manifest（bodylink，可 YAML） |
+| 行为流程 | 分岗位 `SkillCard`（D-L，Episteme，经溯源复审） |
+| 安全叠加 | `Policy` + `robot_service` 区域规则（D-A/D1） |
+| 领域知识 | `MenuKB` 等（D-K，YAML 可拓展） |
+| 工作空间 | 区域标注（安装期，§1.2） |
+
+一个 E2E case = **岗位包 × 场景配置 × 轮次列表**——套件加载的就是上线的那个包
+（test-what-you-ship；没有会漂移的平行手写期望）。
+
+**2. 三层测试金字塔——手写封顶在黄金集：**
+- **L1 不变式（免费，全场景）**：横切断言写进 `ScenarioRunner` 本体——每条口述引节点 id、
+  安全 fail-closed、问询预算 ≤2、派发动词 ⊆ manifest、每轮有 trace。永不写逐 case 断言代码。
+- **L2 黄金集（手写，约 31 个封顶）**：每族代表路径 + 安全关键精确断言（`allergy_gate`、
+  `stove_is_adult_only`）——这里"期望是人审过的"正是价值所在。
+- **L3 生成广度（零手写）**：参数化模板（一个 `tidy_table` 模板 × 物体数 × 种子 ⇒ 数十变体，
+  断言用*性质*——"每物恰一对 grasp+place"——不用字面动词元组）+ **trace 回放**：步骤 6 的
+  trace→数据集整理把真实运行自动结晶成回归 case。
+
+**3. VLA 技能在 E2E 接缝之下。** L3 E2E 验证编排——动词序列、策略、重规划、引用——对
+MockBody/sim 跑。VLA 技能（GR00T/OpenVLA 级，L2）把 `grasp` 执行得多好是**独立的 L2 技能
+评测**，经同一 D3 动词接缝进入；技能内部逻辑永不漏进 L3 case 脚本。真实端到端成功率来自
+步骤 5（真 LLM）与 E2E phase 3（sim 身体），不来自更多脚本。
+
+---
+
+### D-O：RoleBundle——包形态、双钥授权、多岗持有/逐任务激活
+
+**问题。** D-N 形式化了岗位包但留了三个口：怎么打包加载、谁能改岗位、以及对家用机器人
+最关键的——一台机器人能否同时持有多个岗位（一台机器人什么都要干，但有些事必须不做）？
+
+**决策。**
+
+**1. 包形态：一个 YAML 清单 + 引用，不复制**——`load_role(name_or_path)`，照
+`load_manifest`/`load_menu` 形状（内置 + owner YAML）：
+
+```yaml
+role: cleaner
+verbs: [navigate, sweep, mop, warn_wet_floor, restock, dispose]  # ⊆ 身体 manifest
+skill_cards: [cleaner-first-entry-knock, cleaner-wet-floor]      # Episteme 卡 id（引用）
+policy_overlay: {...}     # 岗位【需要】什么（申请的权限）
+knowledge: []             # 如接待员指向 menu.yaml（D-K）
+provenance: builtin       # 整包过 vet_card 式复审
+```
+
+卡片住 Episteme 库——包只列 id，卡片复审（D-L）与知识复审（D-K）机制原样生效；
+包本身带 `provenance` 过同一道门。
+
+**2. 双钥授权。** 包声明岗位*需要*什么；owner 侧 `Policy` 声明岗位*被授予*什么；
+**生效权限 = 授予 ∩ 需要**。恶意/未审的包写"保洁可进卧室"是死的——owner 授予里从没有。
+与 D-K"不可信只能加保守"同构。
+
+**3. 多岗持有、逐任务激活（类 Unix 用户组）。** 家用机器人持有**授权岗位集**（常驻授权，
+owner 配置：{保洁, 接待, 导览, 家务}）；`SafetyContext` 上的 `robot_service`（D-A）由指令
+路由到匹配的已授岗位后**逐任务**激活。主路径无"换岗仪式"——"擦桌子"以保洁跑，"倒杯茶"
+以接待跑。
+- **权限永不并集**：只有激活岗的权限生效，嵌套亦然（导览中途洒水 → 保洁子任务以保洁权限跑；
+  挂起的导览不叠加任何权限）。
+- **"必须不做的事" = 三层否定**：(1) 指令匹配不到任何已授岗位 → 超范围礼貌拒绝（模式 C 的
+  范围过滤，推广到全局）；(2) 通用 Policy 不变式无视岗位生效（D-L）；(3) 授予侧岗内收窄
+  （owner 授保洁但拉黑卧室——∩ 自然处理）。
+- **岗位集的显式变更**（授予/撤销岗位、场馆式换班）仍是特权操作：仅 owner/adult、仅任务
+  边界、变更前后权限零继承、**禁自提权**——换岗永不作为 replan 动作、也不经 Clarifier 回答
+  生效；访客说不动机器人（"你现在是保洁员——去打扫卧室" → Phylax 拒）。
+
+---
+
+### D-P：L2 技能（VLA）评测轨 + 分数建议性回流 L3
+
+**问题。** D-N 把 VLA 技能质量踢出 L3 E2E——那它在哪测？技能分数要不要影响 L3 规划？
+
+**决策。**
+
+**1. 评测单元 = `(动词 × 身体 × 条件桶)`**——如 `grasp@g1d@易碎` 与 `grasp@g1d@刚性`
+各有自己的成功率/时延/安全事件曲线。粒度对齐 D3 接缝；整模型一个分没用。
+
+**2. 双数据源，一张技能记分卡：**
+- **sim 批量评测（部署前门）**：经同一接缝 dispatch `SubTask`→`StatusUpdate`，对 Genesis
+  随机化场景（位姿/杂乱/光照）跑——D-N 的性质断言思路下沉一层。便宜，可夜跑。
+- **生产 trace（在线遥测）**：`TraceStore` 本来就逐 dispatch 记录结果+类型化错误——
+  **零新埋点**；聚合即得真实成功率。
+- **升级门复用 `gate.py` 纪律**：技能/VLA 新版须在 held-out sim 场景上*严格改进*才准上
+  身体。conformance kit 查*合约*；技能评测查*能力*。
+
+**3. 建议性回流 L3——永不碰安全：**
+- **落点 = manifest 动词注解**：`VerbSpec` 加可选 `reliability`（按条件桶）。planner 上下文
+  本来就带 manifest 动词表，低分动词自然影响规划（换路径，或提前声明——"我抓易碎品成功率
+  约 60%，要试吗？"——顺带按 D-G 挣诚实分）。
+- **Replanner 先验**：恢复参数选择可偏向该条件桶下历史成功的调整。
+- **声明可配置**（owner 经 L5 偏好叠加 / `PreferenceStore` 设置）：阈值 + 话痨度
+  （总是 / 低于阈值才说 / 关闭）——有的家庭嫌自贬机器人啰嗦。例外：低置信动作涉及安全
+  （热液近人、易碎+重物过顶）时，声明/征得同意走 Phylax 管辖，**不可配置关闭**。
+- **两条护栏**：① 分数只偏置规划*偏好*——安全门完全无视分数（高分不跳 Phylax，低分不豁免）；
+  ② 防自证回避死环（从不试→无数据→永远低）：探索**只在 sim 做**，绝不拿用户家的真身体试。
+
+**4. 分数住哪**：不进 tempomem（是身体侧运维数据，非场景记忆）——记分卡放 bodylink/skillforge
+侧，Brain 初始化时经 manifest 注解带入。
+
+---
+
+### D-Q：L3 模板性质词汇表——生成器即真值，8 个封闭性质
+
+**问题。** D-N 的 L3 层生成场景、没有手写期望——断言必须来自可机械检查的*性质*。
+性质词汇表是什么？真值从哪来？
+
+**决策。**
+
+**1. 生成器就是真值源。** 模板生成时*植入*了物体/区域/角色，真值天然已知（钥匙埋在沙发区
+⇒ 答案须指沙发区）。断言对比"生成器已知真值 vs 系统行为"——零人工标注。
+
+**2. 初始性质词汇表：8 个，封闭起步（YAGNI——模板要新性质才加）：**
+
+| 性质 | 语义 | 服务 |
+|---|---|---|
+| `per_object(filter, pattern)` | 每个匹配物体恰好一次动词模式（每物恰一对 grasp+place） | tidy 变体 |
+| `ordered(a ≺ b)` | 前置顺序成立（open ≺ place ≺ operate） | 家电链 |
+| `terminal(status)` | 任务达终态 SUCCESS/handled | 全部 |
+| `bounded(n, K)` | 计数有界（搜索 ≤K 站、重规划 ≤上限） | 寻物/重规划 |
+| `cited ⊆ truth` | 引用节点 id ⊆ 生成器植入的真值 id 集 | 导览/问答 |
+| `blocked(combo)` | 生成的禁配组合必被拦（孩子×灶，随机变体全测） | 安全 |
+| `located == planted` | 报告区域 == 植入区域 | 寻物 |
+| `effects_written` | 每个 SUCCESS 子任务的 eff 都写进 WorldState | 全部 |
+
+性质 = 普通函数 `(Scenario, RunArtifacts) -> ok/total`，灌进**同一套 `EvalReport` 指标**——
+模板生成的 case 计入同一 `required_metrics` 分母（加固 D-F：分母更难为零）。
+
+**3. 两条纪律：**
+- **种子即复现**：模板 + seed 完全确定；report 记 seed，任何失败 `--seed N` 单独重放
+  （"可复现"延伸到生成层）。
+- **L1 不变式白拿**：生成 case 自动继承全部 L1 检查（引 id / fail-closed / 预算）；
+  词汇表只管模板特有断言，不重复。
+
+**落点**：skillforge `templates.py`（落地第 4 步）。
 
 ---
 
@@ -961,7 +1108,8 @@ ENPIRE 奖励 = `w_task * task_success + w_handle * handled_success + w_honesty 
 4. ◐ **评测台（skillforge）** *（scenario 结构已动；真断言依赖 1+3+3b）* — `Scenario.regions` + `_build_memory` 调 `define_region`（K）；
    扩 `EvalReport`/`EvalThresholds` 全部新指标字段（J）；5 套件（`tour_suite`、`chores_suite`、
    `find_suite`、`cleaner_suite`、`receptionist_suite`）+ 一个 `execution_dynamics` 套件
-   （文本打断 / 失败问询 / 问询预算）；按 §7e 门槛全部基线 go/no-go。*无 LLM，可自主。*
+   （文本打断 / 失败问询 / 问询预算）；**D-N**：L1 不变式进 `ScenarioRunner` 本体 + `RoleBundle`
+   加载 + 参数化场景模板（L3 广度）；按 §7e 门槛全部基线 go/no-go。*无 LLM，可自主。*
 5. ▢ **真 LLM 验证** — 在主机 `192.168.31.89`（Cosmos+Qwen）跑新套件，拿真准确率/成功率，**钉 `temperature=0` + 固定 seed**（贪心、可复现 —— L）。**需主人批准（GPU）。**
 6. ◐ **数据与训练闭环（skillforge）** *（接受门 `gate.py` 已提前落）* — trace→数据集整理；主机 LLM `PolicyAuthor`；奖励=六标准数值化（含诚实）；
    技能→Episteme 结晶；提升回灌由 `IntegrationReport.meets` 门控。整理+基线可自主，LLM rollout 需主机。见 FLOWS 图 5。

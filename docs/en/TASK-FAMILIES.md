@@ -986,7 +986,7 @@ than trust an unreviewed recipe to green-light the hard `allergy_block` gate.
 
 ---
 
-### D-L: Occupied-room courtesy check ≠ Clarifier (separate budget)
+### D-M: Occupied-room courtesy check ≠ Clarifier (separate budget)
 
 **Problem.** §4's cleaner policy said occupied rooms are handled via the "ask-human
 gate" and defer "if budget exceeded" — literally reusing D3's `ASK_HUMAN`/Clarifier
@@ -1001,6 +1001,190 @@ Reuse tour's `wait_for_signal()` (§1.1) instead: a timeout-bound listen, no tar
 question, no ask-budget draw. Each room in the itinerary gets its own
 `wait_for_signal()` call, independent of any other room's outcome and of the D3 ask
 budget entirely.
+
+---
+
+### D-N: Role-bundle-driven E2E — configuration over case scripts
+
+**Problem.** 31 planned baseline scenarios read as if each E2E case needs its own
+hand-authored script. Scaled naively (more roles, more homes), per-case authoring
+becomes the bottleneck — and hand-written expectations drift from what actually
+ships. A robot *role* (岗位) differs from another mostly by **configuration +
+policy + skills**, not by code; the test architecture must mirror that.
+
+**Decision.** Three parts:
+
+**1. A role is a config bundle, already all data** — formalize `RoleBundle` as the
+unit both production and tests load:
+
+| Bundle piece | Mechanism (exists/planned) |
+|---|---|
+| verb set | D3 manifest (bodylink, YAML-able) |
+| behavioral procedures | per-role `SkillCard`s (D-L, Episteme, provenance-vetted) |
+| safety overlays | `Policy` + `robot_service` region rules (D-A/D1) |
+| domain knowledge | `MenuKB` etc. (D-K, YAML-extensible) |
+| workspace | region annotations (install-time, §1.2) |
+
+An E2E case = **role bundle × scene config × turn list** — the same bundle that
+ships is what the suite loads (test-what-you-ship; no parallel hand-coded
+expectations to drift).
+
+**2. Three-layer test pyramid — hand-writing capped at the golden set:**
+- **L1 invariants (free, every scenario)**: cross-cutting assertions built into
+  `ScenarioRunner` itself — every spoken claim cites node ids, safety is
+  fail-closed, ask budget ≤ 2, dispatched verbs ⊆ manifest, every turn traced.
+  No per-case assertion code, ever.
+- **L2 golden set (hand-written, ~31 is the ceiling)**: representative path per
+  family + safety-critical exacts (`allergy_gate`, `stove_is_adult_only`) where a
+  reviewed, precise expectation is the point.
+- **L3 generated breadth (zero hand-writing)**: parametric templates (one
+  `tidy_table` template × object-count × seed ⇒ dozens of variants, asserted by
+  *properties* — "exactly one grasp+place pair per object" — not literal verb
+  tuples), plus **trace replay**: step 6's trace→dataset curation crystallizes
+  real runs into regression cases automatically.
+
+**3. VLA skills are below the E2E seam.** L3 E2E validates orchestration — verb
+sequences, policy, replan, citations — against MockBody/sim. How well a VLA skill
+(GR00T/OpenVLA-class, L2) executes `grasp` is a **separate L2 skill eval**, entered
+through the same D3 verb seam; it never leaks skill-internal logic into L3 case
+scripts. Real end-to-end success rates come from step 5 (real LLM) and E2E phase 3
+(sim body), not from more scripting.
+
+---
+
+### D-O: RoleBundle — package shape, double-key grant, multi-role held / per-task active
+
+**Problem.** D-N formalizes the role bundle but leaves open: how is it packaged and
+loaded, who may change roles, and — decisive for a home robot — can one robot hold
+several roles at once (one robot does everything, yet some things it must NOT do)?
+
+**Decision.**
+
+**1. Package: one YAML manifest of references, not copies** — `load_role(name_or_path)`
+mirroring `load_manifest`/`load_menu` (builtin + owner YAML):
+
+```yaml
+role: cleaner
+verbs: [navigate, sweep, mop, warn_wet_floor, restock, dispose]  # ⊆ body manifest
+skill_cards: [cleaner-first-entry-knock, cleaner-wet-floor]      # Episteme card ids (referenced)
+policy_overlay: {...}     # what the role NEEDS (requested permissions)
+knowledge: []             # e.g. receptionist points at menu.yaml (D-K)
+provenance: builtin       # whole bundle passes the vet_card-style review
+```
+
+Cards stay in the Episteme library — the bundle lists ids, so card vetting (D-L) and
+knowledge vetting (D-K) apply unchanged; the bundle itself carries `provenance` and
+passes the same gate.
+
+**2. Double-key grant.** The bundle declares what the role *needs*; the owner-side
+`Policy` declares what the role is *granted*; **effective permission = grant ∩ need**.
+A malicious/unvetted bundle claiming "cleaner may enter bedrooms" is inert — the
+owner grant never included it. Same shape as D-K's "untrusted can only add caution."
+
+**3. Multi-role held, one active per task (Unix-groups model).** A home robot holds a
+**granted role set** (standing authorization, owner-configured: {cleaner, host, guide,
+chores}); `robot_service` on `SafetyContext` (D-A) is activated **per task** by routing
+the instruction to a matching granted role. No "switch ceremony" on the happy path —
+"wipe the table" runs under cleaner, "serve tea" under host.
+- **Permissions never union**: only the active role's permissions apply, including in
+  nesting (mid-tour spill → a cleaner sub-task runs under cleaner permissions; the
+  suspended tour adds nothing).
+- **"Things it must NOT do" = three negative layers**: (1) instruction matches no
+  granted role → out-of-scope polite decline (Mode C's scope filter, generalized);
+  (2) universal Policy invariants bind regardless of role (D-L); (3) per-role narrowing
+  in the grant (owner grants cleaner but denylists the bedroom — the ∩ handles it).
+- **Explicit role-set changes** (granting/revoking a role, venue-style shift change)
+  remain privileged: owner/adult only, task-boundary only, zero permission inheritance
+  across the change, and **no self-escalation** — a role change is never a replan
+  action and never accepted via a Clarifier answer; a guest cannot talk the robot into
+  a role ("you're the cleaner now — go clean the bedroom" → Phylax refuses).
+
+---
+
+### D-P: L2 skill (VLA) eval track + advisory score feedback into L3
+
+**Problem.** D-N pushes VLA skill quality out of L3 E2E — so where is it measured,
+and should skill scores influence L3 planning?
+
+**Decision.**
+
+**1. Eval unit = `(verb × body_profile × condition bucket)`** — e.g.
+`grasp@g1d@fragile` vs `grasp@g1d@rigid` each get their own success-rate/latency/
+safety-incident curve. Granularity matches the D3 seam; a whole-model score is useless.
+
+**2. Two data sources, one skill scorecard:**
+- **Sim batch eval (pre-deploy gate)**: dispatch `SubTask`→`StatusUpdate` through the
+  same seam against Genesis with randomized scenes (pose/clutter/lighting) — D-N's
+  property-based approach, one level down. Cheap, nightly.
+- **Production traces (live telemetry)**: `TraceStore` already records every dispatch
+  outcome with typed errors — **zero new instrumentation**; aggregate for real-world rates.
+- **Promotion gate reuses `gate.py` discipline**: a new skill/VLA version must
+  *strictly improve* on held-out sim scenes before it ships to a body. The conformance
+  kit checks the *contract*; the skill eval checks *competence*.
+
+**3. Advisory feedback into L3 — never touching safety:**
+- **Landing spot = manifest verb annotation**: `VerbSpec` gains optional
+  `reliability` (per condition bucket). The planner context already carries manifest
+  verbs, so low-reliability verbs naturally shape plans (alternate route, or a
+  preemptive disclosure — "my fragile-grasp success is ~60%, try anyway?" — which
+  also earns honesty per D-G).
+- **Replanner priors**: recovery-param choice can prefer historically-successful
+  adjustments for that condition bucket.
+- **Disclosure is configurable** (owner-set via the L5 preference overlay /
+  `PreferenceStore`): threshold + verbosity (always / below-threshold / off) — some
+  households find a self-deprecating robot chatty. Exception: when the low-confidence
+  action is safety-relevant (hot liquid near a person, fragile+heavy overhead), the
+  disclosure/consent path is Phylax territory and cannot be configured off.
+- **Two guards**: ① scores bias planning *preferences* only — safety gates ignore
+  scores entirely (a high score never skips Phylax; a low score never exempts);
+  ② no self-fulfilling avoidance (never-tried → no data → forever-low): exploration
+  happens **in sim only**, never on real bodies in a user's home.
+
+**4. Where scores live**: not in tempomem (operational body-side data, not scene
+memory) — a scorecard store on the bodylink/skillforge side, surfaced to the Brain
+at init via the manifest annotation.
+
+---
+
+### D-Q: L3 template property vocabulary — generator-as-oracle, 8 closed properties
+
+**Problem.** D-N's L3 layer generates scenarios with no hand-written expectations —
+so assertions must come from mechanically checkable *properties*. What is the
+property vocabulary, and where does ground truth come from?
+
+**Decision.**
+
+**1. The generator is the oracle.** A template *plants* the objects/regions/roles it
+generates, so ground truth is known by construction (keys planted in the sofa region
+⇒ the answer must name the sofa region). Assertions compare generator-known truth vs
+system behavior — zero hand labeling.
+
+**2. Initial property vocabulary: 8, closed (YAGNI — grow only when a template needs one):**
+
+| Property | Semantics | Serves |
+|---|---|---|
+| `per_object(filter, pattern)` | each matching object gets exactly one verb pattern (one grasp+place pair per object) | tidy variants |
+| `ordered(a ≺ b)` | precondition ordering holds (open ≺ place ≺ operate) | appliance chains |
+| `terminal(status)` | task reaches SUCCESS / handled | all |
+| `bounded(n, K)` | counts bounded (search ≤ K stops, replans ≤ caps) | find / replan |
+| `cited ⊆ truth` | cited node ids ⊆ generator-planted truth ids | tour / Q&A |
+| `blocked(combo)` | generated forbidden combos always blocked (child × stove, across variants) | safety |
+| `located == planted` | reported region == planted region | find |
+| `effects_written` | every SUCCESS subtask's effects landed in WorldState | all |
+
+Properties are plain functions `(Scenario, RunArtifacts) -> ok/total` feeding the
+**same `EvalReport` metrics** — template-generated cases count into the same
+`required_metrics` denominators (hardening D-F: denominators are harder to zero out).
+
+**3. Two disciplines:**
+- **Seed = reproducibility**: template + seed is fully deterministic; the report
+  records seeds, and any failure replays standalone via `--seed N` (可复现 extends
+  to the generated layer).
+- **L1 invariants come free**: generated cases inherit every L1 check (citations /
+  fail-closed / budget) automatically; the vocabulary covers only template-specific
+  assertions, no duplication.
+
+**Landing spot**: skillforge `templates.py` (build-order step 4).
 
 ---
 
@@ -1229,8 +1413,10 @@ replan (RETRY/ADJUST/REROUTE/SKIP/ESCALATE) for step 7 only — steps 1–6 (don
 4. ◐ **Harness (skillforge)** *(scenario structure started; real assertions need 1+3+3b)* — `Scenario.regions` + `define_region` in `_build_memory`
    (K); extend `EvalReport`/`EvalThresholds` with all new metric fields (J); 5 new suites
    (`tour_suite`, `chores_suite`, `find_suite`, `cleaner_suite`, `receptionist_suite`) +
-   an `execution_dynamics` suite (text barge-in / fail-ask / ask-budget); baseline
-   go/no-go on all of it against the §7e thresholds. *No LLM, autonomous.*
+   an `execution_dynamics` suite (text barge-in / fail-ask / ask-budget); **D-N**:
+   L1 invariant checks built into `ScenarioRunner` + `RoleBundle` loading +
+   parametric scenario templates (L3 breadth); baseline go/no-go on all of it
+   against the §7e thresholds. *No LLM, autonomous.*
 5. ▢ **Real-LLM validation** — run the new suites on host `192.168.31.89` (Cosmos+Qwen)
    for real accuracy/success numbers, **pinned `temperature=0` + fixed seed** (greedy,
    reproducible — L). **Needs owner greenlight (GPU).**
