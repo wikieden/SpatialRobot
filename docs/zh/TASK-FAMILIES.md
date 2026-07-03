@@ -1105,9 +1105,9 @@ ENPIRE 奖励 = `w_task * task_success + w_handle * handled_success + w_honesty 
 2. ✅ **记忆（tempomem）** *（2026-07-02 完成：语义 Tier-1 + `last_seen` 带测试落地；`last_changed` 已核验；`current_occupants` = D-B 组合查询，无需新方法）* — 加 `last_seen(name)`（§3）+ Tier-1 场景语义接口（§5c.4）：
    `state`/`set_state`（节点属性包）、`last_changed(region)`、`current_occupants(region)`、
    `add_event`/`query_events`（`.smem` 新增 `events` 表）。区域助手已有。全部 numpy-only，无网络。*无 LLM。*
-3. ▢ **安全（mindloop/Phylax）** — 区域访问 + 按人隐私维度 + 灶/利器的**参数级门控** `(verb, param)`（D1）。
+3. ✅ **安全（mindloop/Phylax）** *（2026-07-02 完成：named_params、D1 参数门、D-A robot_service、Q6 区域默认、D-K menu.py+过敏不变式 —— 18 测试）* — 区域访问 + 按人隐私维度 + 灶/利器的**参数级门控** `(verb, param)`（D1）。
    区域访问 key 在**现有** `Role {adult,child,guest,stranger}`（`phylax.py` 已有）—— 不新造信任枚举。*无 LLM。*
-3b. ▢ **执行动态（mindloop）** — 可抢占调度步进器 + 恢复游标 + `InterruptSource` + `BargeClassifier`（D2）；
+3b. ✅ **执行动态（mindloop）** *（2026-07-02 完成，3 个 TDD 切片：InterruptSource+BargeClassifier · 步间打断处理 · Clarifier+问询预算+ESCALATE 路由 —— 19 测试）* — 可抢占调度步进器 + 恢复游标 + `InterruptSource` + `BargeClassifier`（D2）；
    大脑级 `Clarifier` 接缝（D3），`ReplanAction.ASK_HUMAN` 为其一入口 + 问询预算；可达时把死胡同
    ESCALATE → Clarifier。澄清经 Phylax 复审。*无 LLM。*
    **风险纪律（review 第 2 点）**：本步重构 `Brain._dispatch_plan`——现有 109 个 mindloop

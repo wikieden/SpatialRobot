@@ -27,10 +27,10 @@ T1 ─────────────────────────�
   2 ✅ 记忆       2026-07-02 完成 —— Tier-1 已核验 · last_seen 落地（+5 测试）·
                   current_occupants = D-B 组合查询（无需新方法）
 T2 ──────────────────────────────────────────────────────────── 最高风险批
-  3 ▢  安全       Phylax：D-A robot_service · D1 (verb,param) 门 · Q6 区域默认 · D-K menu.py
-  3b ▢ 动态       InterruptSource · BargeClassifier(D2) · Clarifier+ASK_HUMAN(D3) · 问询预算
-                  ⚠ 重构 Brain._dispatch_plan（109 测试压其上）：TDD 先行、
-                  独立提交、绝不与步骤 3 混批
+  3 ✅ 安全       2026-07-02 完成 —— named_params · D1 参数门 · D-A 服务区域 · Q6 默认 · D-K 菜单/过敏（fail-closed）
+  3b ✅ 动态      2026-07-02 完成 —— 3 个 TDD 切片逐个绿提交：收件箱+分类器 ·
+                  步间打断（中止/恢复/取代/纠正，Phylax 复审）·
+                  Clarifier + 每任务问询预算 + ESCALATE 路由（共 150 测试）
 T3 ──────────────────────────────────────────────────────────── 收口批
   4a ◐ 评测台     Scenario.regions · EvalReport/Thresholds 字段 + required_metrics(D-F)
                   · L1 不变式进 ScenarioRunner(D-N) · 6 套件

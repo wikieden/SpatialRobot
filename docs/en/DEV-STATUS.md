@@ -28,10 +28,10 @@ T1 ─────────────────────────�
   2 ✅ memory      done 2026-07-02 — Tier-1 verified · last_seen landed (+5 tests) ·
                    current_occupants = D-B composition (no method needed)
 T2 ──────────────────────────────────────────────────────────── highest-risk batch
-  3 ▢  safety      Phylax: D-A robot_service · D1 (verb,param) gating · Q6 region defaults · D-K menu.py
-  3b ▢ dynamics    InterruptSource · BargeClassifier (D2) · Clarifier + ASK_HUMAN (D3) · ask budget
-                   ⚠ refactors Brain._dispatch_plan (109 tests on it): TDD-first,
-                   own commits, never mixed with step 3
+  3 ✅ safety      done 2026-07-02 — named_params · D1 param gate · D-A service regions · Q6 defaults · D-K menu/allergen (fail-closed)
+  3b ✅ dynamics   done 2026-07-02 — 3 TDD slices, each committed green: inbox+classifier ·
+                   between-step barge (abort/resume/supersede/correct, Phylax re-vet) ·
+                   Clarifier + per-task ask budget + ESCALATE routing (150 tests total)
 T3 ──────────────────────────────────────────────────────────── closure batch
   4a ◐ harness     Scenario.regions · EvalReport/Thresholds fields + required_metrics (D-F)
                    · L1 invariants in ScenarioRunner (D-N) · 6 suites

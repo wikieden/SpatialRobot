@@ -1409,11 +1409,11 @@ replan (RETRY/ADJUST/REROUTE/SKIP/ESCALATE) for step 7 only — steps 1–6 (don
    (§5c.4): `state`/`set_state` (node attribute bag), `last_changed(region)`,
    `current_occupants(region)`, `add_event`/`query_events` (new `events` table in `.smem`).
    Region helpers already exist. All numpy-only, no network. *No LLM.*
-3. ▢ **Safety (mindloop/Phylax)** — region-access + person-scoped privacy dimensions +
+3. ✅ **Safety (mindloop/Phylax)** *(done 2026-07-02: named_params, D1 param gate, D-A robot_service, Q6 region defaults, D-K menu.py + allergen invariant — 18 tests)* — region-access + person-scoped privacy dimensions +
    **param-scoped gating** `(verb, param)` for stove/sharp (D1). Region-access keys on the
    **existing** `Role {adult,child,guest,stranger}` (already in `phylax.py`) — no new trust
    enum. *No LLM.*
-3b. ▢ **Execution dynamics (mindloop)** — preemptible dispatch stepper + resume cursor +
+3b. ✅ **Execution dynamics (mindloop)** *(done 2026-07-02, 3 TDD slices: InterruptSource+BargeClassifier · between-step barge handling · Clarifier+ask-budget+ESCALATE routing — 19 tests)* — preemptible dispatch stepper + resume cursor +
    `InterruptSource` + `BargeClassifier` (D2); brain-level `Clarifier` seam (D3) with
    `ReplanAction.ASK_HUMAN` as one entry + ask budget; route dead-end ESCALATE →
    Clarifier when reachable. Re-vet clarifications via Phylax. *No LLM.*
