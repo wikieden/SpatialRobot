@@ -1420,8 +1420,7 @@ replan (RETRY/ADJUST/REROUTE/SKIP/ESCALATE) for step 7 only — steps 1–6 (don
    **Risk discipline (review pt 2)**: this refactors `Brain._dispatch_plan` — the core
    under all 109 existing mindloop tests. **TDD-first, own commit(s), never mixed with
    step 3**; the existing suite must stay green after every slice.
-4a. ◐ **Harness — suites + metrics (skillforge)** *(scenario structure started; real
-   assertions need 1+3+3b; split from 4b per review pt 3 — the step had doubled in scope)*
+4a. ✅ **Harness — suites + metrics (skillforge)** *(done 2026-07-02: 11 family metrics on EvalReport/Thresholds, required_metrics (D-F), L1 invariants in the runner (D-N), six suites GO at 1.0 vs §7e)*
    — `Scenario.regions` + `define_region` in `_build_memory` (K); extend
    `EvalReport`/`EvalThresholds` with all new metric fields (J) + `required_metrics`
    (D-F); L1 invariant checks built into `ScenarioRunner` (D-N); 5 new suites

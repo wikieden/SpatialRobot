@@ -33,9 +33,9 @@ T2 ─────────────────────────�
                    between-step barge (abort/resume/supersede/correct, Phylax re-vet) ·
                    Clarifier + per-task ask budget + ESCALATE routing (150 tests total)
 T3 ──────────────────────────────────────────────────────────── closure batch
-  4a ◐ harness     Scenario.regions · EvalReport/Thresholds fields + required_metrics (D-F)
-                   · L1 invariants in ScenarioRunner (D-N) · 6 suites
-                   → baseline go/no-go vs §7e thresholds       [real assertions need 1+3+3b]
+  4a ✅ harness    done 2026-07-02 — 11 family metrics + required_metrics (D-F) · L1
+                   invariants in the runner (D-N) · six suites (tour/chores/find/cleaner/
+                   receptionist/execution-dynamics) baseline GO, every exercised metric 1.0
   4b ▢ harness     load_role + double-key grant (D-O) · templates.py + 8-property vocab (D-Q)
 T4 ──────────────────────────────────────────────────────────── validation batch
   5 ▢  real LLM    host 192.168.31.89, temp=0 + fixed seed     [NEEDS GPU GREENLIGHT]

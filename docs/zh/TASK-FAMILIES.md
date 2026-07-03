@@ -1112,8 +1112,7 @@ ENPIRE 奖励 = `w_task * task_success + w_handle * handled_success + w_honesty 
    ESCALATE → Clarifier。澄清经 Phylax 复审。*无 LLM。*
    **风险纪律（review 第 2 点）**：本步重构 `Brain._dispatch_plan`——现有 109 个 mindloop
    测试全压其上。**TDD 先行、独立提交、绝不与步骤 3 混批**；每切片后现有套件必须保持全绿。
-4a. ◐ **评测台——套件+指标（skillforge）** *（scenario 结构已动；真断言依赖 1+3+3b；
-   按 review 第 3 点从 4b 拆出——原步骤已膨胀一倍）* — `Scenario.regions` + `_build_memory`
+4a. ✅ **评测台——套件+指标（skillforge）** *（2026-07-02 完成：EvalReport/Thresholds 11 族指标、required_metrics（D-F）、runner 内 L1 不变式（D-N）、六套件按 §7e 全 1.0 GO）* — `Scenario.regions` + `_build_memory`
    调 `define_region`（K）；扩 `EvalReport`/`EvalThresholds` 全部新指标字段（J）+
    `required_metrics`（D-F）；L1 不变式进 `ScenarioRunner` 本体（D-N）；5 套件
    （`tour_suite`、`chores_suite`、`find_suite`、`cleaner_suite`、`receptionist_suite`）+
