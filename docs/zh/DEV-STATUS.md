@@ -8,10 +8,10 @@
 
 | 成员 | 已完成 | 进行中 | 下一步 |
 |---|---|---|---|
-| **tempomem** | 核心（融合/持久/查询/序列化）、区域、衰减、viz；**语义 Tier-1 已落**（edges/properties/events，migration 002） | — | 步骤 2 收尾：核验/补齐 `last_seen`、`last_changed`、`current_occupants` |
+| **tempomem** | 核心（融合/持久/查询/序列化）、区域、衰减、viz；**语义 Tier-1 已落**（edges/properties/events，migration 002）；**`last_seen` 已落**（步骤 2 ✅） | — | 动态场景 P4 供数（推迟） |
 | **worldsense** | RGB(-D)→世界系 Detection，CLIP 在 extra 后 | — | 动态场景 P4 实时感知（推迟） |
-| **mindloop** | P0–P5 ✅；P6 ◐（eval+真LLM已验；Thor 待硬件）；P7 ◐（7.1 failover + 7.2 语音接缝 ✅）；动态场景 1–4 ✅；**TempoMem 改名已落** | — | 步骤 1（`_VERB_TABLE`）、3（Phylax 扩展）、3b（执行动态） |
-| **bodylink** | D3 manifest 框架、MockBody、Genesis sim、一致性套件、4 内置身体 | — | 步骤 1：manifest/mock/sim 加约 12 新动词 |
+| **mindloop** | P0–P5 ✅；P6 ◐（eval+真LLM已验；Thor 待硬件）；P7 ◐（7.1 failover + 7.2 语音接缝 ✅）；动态场景 1–4 ✅；**TempoMem 改名已落**；**步骤 1 `_VERB_TABLE` + place@location 已落** | — | 步骤 3（Phylax 扩展）、3b（执行动态） |
+| **bodylink** | D3 manifest 框架、MockBody、Genesis sim、一致性套件、4 内置身体；**步骤 1 动词已落**（13 通用 + arm 子集） | — | D-P 技能记分卡（随步骤 6） |
 | **voicelink** | EndpointListener/Speaker（Qwen3-ASR/TTS） | — | 步骤 7：真语音打断（流式 ASR+VAD，推迟） |
 | **skillforge** | ENPIRE 骨架、4 场景基线 GO ✅、**evolve 接受门已落**（held-out 严格改进） | 步骤 4 部分（scenario 结构） | 步骤 4 全量：6 族套件 + 新指标 + regions |
 
@@ -23,9 +23,9 @@
 ```
 T1 ──────────────────────────────────────────────────────────── 机械、低风险
   0 ✅ WIP 落地（TempoMem 改名 + 语义层 + gate）                [2026-07-02 完成]
-  1 ▢  动词       bodylink manifest/mock/sim + mindloop _VERB_TABLE + place 区域 eff
-  2 ◐  记忆       Tier-1 已落；按 D-B/§5c.4 签名核验 last_seen · last_changed ·
-                  current_occupants（+测试），缺则补
+  1 ✅ 动词       2026-07-02 完成 —— 13 动词（manifest+arm 子集）· _VERB_TABLE · place@location eff
+  2 ✅ 记忆       2026-07-02 完成 —— Tier-1 已核验 · last_seen 落地（+5 测试）·
+                  current_occupants = D-B 组合查询（无需新方法）
 T2 ──────────────────────────────────────────────────────────── 最高风险批
   3 ▢  安全       Phylax：D-A robot_service · D1 (verb,param) 门 · Q6 区域默认 · D-K menu.py
   3b ▢ 动态       InterruptSource · BargeClassifier(D2) · Clarifier+ASK_HUMAN(D3) · 问询预算

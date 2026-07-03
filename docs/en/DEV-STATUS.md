@@ -8,10 +8,10 @@
 
 | Member | Done | In progress | Next |
 |---|---|---|---|
-| **tempomem** | core (fuse/persist/query/serialize), regions, decay, viz; **semantic Tier-1 landed** (edges/properties/events, migration 002) | — | step 2 remainder: verify/complete `last_seen`, `last_changed`, `current_occupants` |
+| **tempomem** | core (fuse/persist/query/serialize), regions, decay, viz; **semantic Tier-1 landed** (edges/properties/events, migration 002); **`last_seen` landed** (step 2 ✅) | — | dynamic-scene P4 feeds (deferred) |
 | **worldsense** | RGB(-D)→world Detections, CLIP behind extra | — | dynamic-scene P4 live perception (deferred) |
-| **mindloop** | P0–P5 ✅; P6 ◐ (eval + real-LLM validated; Thor pending HW); P7 ◐ (7.1 failover + 7.2 voice seams ✅); dynamic-scene 1–4 ✅; **TempoMem rename landed** | — | steps 1 (`_VERB_TABLE`), 3 (Phylax ext), 3b (execution dynamics) |
-| **bodylink** | D3 manifest framework, MockBody, Genesis sim, conformance kit, 4 builtin bodies | — | step 1: ~12 new verbs in manifest/mock/sim |
+| **mindloop** | P0–P5 ✅; P6 ◐ (eval + real-LLM validated; Thor pending HW); P7 ◐ (7.1 failover + 7.2 voice seams ✅); dynamic-scene 1–4 ✅; **TempoMem rename landed**; **step-1 `_VERB_TABLE` + place@location landed** | — | steps 3 (Phylax ext), 3b (execution dynamics) |
+| **bodylink** | D3 manifest framework, MockBody, Genesis sim, conformance kit, 4 builtin bodies; **step-1 verbs landed** (13 common + arm subset) | — | D-P skill scorecard (with step 6) |
 | **voicelink** | EndpointListener/Speaker (Qwen3-ASR/TTS) | — | step 7: real voice barge-in (streaming ASR+VAD, deferred) |
 | **skillforge** | ENPIRE skeleton, 4-scenario baseline harness GO ✅, **evolve acceptance gate landed** (held-out strict improvement) | step 4 partial (scenario structure) | step 4 full: 6 family suites + new metrics + regions |
 
@@ -24,9 +24,9 @@
 ```
 T1 ──────────────────────────────────────────────────────────── mechanical, low-risk
   0 ✅ land WIP (TempoMem rename + semantic layer + gate)      [done 2026-07-02]
-  1 ▢  verbs       bodylink manifest/mock/sim + mindloop _VERB_TABLE + place-region eff
-  2 ◐  memory      Tier-1 landed; VERIFY last_seen · last_changed · current_occupants
-                   against D-B/§5c.4 signatures (+tests), complete gaps
+  1 ✅ verbs       done 2026-07-02 — 13 verbs (manifest+arm subset) · _VERB_TABLE · place@location eff
+  2 ✅ memory      done 2026-07-02 — Tier-1 verified · last_seen landed (+5 tests) ·
+                   current_occupants = D-B composition (no method needed)
 T2 ──────────────────────────────────────────────────────────── highest-risk batch
   3 ▢  safety      Phylax: D-A robot_service · D1 (verb,param) gating · Q6 region defaults · D-K menu.py
   3b ▢ dynamics    InterruptSource · BargeClassifier (D2) · Clarifier + ASK_HUMAN (D3) · ask budget

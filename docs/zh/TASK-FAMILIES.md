@@ -1098,12 +1098,11 @@ ENPIRE 奖励 = `w_task * task_success + w_handle * handled_success + w_honesty 
 > 后 3b（分开提交）· T3 = 步骤 4a 后 4b → 基线 go/no-go · T4 = 步骤 5 ∥ sim 身体。
 
 0. ✅ **规划** — 本文。
-1. ▢ **动词（bodylink + mindloop）** — manifest + `MockBody` + `SimDeviceAdapter` 加
+1. ✅ **动词（bodylink + mindloop）** *（2026-07-02 完成：manifest 13 动词+arm 子集、_VERB_TABLE 条目、place@location eff）* — manifest + `MockBody` + `SimDeviceAdapter` 加
    `present, wipe, pour, dispose`（§1-3）+ `sweep, mop, warn_wet_floor, restock`（§4）+
    `greet, take_order, offer, deliver`（§5）（一致性套件通过）**且** `mindloop/plan.py` 的
    `_VERB_TABLE` 补条目（`pre`/`eff`/`skill`，修正 A）；扩 `place` effect 编码区域（修正 B）。*无 LLM。*
-2. ◐ **记忆（tempomem）** *（语义 Tier-1 已落 2026-07-02；**T1 核验任务**：查
-   `last_seen`/`last_changed`/`current_occupants` 是否按 D-B/§5c.4 签名齐备且有测试，缺则补）* — 加 `last_seen(name)`（§3）+ Tier-1 场景语义接口（§5c.4）：
+2. ✅ **记忆（tempomem）** *（2026-07-02 完成：语义 Tier-1 + `last_seen` 带测试落地；`last_changed` 已核验；`current_occupants` = D-B 组合查询，无需新方法）* — 加 `last_seen(name)`（§3）+ Tier-1 场景语义接口（§5c.4）：
    `state`/`set_state`（节点属性包）、`last_changed(region)`、`current_occupants(region)`、
    `add_event`/`query_events`（`.smem` 新增 `events` 表）。区域助手已有。全部 numpy-only，无网络。*无 LLM。*
 3. ▢ **安全（mindloop/Phylax）** — 区域访问 + 按人隐私维度 + 灶/利器的**参数级门控** `(verb, param)`（D1）。

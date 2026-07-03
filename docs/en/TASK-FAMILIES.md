@@ -1400,14 +1400,12 @@ replan (RETRY/ADJUST/REROUTE/SKIP/ESCALATE) for step 7 only — steps 1–6 (don
 > baseline go/no-go · T4 = step 5 ∥ sim body.
 
 0. ✅ **Plan** — this doc. ✅
-1. ▢ **Verbs (bodylink + mindloop)** — add `present, wipe, pour, dispose` (§1-3) +
+1. ✅ **Verbs (bodylink + mindloop)** *(done 2026-07-02: 13 verbs in manifest+arm subset, _VERB_TABLE entries, place@location eff)* — add `present, wipe, pour, dispose` (§1-3) +
    `sweep, mop, warn_wet_floor, restock` (§4) + `greet, take_order, offer, deliver` (§5)
    to manifest + `MockBody` + `SimDeviceAdapter` (conformance green) **and** `_VERB_TABLE`
    entries (`pre`/`eff`/`skill`) in `mindloop/plan.py` (review fix A); extend `place`
    effect to encode the region (fix B). *No LLM.*
-2. ◐ **Memory (tempomem)** *(Tier-1 semantic layer landed 2026-07-02; **T1 verification
-   task**: check `last_seen`/`last_changed`/`current_occupants` exist with the D-B/§5c.4
-   signatures + tests, complete whatever is missing)* — add `last_seen(name)` (§3) + Tier-1 scene-semantics interfaces
+2. ✅ **Memory (tempomem)** *(done 2026-07-02: Tier-1 semantic layer + `last_seen` landed with tests; `last_changed` verified; `current_occupants` = D-B composition, no method needed)* — add `last_seen(name)` (§3) + Tier-1 scene-semantics interfaces
    (§5c.4): `state`/`set_state` (node attribute bag), `last_changed(region)`,
    `current_occupants(region)`, `add_event`/`query_events` (new `events` table in `.smem`).
    Region helpers already exist. All numpy-only, no network. *No LLM.*
