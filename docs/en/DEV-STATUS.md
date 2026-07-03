@@ -36,7 +36,8 @@ T3 ─────────────────────────�
   4a ✅ harness    done 2026-07-02 — 11 family metrics + required_metrics (D-F) · L1
                    invariants in the runner (D-N) · six suites (tour/chores/find/cleaner/
                    receptionist/execution-dynamics) baseline GO, every exercised metric 1.0
-  4b ▢ harness     load_role + double-key grant (D-O) · templates.py + 8-property vocab (D-Q)
+  4b ✅ harness    done 2026-07-02 — load_role/effective_verbs/vet_role (D-O) · templates.py
+                   (tidy/privacy/find generators, seed-deterministic, 19 variants GO — D-Q)
 T4 ──────────────────────────────────────────────────────────── validation batch
   5 ▢  real LLM    host 192.168.31.89, temp=0 + fixed seed     [NEEDS GPU GREENLIGHT]
       ∥ E2E phase 3: sim body (Genesis) pass                   [autonomous]

@@ -1427,7 +1427,7 @@ replan (RETRY/ADJUST/REROUTE/SKIP/ESCALATE) for step 7 only — steps 1–6 (don
    (`tour_suite`, `chores_suite`, `find_suite`, `cleaner_suite`, `receptionist_suite`) +
    an `execution_dynamics` suite (text barge-in / fail-ask / ask-budget); baseline
    go/no-go against the §7e thresholds. *No LLM, autonomous.*
-4b. ▢ **Harness — RoleBundle + templates (skillforge)** — `load_role` bundle loading +
+4b. ✅ **Harness — RoleBundle + templates (skillforge)** *(done 2026-07-02: load_role + double-key + vet_role in mindloop; templates.py generator-as-oracle, 19 seeded variants GO)* — `load_role` bundle loading +
    double-key grant (D-O); `templates.py` parametric generators + the 8-property
    vocabulary, seeds recorded (D-Q). Extends 4a's go/no-go with generated breadth.
    *No LLM, autonomous.*

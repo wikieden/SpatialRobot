@@ -1118,7 +1118,7 @@ ENPIRE 奖励 = `w_task * task_success + w_handle * handled_success + w_honesty 
    （`tour_suite`、`chores_suite`、`find_suite`、`cleaner_suite`、`receptionist_suite`）+
    一个 `execution_dynamics` 套件（文本打断 / 失败问询 / 问询预算）；按 §7e 门槛基线
    go/no-go。*无 LLM，可自主。*
-4b. ▢ **评测台——RoleBundle+模板（skillforge）** — `load_role` 包加载 + 双钥授权（D-O）；
+4b. ✅ **评测台——RoleBundle+模板（skillforge）** *（2026-07-02 完成：load_role+双钥+vet_role 在 mindloop；templates.py 生成器即真值，19 个种子变体 GO）* — `load_role` 包加载 + 双钥授权（D-O）；
    `templates.py` 参数化生成器 + 8 性质词汇表、记录 seed（D-Q）。在 4a 的 go/no-go 上
    扩生成广度。*无 LLM，可自主。*
 5. ▢ **真 LLM 验证** — 在主机 `192.168.31.89`（Cosmos+Qwen）跑新套件，拿真准确率/成功率，**钉 `temperature=0` + 固定 seed**（贪心、可复现 —— L）。**需主人批准（GPU）。**

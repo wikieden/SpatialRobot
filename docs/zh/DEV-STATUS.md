@@ -35,7 +35,8 @@ T3 ─────────────────────────�
   4a ✅ 评测台    2026-07-02 完成 —— 11 族指标 + required_metrics(D-F) · runner 内 L1
                   不变式(D-N) · 六套件（导览/家务/寻物/保洁/接待/执行动态）基线 GO，
                   已练指标全 1.0
-  4b ▢ 评测台     load_role + 双钥授权(D-O) · templates.py + 8 性质词汇表(D-Q)
+  4b ✅ 评测台    2026-07-02 完成 —— load_role/effective_verbs/vet_role(D-O) · templates.py
+                  （tidy/privacy/find 生成器，seed 确定，19 变体 GO —— D-Q）
 T4 ──────────────────────────────────────────────────────────── 验证批
   5 ▢  真 LLM     主机 192.168.31.89，temp=0+固定 seed          [需 GPU 批准]
       ∥ E2E phase 3：sim 身体（Genesis）通跑                    [可自主]
