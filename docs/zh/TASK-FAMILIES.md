@@ -1091,13 +1091,19 @@ ENPIRE 奖励 = `w_task * task_success + w_handle * handled_success + w_honesty 
 ## 8. 落地顺序（获批后）
 
 > 实时状态见 [DEV-STATUS.md](DEV-STATUS.md)。标记：✅ 完成 · ◐ 部分 · ▢ 未启动。
+>
+> **规划已冻结（2026-07-02）。** 17 项 D-决策已饱和。此后新设计问题一律**建时决策**
+> （在代码/PR 里定，DEV-STATUS 记一行），仅安全关键项可重开本文档。
+> 执行按批次 **T1–T4**（见 DEV-STATUS §2）：T1 = 步骤 1 + 步骤 2 核验 · T2 = 步骤 3
+> 后 3b（分开提交）· T3 = 步骤 4a 后 4b → 基线 go/no-go · T4 = 步骤 5 ∥ sim 身体。
 
 0. ✅ **规划** — 本文。
 1. ▢ **动词（bodylink + mindloop）** — manifest + `MockBody` + `SimDeviceAdapter` 加
    `present, wipe, pour, dispose`（§1-3）+ `sweep, mop, warn_wet_floor, restock`（§4）+
    `greet, take_order, offer, deliver`（§5）（一致性套件通过）**且** `mindloop/plan.py` 的
    `_VERB_TABLE` 补条目（`pre`/`eff`/`skill`，修正 A）；扩 `place` effect 编码区域（修正 B）。*无 LLM。*
-2. ◐ **记忆（tempomem）** *（语义 Tier-1 已落 2026-07-02；核验/补齐 `last_seen`/`last_changed`/`current_occupants`）* — 加 `last_seen(name)`（§3）+ Tier-1 场景语义接口（§5c.4）：
+2. ◐ **记忆（tempomem）** *（语义 Tier-1 已落 2026-07-02；**T1 核验任务**：查
+   `last_seen`/`last_changed`/`current_occupants` 是否按 D-B/§5c.4 签名齐备且有测试，缺则补）* — 加 `last_seen(name)`（§3）+ Tier-1 场景语义接口（§5c.4）：
    `state`/`set_state`（节点属性包）、`last_changed(region)`、`current_occupants(region)`、
    `add_event`/`query_events`（`.smem` 新增 `events` 表）。区域助手已有。全部 numpy-only，无网络。*无 LLM。*
 3. ▢ **安全（mindloop/Phylax）** — 区域访问 + 按人隐私维度 + 灶/利器的**参数级门控** `(verb, param)`（D1）。
@@ -1105,11 +1111,18 @@ ENPIRE 奖励 = `w_task * task_success + w_handle * handled_success + w_honesty 
 3b. ▢ **执行动态（mindloop）** — 可抢占调度步进器 + 恢复游标 + `InterruptSource` + `BargeClassifier`（D2）；
    大脑级 `Clarifier` 接缝（D3），`ReplanAction.ASK_HUMAN` 为其一入口 + 问询预算；可达时把死胡同
    ESCALATE → Clarifier。澄清经 Phylax 复审。*无 LLM。*
-4. ◐ **评测台（skillforge）** *（scenario 结构已动；真断言依赖 1+3+3b）* — `Scenario.regions` + `_build_memory` 调 `define_region`（K）；
-   扩 `EvalReport`/`EvalThresholds` 全部新指标字段（J）；5 套件（`tour_suite`、`chores_suite`、
-   `find_suite`、`cleaner_suite`、`receptionist_suite`）+ 一个 `execution_dynamics` 套件
-   （文本打断 / 失败问询 / 问询预算）；**D-N**：L1 不变式进 `ScenarioRunner` 本体 + `RoleBundle`
-   加载 + 参数化场景模板（L3 广度）；按 §7e 门槛全部基线 go/no-go。*无 LLM，可自主。*
+   **风险纪律（review 第 2 点）**：本步重构 `Brain._dispatch_plan`——现有 109 个 mindloop
+   测试全压其上。**TDD 先行、独立提交、绝不与步骤 3 混批**；每切片后现有套件必须保持全绿。
+4a. ◐ **评测台——套件+指标（skillforge）** *（scenario 结构已动；真断言依赖 1+3+3b；
+   按 review 第 3 点从 4b 拆出——原步骤已膨胀一倍）* — `Scenario.regions` + `_build_memory`
+   调 `define_region`（K）；扩 `EvalReport`/`EvalThresholds` 全部新指标字段（J）+
+   `required_metrics`（D-F）；L1 不变式进 `ScenarioRunner` 本体（D-N）；5 套件
+   （`tour_suite`、`chores_suite`、`find_suite`、`cleaner_suite`、`receptionist_suite`）+
+   一个 `execution_dynamics` 套件（文本打断 / 失败问询 / 问询预算）；按 §7e 门槛基线
+   go/no-go。*无 LLM，可自主。*
+4b. ▢ **评测台——RoleBundle+模板（skillforge）** — `load_role` 包加载 + 双钥授权（D-O）；
+   `templates.py` 参数化生成器 + 8 性质词汇表、记录 seed（D-Q）。在 4a 的 go/no-go 上
+   扩生成广度。*无 LLM，可自主。*
 5. ▢ **真 LLM 验证** — 在主机 `192.168.31.89`（Cosmos+Qwen）跑新套件，拿真准确率/成功率，**钉 `temperature=0` + 固定 seed**（贪心、可复现 —— L）。**需主人批准（GPU）。**
 6. ◐ **数据与训练闭环（skillforge）** *（接受门 `gate.py` 已提前落）* — trace→数据集整理；主机 LLM `PolicyAuthor`；奖励=六标准数值化（含诚实）；
    技能→Episteme 结晶；提升回灌由 `IntegrationReport.meets` 门控。整理+基线可自主，LLM rollout 需主机。见 FLOWS 图 5。

@@ -1391,6 +1391,13 @@ replan (RETRY/ADJUST/REROUTE/SKIP/ESCALATE) for step 7 only — steps 1–6 (don
 ## 8. Build order (when greenlit)
 
 > Live status: [DEV-STATUS.md](DEV-STATUS.md). Markers: ✅ done · ◐ partial · ▢ not started.
+>
+> **PLANNING FROZEN (2026-07-02).** 17 D-decisions is saturation. From here, new design
+> questions are **build-time decisions** (decided in code/PR, logged one-line in
+> DEV-STATUS) unless safety-critical — only those reopen this document.
+> Execution runs in tranches **T1–T4** (see DEV-STATUS §2): T1 = step 1 + step-2
+> verification · T2 = step 3 then 3b (separate commits) · T3 = step 4a then 4b →
+> baseline go/no-go · T4 = step 5 ∥ sim body.
 
 0. ✅ **Plan** — this doc. ✅
 1. ▢ **Verbs (bodylink + mindloop)** — add `present, wipe, pour, dispose` (§1-3) +
@@ -1398,7 +1405,9 @@ replan (RETRY/ADJUST/REROUTE/SKIP/ESCALATE) for step 7 only — steps 1–6 (don
    to manifest + `MockBody` + `SimDeviceAdapter` (conformance green) **and** `_VERB_TABLE`
    entries (`pre`/`eff`/`skill`) in `mindloop/plan.py` (review fix A); extend `place`
    effect to encode the region (fix B). *No LLM.*
-2. ◐ **Memory (tempomem)** *(Tier-1 semantic layer landed 2026-07-02; verify/complete `last_seen`/`last_changed`/`current_occupants`)* — add `last_seen(name)` (§3) + Tier-1 scene-semantics interfaces
+2. ◐ **Memory (tempomem)** *(Tier-1 semantic layer landed 2026-07-02; **T1 verification
+   task**: check `last_seen`/`last_changed`/`current_occupants` exist with the D-B/§5c.4
+   signatures + tests, complete whatever is missing)* — add `last_seen(name)` (§3) + Tier-1 scene-semantics interfaces
    (§5c.4): `state`/`set_state` (node attribute bag), `last_changed(region)`,
    `current_occupants(region)`, `add_event`/`query_events` (new `events` table in `.smem`).
    Region helpers already exist. All numpy-only, no network. *No LLM.*
@@ -1410,13 +1419,21 @@ replan (RETRY/ADJUST/REROUTE/SKIP/ESCALATE) for step 7 only — steps 1–6 (don
    `InterruptSource` + `BargeClassifier` (D2); brain-level `Clarifier` seam (D3) with
    `ReplanAction.ASK_HUMAN` as one entry + ask budget; route dead-end ESCALATE →
    Clarifier when reachable. Re-vet clarifications via Phylax. *No LLM.*
-4. ◐ **Harness (skillforge)** *(scenario structure started; real assertions need 1+3+3b)* — `Scenario.regions` + `define_region` in `_build_memory`
-   (K); extend `EvalReport`/`EvalThresholds` with all new metric fields (J); 5 new suites
+   **Risk discipline (review pt 2)**: this refactors `Brain._dispatch_plan` — the core
+   under all 109 existing mindloop tests. **TDD-first, own commit(s), never mixed with
+   step 3**; the existing suite must stay green after every slice.
+4a. ◐ **Harness — suites + metrics (skillforge)** *(scenario structure started; real
+   assertions need 1+3+3b; split from 4b per review pt 3 — the step had doubled in scope)*
+   — `Scenario.regions` + `define_region` in `_build_memory` (K); extend
+   `EvalReport`/`EvalThresholds` with all new metric fields (J) + `required_metrics`
+   (D-F); L1 invariant checks built into `ScenarioRunner` (D-N); 5 new suites
    (`tour_suite`, `chores_suite`, `find_suite`, `cleaner_suite`, `receptionist_suite`) +
-   an `execution_dynamics` suite (text barge-in / fail-ask / ask-budget); **D-N**:
-   L1 invariant checks built into `ScenarioRunner` + `RoleBundle` loading +
-   parametric scenario templates (L3 breadth); baseline go/no-go on all of it
-   against the §7e thresholds. *No LLM, autonomous.*
+   an `execution_dynamics` suite (text barge-in / fail-ask / ask-budget); baseline
+   go/no-go against the §7e thresholds. *No LLM, autonomous.*
+4b. ▢ **Harness — RoleBundle + templates (skillforge)** — `load_role` bundle loading +
+   double-key grant (D-O); `templates.py` parametric generators + the 8-property
+   vocabulary, seeds recorded (D-Q). Extends 4a's go/no-go with generated breadth.
+   *No LLM, autonomous.*
 5. ▢ **Real-LLM validation** — run the new suites on host `192.168.31.89` (Cosmos+Qwen)
    for real accuracy/success numbers, **pinned `temperature=0` + fixed seed** (greedy,
    reproducible — L). **Needs owner greenlight (GPU).**

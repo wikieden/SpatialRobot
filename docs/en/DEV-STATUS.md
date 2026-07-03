@@ -17,23 +17,37 @@
 
 ## 2. Unified execution order (dependency chain)
 
+> **PLANNING FROZEN (2026-07-02)** — 17 D-decisions is saturation. New design questions
+> are decided at build time (one-line log here); only safety-critical items reopen
+> TASK-FAMILIES.
+
 ```
-0 ✅ land WIP (TempoMem rename + semantic layer + gate)        [done 2026-07-02]
-1 ▢  verbs        bodylink manifest/mock/sim + mindloop _VERB_TABLE + place-region eff
-2 ◐  memory       Tier-1 landed; verify/complete last_seen · last_changed · current_occupants
-3 ▢  safety       Phylax: D-A robot_service · D1 (verb,param) gating · Q6 region defaults · D-K menu.py
-3b ▢ dynamics     InterruptSource · BargeClassifier (D2) · Clarifier + ASK_HUMAN (D3) · ask budget
-4 ◐  harness      Scenario.regions · EvalReport/Thresholds fields · 6 suites · required_metrics (D-F)
-                  → baseline go/no-go vs §7e thresholds        [needs 1+3+3b for real assertions]
-5 ▢  real LLM     host 192.168.31.89, temp=0 + fixed seed      [NEEDS GPU GREENLIGHT]
-     ∥ E2E phase 3: sim body (Genesis) pass                    [autonomous]
-6 ◐  data loop    trace→dataset · LLM PolicyAuthor · Episteme crystallization · promote gate
-                  (gate.py landed early as the acceptance-gate piece)
-7 ▢  deferred     voice tour / real voice barge-in (P7.3–7.4) · active perception (dyn-scene P4)
+T1 ──────────────────────────────────────────────────────────── mechanical, low-risk
+  0 ✅ land WIP (TempoMem rename + semantic layer + gate)      [done 2026-07-02]
+  1 ▢  verbs       bodylink manifest/mock/sim + mindloop _VERB_TABLE + place-region eff
+  2 ◐  memory      Tier-1 landed; VERIFY last_seen · last_changed · current_occupants
+                   against D-B/§5c.4 signatures (+tests), complete gaps
+T2 ──────────────────────────────────────────────────────────── highest-risk batch
+  3 ▢  safety      Phylax: D-A robot_service · D1 (verb,param) gating · Q6 region defaults · D-K menu.py
+  3b ▢ dynamics    InterruptSource · BargeClassifier (D2) · Clarifier + ASK_HUMAN (D3) · ask budget
+                   ⚠ refactors Brain._dispatch_plan (109 tests on it): TDD-first,
+                   own commits, never mixed with step 3
+T3 ──────────────────────────────────────────────────────────── closure batch
+  4a ◐ harness     Scenario.regions · EvalReport/Thresholds fields + required_metrics (D-F)
+                   · L1 invariants in ScenarioRunner (D-N) · 6 suites
+                   → baseline go/no-go vs §7e thresholds       [real assertions need 1+3+3b]
+  4b ▢ harness     load_role + double-key grant (D-O) · templates.py + 8-property vocab (D-Q)
+T4 ──────────────────────────────────────────────────────────── validation batch
+  5 ▢  real LLM    host 192.168.31.89, temp=0 + fixed seed     [NEEDS GPU GREENLIGHT]
+      ∥ E2E phase 3: sim body (Genesis) pass                   [autonomous]
+──────────────────────────────────────────────────────────────
+  6 ◐  data loop   trace→dataset · LLM PolicyAuthor · Episteme crystallization · promote gate
+                   (gate.py landed early as the acceptance-gate piece)
+  7 ▢  deferred    voice tour / real voice barge-in (P7.3–7.4) · active perception (dyn-scene P4)
 ```
 
-Steps 1–4 are autonomous + network-free. Step 5 alone needs the host. Step 4's six
-suites depend on 1 + 3 + 3b being in place before their assertions are real.
+T1–T3 are autonomous + network-free; each tranche ends tests-green + committed.
+Step 5 alone needs the host.
 
 ## 3. Review findings (2026-07-02 consolidation pass)
 
@@ -47,6 +61,10 @@ suites depend on 1 + 3 + 3b being in place before their assertions are real.
    landed early.
 4. **Doc status drift fixed** — INTEGRATION-E2E phase 1 split into 1a (4-scenario baseline,
    GO ✅) / 1b (6 family suites, in progress); TASK-FAMILIES §8 now carries status markers.
+5. **Planning/code ratio alert → planning frozen (2026-07-02)** — ~2600 lines of planning,
+   17 D-decisions, 0 lines of task-family code. Saturation reached: design questions are
+   now build-time decisions (logged one line here); execution runs in tranches T1–T4 (§2);
+   step 3b carries an explicit TDD/isolation discipline; step 4 split into 4a/4b.
 
 ## 4. Tracked-open items (do not lose)
 

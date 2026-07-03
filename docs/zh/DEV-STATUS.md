@@ -17,22 +17,35 @@
 
 ## 2. 统一执行顺序（依赖链）
 
+> **规划已冻结（2026-07-02）**——17 项 D-决策已饱和。新设计问题一律建时决策（此处记一行）；
+> 仅安全关键项可重开 TASK-FAMILIES。
+
 ```
-0 ✅ WIP 落地（TempoMem 改名 + 语义层 + gate）                  [2026-07-02 完成]
-1 ▢  动词        bodylink manifest/mock/sim + mindloop _VERB_TABLE + place 区域 eff
-2 ◐  记忆        Tier-1 已落；核验/补齐 last_seen · last_changed · current_occupants
-3 ▢  安全        Phylax：D-A robot_service · D1 (verb,param) 门 · Q6 区域默认 · D-K menu.py
-3b ▢ 动态        InterruptSource · BargeClassifier(D2) · Clarifier+ASK_HUMAN(D3) · 问询预算
-4 ◐  评测台      Scenario.regions · EvalReport/Thresholds 字段 · 6 套件 · required_metrics(D-F)
-                 → 按 §7e 门槛基线 go/no-go                    [真断言依赖 1+3+3b]
-5 ▢  真 LLM      主机 192.168.31.89，temp=0+固定 seed          [需 GPU 批准]
-     ∥ E2E phase 3：sim 身体（Genesis）通跑                     [可自主]
-6 ◐  数据闭环    trace→数据集 · LLM PolicyAuthor · Episteme 结晶 · 提升门
-                 （gate.py 作为接受门件已提前落）
-7 ▢  推迟        语音导览/真语音打断（P7.3–7.4）· 主动感知（动态场景 P4）
+T1 ──────────────────────────────────────────────────────────── 机械、低风险
+  0 ✅ WIP 落地（TempoMem 改名 + 语义层 + gate）                [2026-07-02 完成]
+  1 ▢  动词       bodylink manifest/mock/sim + mindloop _VERB_TABLE + place 区域 eff
+  2 ◐  记忆       Tier-1 已落；按 D-B/§5c.4 签名核验 last_seen · last_changed ·
+                  current_occupants（+测试），缺则补
+T2 ──────────────────────────────────────────────────────────── 最高风险批
+  3 ▢  安全       Phylax：D-A robot_service · D1 (verb,param) 门 · Q6 区域默认 · D-K menu.py
+  3b ▢ 动态       InterruptSource · BargeClassifier(D2) · Clarifier+ASK_HUMAN(D3) · 问询预算
+                  ⚠ 重构 Brain._dispatch_plan（109 测试压其上）：TDD 先行、
+                  独立提交、绝不与步骤 3 混批
+T3 ──────────────────────────────────────────────────────────── 收口批
+  4a ◐ 评测台     Scenario.regions · EvalReport/Thresholds 字段 + required_metrics(D-F)
+                  · L1 不变式进 ScenarioRunner(D-N) · 6 套件
+                  → 按 §7e 门槛基线 go/no-go                   [真断言依赖 1+3+3b]
+  4b ▢ 评测台     load_role + 双钥授权(D-O) · templates.py + 8 性质词汇表(D-Q)
+T4 ──────────────────────────────────────────────────────────── 验证批
+  5 ▢  真 LLM     主机 192.168.31.89，temp=0+固定 seed          [需 GPU 批准]
+      ∥ E2E phase 3：sim 身体（Genesis）通跑                    [可自主]
+──────────────────────────────────────────────────────────────
+  6 ◐  数据闭环   trace→数据集 · LLM PolicyAuthor · Episteme 结晶 · 提升门
+                  （gate.py 作为接受门件已提前落）
+  7 ▢  推迟       语音导览/真语音打断（P7.3–7.4）· 主动感知（动态场景 P4）
 ```
 
-步骤 1–4 可自主、无网络。仅步骤 5 需主机。步骤 4 的 6 套件须 1+3+3b 就位后断言才是真的。
+T1–T3 可自主、无网络；每批以测试全绿+提交收尾。仅步骤 5 需主机。
 
 ## 3. Review 发现（2026-07-02 整理轮）
 
@@ -43,6 +56,9 @@
    （见 skillforge/docs/en/skillopt-borrow-decision.md），属提前落地。
 4. **文档状态漂移已修**——INTEGRATION-E2E phase 1 拆为 1a（4 场景基线，GO ✅）/ 1b（6 族套件，进行中）；
    TASK-FAMILIES §8 已加状态标记。
+5. **规划/代码比警报 → 规划冻结（2026-07-02）**——约 2600 行规划、17 项 D-决策、任务族代码 0 行。
+   已达饱和：此后设计问题一律建时决策（此处记一行）；执行按 T1–T4 批次（§2）；步骤 3b 带显式
+   TDD/隔离纪律；步骤 4 拆 4a/4b。
 
 ## 4. 跟踪中未决（防散失）
 
