@@ -40,7 +40,7 @@ T3 ─────────────────────────�
                    (tidy/privacy/find generators, seed-deterministic, 19 variants GO — D-Q)
 T4 ──────────────────────────────────────────────────────────── validation batch
   5 ▢  real LLM    host 192.168.31.89, temp=0 + fixed seed     [NEEDS GPU GREENLIGHT]
-      ∥ E2E phase 3: sim body (Genesis) pass                   [autonomous]
+      ∥ E2E phase 3 ✅ sim body (Genesis): 21/21 physical scenarios GO (~48 s, 2026-07-04)
 ──────────────────────────────────────────────────────────────
   6 ◐  data loop   trace→dataset · LLM PolicyAuthor · Episteme crystallization · promote gate
                    (gate.py landed early as the acceptance-gate piece)

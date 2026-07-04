@@ -89,7 +89,8 @@ A small, growing suite exercising every faculty:
 2. **Real-LLM validation pass**: swap in `FailoverVerbalizer`→host; run on the GPU
    host; capture accuracy + success-rate + latency; archive the report.
 3. **Sim body**: run the suite through `SimDeviceAdapter`+Genesis (physics stepping)
-   in addition to MockBody.
+   in addition to MockBody. **✅ done 2026-07-04 — 21/21 physical scenarios GO in ~48 s
+   (`skillforge/examples/sim_e2e.py`, CPU backend).**
 4. **Voice**: optionally drive turns through `VoiceLoop` (voicelink fills).
 
 ---
