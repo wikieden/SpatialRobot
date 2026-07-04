@@ -1431,14 +1431,21 @@ replan (RETRY/ADJUST/REROUTE/SKIP/ESCALATE) for step 7 only — steps 1–6 (don
    double-key grant (D-O); `templates.py` parametric generators + the 8-property
    vocabulary, seeds recorded (D-Q). Extends 4a's go/no-go with generated breadth.
    *No LLM, autonomous.*
-5. ▢ **Real-LLM validation** — run the new suites on host `192.168.31.89` (Cosmos+Qwen)
-   for real accuracy/success numbers, **pinned `temperature=0` + fixed seed** (greedy,
-   reproducible — L). **Needs owner greenlight (GPU).**
-6. ◐ **Data & training closed-loop (skillforge)** *(acceptance gate `gate.py` landed early)* — trace→dataset curation; LLM
-   `PolicyAuthor` on host; reward = the six criteria numeric (incl. honesty);
-   skill→Episteme crystallization; promote-back gated by `IntegrationReport.meets`.
-   Curation + baseline are autonomous; LLM rollouts need the host. See FLOWS Diagram 5.
-7. ▢ **Deferred** — voice-narrated tour (VoiceLoop), guest-following + active-search
-   perception (dynamic-scene P4).
+5. ✅ **Real-LLM validation** *(done 2026-07-04: host `172.16.1.12`, Cosmos-Reason2-8B via
+   vLLM, `temperature=0` + fixed seed — 4/4 scenarios GO, intent/plan/policy/citation 1.0,
+   turn p95 ~0.25 s)* — run the new suites on the GPU host for real accuracy/success
+   numbers, pinned greedy + seeded (reproducible — L).
+6. ✅ **Data & training closed-loop (skillforge)** *(done 2026-07-04: curate — home-scoped,
+   speech-scrubbed; `LLMPolicyAuthor`; crystallize → learned SkillCard, no safety keys;
+   `gate.py` promote gate; learn→reuse validated live on the host. Deepening done same
+   day: D-G composite reward `Weights` 0.6/0.25/0.15 + `IntegrationReport.composite_score`)*
+   — see FLOWS Diagram 5.
+7. ◐ **Step 7 — software face done (2026-07-04)**: voice-narrated tour via `VoiceLoop`
+   (`skillforge/examples/voice_tour.py`, GO) · `ListenerInterruptSource` voice barge-in
+   seam (P7.3) · P7.4 degraded mode (per-turn mode telemetry, offline policy tighten,
+   honest offline UX) · D-I binding ambiguity · D-D macro expansion · D-P scorecard +
+   advisory reliability. **Remaining (hardware)**: on-body streaming ASR+VAD fill of
+   `audio_source`, live-camera perception feeds (dynamic-scene P4), mid-step preemption
+   (bodylink cancel/pause/resume).
 
 Steps 1–4 are autonomously buildable and network-free. Step 5 alone needs the host.

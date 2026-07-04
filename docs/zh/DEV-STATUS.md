@@ -2,7 +2,7 @@
 
 > **汇总自** [TASK-FAMILIES.md](../en/TASK-FAMILIES.md) §8 × [INTEGRATION-E2E.md](../en/INTEGRATION-E2E.md) §6
 > × [mindloop DEV-PLAN](../../mindloop/docs/zh/devplan/DEV-PLAN.md)。各原文档仍是各自领域的
-> 单一事实源；本页只是路由/状态视图。更新于 **2026-07-02**。
+> 单一事实源；本页只是路由/状态视图。更新于 **2026-07-04**。
 
 ## 1. 成员 × 状态
 
@@ -10,10 +10,10 @@
 |---|---|---|---|
 | **tempomem** | 核心（融合/持久/查询/序列化）、区域、衰减、viz；**语义 Tier-1 已落**（edges/properties/events，migration 002）；**`last_seen` 已落**（步骤 2 ✅） | — | 动态场景 P4 供数（推迟） |
 | **worldsense** | RGB(-D)→世界系 Detection，CLIP 在 extra 后 | — | 动态场景 P4 实时感知（推迟） |
-| **mindloop** | P0–P5 ✅；P6 ◐（eval+真LLM已验；Thor 待硬件）；P7 ◐（7.1 failover + 7.2 语音接缝 ✅）；动态场景 1–4 ✅；**TempoMem 改名已落**；**步骤 1 `_VERB_TABLE` + place@location 已落** | — | 步骤 3（Phylax 扩展）、3b（执行动态） |
-| **bodylink** | D3 manifest 框架、MockBody、Genesis sim、一致性套件、4 内置身体；**步骤 1 动词已落**（13 通用 + arm 子集） | — | D-P 技能记分卡（随步骤 6） |
-| **voicelink** | EndpointListener/Speaker（Qwen3-ASR/TTS） | — | 步骤 7：真语音打断（流式 ASR+VAD，推迟） |
-| **skillforge** | ENPIRE 骨架、4 场景基线 GO ✅、**evolve 接受门已落**（held-out 严格改进） | 步骤 4 部分（scenario 结构） | 步骤 4 全量：6 族套件 + 新指标 + regions |
+| **mindloop** | P0–P5 ✅；P6 ◐（eval+真LLM已验；Thor 待硬件）；P7 ◐（7.1 failover + 7.2 语音接缝 ✅）；动态场景 1–4 ✅；**TempoMem 改名已落**；**步骤 3/3b 已落**；**第 7 步软件面已落**（D-I 绑定歧义、D-D 宏展开、D-P 可靠度提示、P7.3 ListenerInterruptSource、P7.4 降级模式） | — | 硬件轨：Thor 切换；步内抢占（需 bodylink cancel/pause/resume） |
+| **bodylink** | D3 manifest 框架、MockBody、Genesis sim、一致性套件、4 内置身体；**步骤 1 动词已落**（13 通用 + arm 子集） | — | D3 真机轨（BT/反射层）；cancel/pause/resume 握手（步内抢占） |
+| **voicelink** | EndpointListener/Speaker（Qwen3-ASR/TTS）；打断 seam 经 mindloop `ListenerInterruptSource` 可达 | — | 本体流式 ASR+VAD 填 `audio_source`（硬件） |
+| **skillforge** | ENPIRE 骨架、4 场景基线 GO ✅、**evolve 接受门已落**；六套件 GO；templates（D-Q）；数据闭环（curate/author/crystallize）；**D-G 复合奖励**；**D-P 记分卡**；语音导览示例 | — | 主机 LLM rollout 扩量（可选深化） |
 
 ## 2. 统一执行顺序（依赖链）
 
@@ -44,8 +44,14 @@ T4 ─────────────────────────�
 ──────────────────────────────────────────────────────────────
   6 ✅ 数据闭环   2026-07-04 完成 —— curate（按户隔离、语音脱敏、拒跨户合并）· LLMPolicyAuthor
                   （BYO Verbalizer）· crystallize（learned 卡、零 safety 键 —— D-L）· gate.py
-                  提升门；学→用已闭环（learning_loop.py）。余下深化：D-G 复合奖励塑形
-  7 ▢  推迟       语音导览/真语音打断（P7.3–7.4）· 主动感知（动态场景 P4）
+                  提升门；学→用已闭环（learning_loop.py）。深化 2026-07-04 完成：
+                  D-G 复合奖励（Weights 0.6/0.25/0.15 + composite_score；meets() 仍只按任务成功门控）
+  7 ◐  第 7 步     软件面 2026-07-04 完成 —— 语音导览经 VoiceLoop（示例 GO）·
+                  ListenerInterruptSource 语音打断 seam（P7.3）· P7.4 降级模式
+                  （逐轮模式遥测 · 离线安全收紧 · 诚实离线提示）· D-I 绑定歧义
+                  （只问一次、共享预算）· D-D 宏展开（macro_parent 入痕迹）·
+                  D-P 记分卡+可靠度提示。余项（硬件）：流式 ASR+VAD 填充 ·
+                  真相机感知喂入（动态场景 P4）· 步内抢占（bodylink cancel/pause/resume）
 ```
 
 T1–T3 可自主、无网络；每批以测试全绿+提交收尾。仅步骤 5 需主机。
@@ -63,6 +69,17 @@ T1–T3 可自主、无网络；每批以测试全绿+提交收尾。仅步骤 5
    已达饱和：此后设计问题一律建时决策（此处记一行）；执行按 T1–T4 批次（§2）；步骤 3b 带显式
    TDD/隔离纪律；步骤 4 拆 4a/4b。
 
+## 3b. 建时决策（按规划冻结约定逐行记）
+
+- **D-I**："同分接近" = 达到榜首分 0.75 倍以内（无量纲比值）；绑定问询与 escalate 问询共享
+  每任务预算；无 clarifier 时按 top-1 继续（留日志）。
+- **D-D**：展开表 `deliver→navigate+offer`、`sweep→navigate+vacuum`、`mop→warn+navigate+mop+warn`；
+  单遍展开，mop 原子核保留同名；trace 迁移 = 追加 `macro_parent` 列。
+- **D-P**：记分卡落 skillforge（实验室侧）；planner 上下文披露线 0.8；从未尝试的桶保持
+  `None`（防自证回避）。
+- **P7.4**：离线 = `mode_probe() == "fallback"`；离线 Phylax 门为整体换入（只紧不松）；
+  披露只追加到任务 `speak`（答案文本保持引用完整，`HandleResult.mode` 供 UX 层读取）。
+
 ## 4. 跟踪中未决（防散失）
 
 | 项 | 状态 | 归属 |
@@ -71,6 +88,6 @@ T1–T3 可自主、无网络；每批以测试全绿+提交收尾。仅步骤 5
 | D2：L4 trace → tempomem core 合并 | deferred | mindloop DEV-PLAN §8 |
 | `negation_constraints` SubTask 字段 | 未加（B2R 对齐项） | mindloop DEV-PLAN §8 |
 | 云 → Thor 切换（P6 出口） | 待硬件 | mindloop DEV-PLAN P6 |
-| P7.3–7.4 边缘栈 + 降级遥测 | deferred | mindloop DEV-PLAN P7 |
+| P7.3–7.4 边缘栈 + 降级遥测 | 软件面 2026-07-04 完成（seam + P7.4）；本体 ASR/TTS/LLM 装机待硬件 | mindloop DEV-PLAN P7 |
 | D3 真机身体轨（BT/反射层） | pending | bodylink 设计文档 |
 | 屋主访问控制规范（运行时区域策略覆写） | flagged | TASK-FAMILIES §1.2 |

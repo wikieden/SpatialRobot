@@ -1121,9 +1121,13 @@ ENPIRE 奖励 = `w_task * task_success + w_handle * handled_success + w_honesty 
 4b. ✅ **评测台——RoleBundle+模板（skillforge）** *（2026-07-02 完成：load_role+双钥+vet_role 在 mindloop；templates.py 生成器即真值，19 个种子变体 GO）* — `load_role` 包加载 + 双钥授权（D-O）；
    `templates.py` 参数化生成器 + 8 性质词汇表、记录 seed（D-Q）。在 4a 的 go/no-go 上
    扩生成广度。*无 LLM，可自主。*
-5. ▢ **真 LLM 验证** — 在主机 `192.168.31.89`（Cosmos+Qwen）跑新套件，拿真准确率/成功率，**钉 `temperature=0` + 固定 seed**（贪心、可复现 —— L）。**需主人批准（GPU）。**
-6. ◐ **数据与训练闭环（skillforge）** *（接受门 `gate.py` 已提前落）* — trace→数据集整理；主机 LLM `PolicyAuthor`；奖励=六标准数值化（含诚实）；
-   技能→Episteme 结晶；提升回灌由 `IntegrationReport.meets` 门控。整理+基线可自主，LLM rollout 需主机。见 FLOWS 图 5。
-7. ▢ **延后** — 语音讲解导览（VoiceLoop）、跟随访客 + 主动搜索感知（动态场景 P4）。
+5. ✅ **真 LLM 验证** *（2026-07-04 完成：主机 `172.16.1.12`，Cosmos-Reason2-8B（vLLM），`temperature=0`+固定 seed —— 4/4 场景 GO，意图/规划/策略/引用全 1.0，单轮 p95 约 0.25 秒）*。
+6. ✅ **数据与训练闭环（skillforge）** *（2026-07-04 完成：curate 家庭隔离+语音脱敏；`LLMPolicyAuthor`；
+   crystallize→learned SkillCard（无 safety 键）；`gate.py` 提升门；学→用闭环已在主机实测。深化同日完成：
+   D-G 复合奖励 `Weights` 0.6/0.25/0.15 + `IntegrationReport.composite_score`）*。见 FLOWS 图 5。
+7. ◐ **第 7 步 —— 软件面完成（2026-07-04）**：语音讲解导览经 `VoiceLoop`（`skillforge/examples/voice_tour.py`，GO）·
+   `ListenerInterruptSource` 语音打断 seam（P7.3）· P7.4 降级模式（逐轮模式遥测、离线安全收紧、诚实离线提示）·
+   D-I 绑定歧义 · D-D 宏展开 · D-P 记分卡+可靠度提示。**余项（硬件）**：本体流式 ASR+VAD 填 `audio_source`、
+   真相机感知喂入（动态场景 P4）、步内抢占（bodylink cancel/pause/resume）。
 
 第 1–4 步可自主落地、无网络。仅第 5 步需主机。

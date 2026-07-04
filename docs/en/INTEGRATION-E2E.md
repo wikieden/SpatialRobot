@@ -94,6 +94,9 @@ A small, growing suite exercising every faculty:
    in addition to MockBody. **✅ done 2026-07-04 — 21/21 physical scenarios GO in ~48 s
    (`skillforge/examples/sim_e2e.py`, CPU backend).**
 4. **Voice**: optionally drive turns through `VoiceLoop` (voicelink fills).
+   **✅ software face done 2026-07-04 — voice-narrated tour with an inline voice barge-in,
+   network-free mocks (`skillforge/examples/voice_tour.py`, GO). The real Qwen3-ASR/TTS
+   endpoint pass + on-body streaming mic/VAD stay pending hardware.**
 
 ---
 
@@ -106,16 +109,18 @@ A small, growing suite exercising every faculty:
 > They extend this capstone's scenario set + metrics — same six-criteria go/no-go gate.
 
 **Track 2 — finish the remaining brain software**
-- *Dynamic scene phase 4 (active perception):* on a stale focus or reasoner request,
-  re-`observe` between steps → fuse → re-query fresh context → re-plan the tail. Hooks
-  exist (`_dispatch_plan`, version bump). Network-free testable with a scripted perceiver.
-- *P7.4 (degradation + telemetry):* offline mode prefers skill-cards, tightens safety
-  to conservative, records which mode (online/offline) served each turn; honest
-  "I'm offline" UX. Builds on `FailoverVerbalizer.mode`.
+- *Dynamic scene phase 4 (active perception):* **software done** — the `ActivePerception`
+  seam + scripted perceiver run between steps with bounded tail re-plans; the live-camera
+  fill (worldsense feeds) stays pending hardware.
+- *P7.4 (degradation + telemetry):* **✅ done 2026-07-04** — `Brain(mode_probe=,
+  offline_policy=)`: per-turn `serve_mode` telemetry (result + trace), a conservative
+  Phylax swap-in while offline (tighten-only), honest "I'm running offline" speak;
+  skill-card preference offline is structural (SkillCardPlanner is card-first).
 
 **Track 3 — skillforge self-learning deepening**
-- The ENPIRE loop (Environment/Policy/Rollout/Evolution) currently a walking skeleton.
-  Deepen: richer reward shaping, an LLM `PolicyAuthor` (vs ScriptedAuthor), skill
-  crystallization back into Episteme cards (close the learn→reuse loop). Research track.
+- **✅ done 2026-07-04** — D-G composite reward (`Weights` 0.6/0.25/0.15 +
+  `IntegrationReport.composite_score`), `LLMPolicyAuthor` (validated live on the host),
+  crystallization → learned SkillCard (learn→reuse closed, `learning_loop.py`), plus the
+  D-P `Scorecard` (advisory reliability). Remaining research depth: LLM-rollout scale-up.
 
-Both are scoped + parked; the integration capstone (above) is the focus.
+Track 2/3 software is landed; remaining items are hardware-gated (see DEV-STATUS §2 step 7).

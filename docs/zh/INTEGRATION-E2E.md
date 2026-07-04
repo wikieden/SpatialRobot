@@ -78,6 +78,9 @@ skillforge 是 import 全部成员的那个 —— 驱动 mem+brain+body+world �
    **✅ 2026-07-04 完成 —— Cosmos-Reason2-8B（vLLM，temp=0+seed）4/4 场景 GO：意图/规划/策略/引用全 1.0，单轮 p95 约 0.25 秒（`skillforge/examples/real_llm_e2e.py`）。**
 3. **仿真身体**：套件经 `SimDeviceAdapter`+Genesis（物理步进）跑，补 MockBody。**✅ 2026-07-04 完成 —— 21/21 物理场景 GO，约 48 秒（`skillforge/examples/sim_e2e.py`，CPU 后端）。**
 4. **语音**：可选地经 `VoiceLoop`（voicelink fill）驱动轮次。
+   **✅ 软件面 2026-07-04 完成 —— 语音讲解导览 + 中途语音插话内联作答，网络隔离 mock
+   （`skillforge/examples/voice_tour.py`，GO）。真 Qwen3-ASR/TTS 端点 pass + 本体流式
+   mic/VAD 待硬件。**
 
 ---
 
@@ -89,13 +92,16 @@ skillforge 是 import 全部成员的那个 —— 驱动 mem+brain+body+world �
 > 它们扩展本压轴的场景集 + 指标 —— 同一套六标准 go/no-go 门。
 
 **轨 2 —— 收尾剩余大脑软件**
-- *动态场景第 4 步（主动感知）：* focus 陈旧或 reasoner 请求时，步间重 `observe` → fuse → 重查新
-  context → 重规划尾部。钩子已有（`_dispatch_plan`、版本 bump）。脚本感知器网络隔离可测。
-- *P7.4（降级+telemetry）：* 离线模式优先技能卡、收紧到保守安全、记每轮哪个模式（在线/离线）服务；
-  诚实"我离线了"UX。基于 `FailoverVerbalizer.mode`。
+- *动态场景第 4 步（主动感知）：* **软件已完** —— `ActivePerception` seam + 脚本感知器步间运行、
+  尾部重规划有界；真相机填充（worldsense 喂入）待硬件。
+- *P7.4（降级+telemetry）：* **✅ 2026-07-04 完成** —— `Brain(mode_probe=, offline_policy=)`：
+  逐轮 `serve_mode` 遥测（结果 + 痕迹）、离线时保守 Phylax 整体换入（只紧不松）、诚实
+  "我在离线运行"提示；离线技能卡优先为结构性（SkillCardPlanner 卡优先）。
 
 **轨 3 —— skillforge 自学习深化**
-- ENPIRE 回路（Environment/Policy/Rollout/Evolution）现是 walking skeleton。深化：更丰富 reward
-  shaping、LLM `PolicyAuthor`（替 ScriptedAuthor）、技能结晶回 Episteme 卡（闭 学→用 环）。研究轨。
+- **✅ 2026-07-04 完成** —— D-G 复合奖励（`Weights` 0.6/0.25/0.15 +
+  `IntegrationReport.composite_score`）、`LLMPolicyAuthor`（主机实测）、结晶→learned
+  SkillCard（学→用闭环，`learning_loop.py`），另有 D-P `Scorecard`（可靠度提示）。
+  余下研究深度：LLM rollout 扩量。
 
-两者已圈定+停放；整合压轴（上文）是焦点。
+轨 2/3 软件已落；余项均卡硬件（见 DEV-STATUS §2 第 7 步）。

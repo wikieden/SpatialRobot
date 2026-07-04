@@ -2,7 +2,7 @@
 
 > **Consolidated from** [TASK-FAMILIES.md](TASK-FAMILIES.md) §8 × [INTEGRATION-E2E.md](INTEGRATION-E2E.md) §6
 > × [mindloop DEV-PLAN](../../mindloop/docs/en/devplan/DEV-PLAN.md). Those remain the single
-> sources of truth for their areas; this page is the routing/status view. Updated **2026-07-02**.
+> sources of truth for their areas; this page is the routing/status view. Updated **2026-07-04**.
 
 ## 1. Members × status
 
@@ -10,10 +10,10 @@
 |---|---|---|---|
 | **tempomem** | core (fuse/persist/query/serialize), regions, decay, viz; **semantic Tier-1 landed** (edges/properties/events, migration 002); **`last_seen` landed** (step 2 ✅) | — | dynamic-scene P4 feeds (deferred) |
 | **worldsense** | RGB(-D)→world Detections, CLIP behind extra | — | dynamic-scene P4 live perception (deferred) |
-| **mindloop** | P0–P5 ✅; P6 ◐ (eval + real-LLM validated; Thor pending HW); P7 ◐ (7.1 failover + 7.2 voice seams ✅); dynamic-scene 1–4 ✅; **TempoMem rename landed**; **step-1 `_VERB_TABLE` + place@location landed** | — | steps 3 (Phylax ext), 3b (execution dynamics) |
-| **bodylink** | D3 manifest framework, MockBody, Genesis sim, conformance kit, 4 builtin bodies; **step-1 verbs landed** (13 common + arm subset) | — | D-P skill scorecard (with step 6) |
-| **voicelink** | EndpointListener/Speaker (Qwen3-ASR/TTS) | — | step 7: real voice barge-in (streaming ASR+VAD, deferred) |
-| **skillforge** | ENPIRE skeleton, 4-scenario baseline harness GO ✅, **evolve acceptance gate landed** (held-out strict improvement) | step 4 partial (scenario structure) | step 4 full: 6 family suites + new metrics + regions |
+| **mindloop** | P0–P5 ✅; P6 ◐ (eval + real-LLM validated; Thor pending HW); P7 ◐ (7.1 failover + 7.2 voice seams ✅); dynamic-scene 1–4 ✅; **TempoMem rename landed**; **steps 3/3b landed**; **step-7 software landed** (D-I binding ambiguity, D-D macro expansion, D-P advisory reliability, P7.3 ListenerInterruptSource, P7.4 degraded mode) | — | hardware tracks: Thor switch; mid-step preempt (needs bodylink cancel/pause/resume) |
+| **bodylink** | D3 manifest framework, MockBody, Genesis sim, conformance kit, 4 builtin bodies; **step-1 verbs landed** (13 common + arm subset) | — | D3 real-HW track (BT/reflex tiers); cancel/pause/resume handshake (mid-step preempt) |
+| **voicelink** | EndpointListener/Speaker (Qwen3-ASR/TTS); barge seam reachable via mindloop `ListenerInterruptSource` | — | on-body streaming ASR+VAD fill of `audio_source` (hardware) |
+| **skillforge** | ENPIRE skeleton, 4-scenario baseline harness GO ✅, **evolve acceptance gate landed**; six suites GO; templates (D-Q); data loop (curate/author/crystallize); **D-G composite reward**; **D-P Scorecard**; voice-tour example | — | LLM-rollout scale-up on the host (optional deepening) |
 
 ## 2. Unified execution order (dependency chain)
 
@@ -70,6 +70,20 @@ Step 5 alone needs the host.
    now build-time decisions (logged one line here); execution runs in tranches T1–T4 (§2);
    step 3b carries an explicit TDD/isolation discipline; step 4 split into 4a/4b.
 
+## 3b. Build-time decisions (logged per the planning freeze)
+
+- **D-I**: "close in score" = within 0.75x of the top hit (scale-free ratio); a binding
+  ask consumes the same per-task ask budget as escalate-asks; clarifier-less brains
+  proceed on top-1 (logged).
+- **D-D**: expansion table `deliver→navigate+offer`, `sweep→navigate+vacuum`,
+  `mop→warn+navigate+mop+warn`; single-pass, so mop's atomic core keeps its name;
+  trace migration = additive `macro_parent` column.
+- **D-P**: scorecard lives in skillforge (lab side); planner-context disclosure bar 0.8;
+  never-tried buckets stay `None` (no self-fulfilling avoidance).
+- **P7.4**: offline = `mode_probe() == "fallback"`; the offline Phylax gate is a swap-in
+  (tighten-only); disclosure appends to task `speak` only (answers keep citation text
+  intact, `HandleResult.mode` carries the tier for the UX layer).
+
 ## 4. Tracked-open items (do not lose)
 
 | Item | State | Home |
@@ -78,6 +92,6 @@ Step 5 alone needs the host.
 | D2: L4 trace → tempomem core merge | deferred | mindloop DEV-PLAN §8 |
 | `negation_constraints` SubTask field | not added (B2R parity) | mindloop DEV-PLAN §8 |
 | Cloud → Thor switch (P6 exit) | pending hardware | mindloop DEV-PLAN P6 |
-| P7.3–7.4 edge stack + degradation telemetry | deferred | mindloop DEV-PLAN P7 |
+| P7.3–7.4 edge stack + degradation telemetry | software done 2026-07-04 (seam + P7.4); on-body ASR/TTS/LLM install pending HW | mindloop DEV-PLAN P7 |
 | D3 real-HW body track (BT/reflex tiers) | pending | bodylink design docs |
 | Owner access-control spec (runtime region-policy override) | flagged | TASK-FAMILIES §1.2 |
