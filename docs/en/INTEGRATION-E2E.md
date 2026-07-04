@@ -88,6 +88,8 @@ A small, growing suite exercising every faculty:
    (real assertions need TASK-FAMILIES §8 steps 1+3+3b).
 2. **Real-LLM validation pass**: swap in `FailoverVerbalizer`→host; run on the GPU
    host; capture accuracy + success-rate + latency; archive the report.
+   **✅ done 2026-07-04 — 4/4 scenarios GO on Cosmos-Reason2-8B (vLLM, temp=0+seed):
+   intent/plan/policy/citation all 1.0, turn p95 ~0.25 s (`skillforge/examples/real_llm_e2e.py`).**
 3. **Sim body**: run the suite through `SimDeviceAdapter`+Genesis (physics stepping)
    in addition to MockBody. **✅ done 2026-07-04 — 21/21 physical scenarios GO in ~48 s
    (`skillforge/examples/sim_e2e.py`, CPU backend).**

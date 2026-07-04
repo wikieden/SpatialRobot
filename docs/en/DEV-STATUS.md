@@ -39,7 +39,8 @@ T3 ─────────────────────────�
   4b ✅ harness    done 2026-07-02 — load_role/effective_verbs/vet_role (D-O) · templates.py
                    (tidy/privacy/find generators, seed-deterministic, 19 variants GO — D-Q)
 T4 ──────────────────────────────────────────────────────────── validation batch
-  5 ▢  real LLM    host 192.168.31.89, temp=0 + fixed seed     [NEEDS GPU GREENLIGHT]
+  5 ✅ real LLM    done 2026-07-04 — host 172.16.1.12 (new IP), Cosmos-Reason2-8B via vLLM,
+                   temp=0+seed: 4/4 GO (intent/plan/policy/citation 1.0), turn p95 ~0.25 s
       ∥ E2E phase 3 ✅ sim body (Genesis): 21/21 physical scenarios GO (~48 s, 2026-07-04)
 ──────────────────────────────────────────────────────────────
   6 ◐  data loop   trace→dataset · LLM PolicyAuthor · Episteme crystallization · promote gate

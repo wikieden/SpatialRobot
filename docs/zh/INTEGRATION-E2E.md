@@ -75,6 +75,7 @@ skillforge 是 import 全部成员的那个 —— 驱动 mem+brain+body+world �
 1b. **任务族套件扩展**：TASK-FAMILIES 6 套件（导览/家务/寻物/保洁/接待/执行动态）+ 新指标。
    **▢ 进行中**（真断言依赖 TASK-FAMILIES §8 步骤 1+3+3b）。
 2. **真 LLM 验证 pass**：换 `FailoverVerbalizer`→主机；在 GPU 主机跑；取准确率+成功率+时延；归档 report。
+   **✅ 2026-07-04 完成 —— Cosmos-Reason2-8B（vLLM，temp=0+seed）4/4 场景 GO：意图/规划/策略/引用全 1.0，单轮 p95 约 0.25 秒（`skillforge/examples/real_llm_e2e.py`）。**
 3. **仿真身体**：套件经 `SimDeviceAdapter`+Genesis（物理步进）跑，补 MockBody。**✅ 2026-07-04 完成 —— 21/21 物理场景 GO，约 48 秒（`skillforge/examples/sim_e2e.py`，CPU 后端）。**
 4. **语音**：可选地经 `VoiceLoop`（voicelink fill）驱动轮次。
 

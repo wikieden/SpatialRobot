@@ -38,7 +38,8 @@ T3 ─────────────────────────�
   4b ✅ 评测台    2026-07-02 完成 —— load_role/effective_verbs/vet_role(D-O) · templates.py
                   （tidy/privacy/find 生成器，seed 确定，19 变体 GO —— D-Q）
 T4 ──────────────────────────────────────────────────────────── 验证批
-  5 ▢  真 LLM     主机 192.168.31.89，temp=0+固定 seed          [需 GPU 批准]
+  5 ✅ 真 LLM     2026-07-04 完成 —— 主机 172.16.1.12（新 IP），Cosmos-Reason2-8B 经 vLLM，
+                  temp=0+seed：4/4 GO（意图/规划/策略/引用全 1.0），单轮 p95 约 0.25 秒
       ∥ E2E phase 3 ✅ sim 身体（Genesis）：21/21 物理场景 GO（约 48 秒，2026-07-04）
 ──────────────────────────────────────────────────────────────
   6 ◐  数据闭环   trace→数据集 · LLM PolicyAuthor · Episteme 结晶 · 提升门
