@@ -43,8 +43,10 @@ T4 ─────────────────────────�
                    temp=0+seed: 4/4 GO (intent/plan/policy/citation 1.0), turn p95 ~0.25 s
       ∥ E2E phase 3 ✅ sim body (Genesis): 21/21 physical scenarios GO (~48 s, 2026-07-04)
 ──────────────────────────────────────────────────────────────
-  6 ◐  data loop   trace→dataset · LLM PolicyAuthor · Episteme crystallization · promote gate
-                   (gate.py landed early as the acceptance-gate piece)
+  6 ✅ data loop   done 2026-07-04 — curate (home-scoped, speech-scrubbed, no cross-home merge)
+                   · LLMPolicyAuthor (BYO Verbalizer) · crystallize (learned SkillCard, no safety
+                   keys — D-L) · gate.py promote gate; learn→reuse closed (learning_loop.py).
+                   Remaining deepening: D-G composite reward shaping (task/handle/honesty weights)
   7 ▢  deferred    voice tour / real voice barge-in (P7.3–7.4) · active perception (dyn-scene P4)
 ```
 

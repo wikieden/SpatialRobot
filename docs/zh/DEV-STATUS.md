@@ -42,8 +42,9 @@ T4 ─────────────────────────�
                   temp=0+seed：4/4 GO（意图/规划/策略/引用全 1.0），单轮 p95 约 0.25 秒
       ∥ E2E phase 3 ✅ sim 身体（Genesis）：21/21 物理场景 GO（约 48 秒，2026-07-04）
 ──────────────────────────────────────────────────────────────
-  6 ◐  数据闭环   trace→数据集 · LLM PolicyAuthor · Episteme 结晶 · 提升门
-                  （gate.py 作为接受门件已提前落）
+  6 ✅ 数据闭环   2026-07-04 完成 —— curate（按户隔离、语音脱敏、拒跨户合并）· LLMPolicyAuthor
+                  （BYO Verbalizer）· crystallize（learned 卡、零 safety 键 —— D-L）· gate.py
+                  提升门；学→用已闭环（learning_loop.py）。余下深化：D-G 复合奖励塑形
   7 ▢  推迟       语音导览/真语音打断（P7.3–7.4）· 主动感知（动态场景 P4）
 ```
 
