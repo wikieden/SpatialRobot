@@ -70,6 +70,16 @@ Step 5 alone needs the host.
    now build-time decisions (logged one line here); execution runs in tranches T1–T4 (§2);
    step 3b carries an explicit TDD/isolation discipline; step 4 split into 4a/4b.
 
+## 3a. Review round (2026-07-04, step-7 batch)
+
+Independent review of the 10 landed commits: **0 CRITICAL · 1 HIGH · 3 MEDIUM · 3 LOW**;
+no ratified-semantics violations, no safety regressions (all vet points verified on the
+per-turn gate). Fixed same day: HIGH-1 serve_mode telemetry leaking into the skill
+scorecard; MEDIUM-1 macro missing-arg silent degrade (now warns); MEDIUM-2 zero-score
+binding ties silently trusting position 0 (now ambiguous when labels differ). LOWs
+logged as intentional (first-ambiguity-only ask; non-unit Weights sums allowed;
+unanswered asks still spend budget).
+
 ## 3b. Build-time decisions (logged per the planning freeze)
 
 - **D-I**: "close in score" = within 0.75x of the top hit (scale-free ratio); a binding

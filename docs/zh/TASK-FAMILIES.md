@@ -1128,6 +1128,7 @@ ENPIRE 奖励 = `w_task * task_success + w_handle * handled_success + w_honesty 
 7. ◐ **第 7 步 —— 软件面完成（2026-07-04）**：语音讲解导览经 `VoiceLoop`（`skillforge/examples/voice_tour.py`，GO）·
    `ListenerInterruptSource` 语音打断 seam（P7.3）· P7.4 降级模式（逐轮模式遥测、离线安全收紧、诚实离线提示）·
    D-I 绑定歧义 · D-D 宏展开 · D-P 记分卡+可靠度提示。**余项（硬件）**：本体流式 ASR+VAD 填 `audio_source`、
-   真相机感知喂入（动态场景 P4）、步内抢占（bodylink cancel/pause/resume）。
+   真相机感知喂入（动态场景 P4）。步内抢占（bodylink cancel/pause/resume）重新归类为
+   软件项 —— 见 DEV-STATUS T5。
 
 第 1–4 步可自主落地、无网络。仅第 5 步需主机。

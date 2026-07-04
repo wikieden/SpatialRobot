@@ -1445,7 +1445,7 @@ replan (RETRY/ADJUST/REROUTE/SKIP/ESCALATE) for step 7 only — steps 1–6 (don
    seam (P7.3) · P7.4 degraded mode (per-turn mode telemetry, offline policy tighten,
    honest offline UX) · D-I binding ambiguity · D-D macro expansion · D-P scorecard +
    advisory reliability. **Remaining (hardware)**: on-body streaming ASR+VAD fill of
-   `audio_source`, live-camera perception feeds (dynamic-scene P4), mid-step preemption
-   (bodylink cancel/pause/resume).
+   `audio_source`, live-camera perception feeds (dynamic-scene P4). Mid-step preemption
+   (bodylink cancel/pause/resume) is reclassified as software — see DEV-STATUS T5.
 
 Steps 1–4 are autonomously buildable and network-free. Step 5 alone needs the host.
