@@ -46,8 +46,34 @@ T4 ─────────────────────────�
   6 ✅ data loop   done 2026-07-04 — curate (home-scoped, speech-scrubbed, no cross-home merge)
                    · LLMPolicyAuthor (BYO Verbalizer) · crystallize (learned SkillCard, no safety
                    keys — D-L) · gate.py promote gate; learn→reuse closed (learning_loop.py).
-                   Remaining deepening: D-G composite reward shaping (task/handle/honesty weights)
-  7 ▢  deferred    voice tour / real voice barge-in (P7.3–7.4) · active perception (dyn-scene P4)
+                   Deepening done 2026-07-04: D-G composite reward (Weights 0.6/0.25/0.15
+                   + IntegrationReport.composite_score; meets() stays task-gated)
+  7 ◐  step 7      software face done 2026-07-04 — voice tour via VoiceLoop (example GO) ·
+                   ListenerInterruptSource voice barge seam (P7.3) · P7.4 degraded mode
+                   (per-turn mode telemetry · offline policy tighten · honest offline UX) ·
+                   D-I binding ambiguity (ask-once, shared budget) · D-D macro expansion
+                   (macro_parent traced) · D-P scorecard + advisory reliability.
+                   Remaining (hardware): streaming ASR+VAD fill · live-camera perception
+                   (dyn-scene P4 feeds)
+──────────────────────────────────────────────────────────────
+T5 ✅ done 2026-07-04 (same day as revised)
+  8 ✅ mid-step preempt — cancel/pause/resume handshake on BaseExecutorAdapter +
+     SimDeviceAdapter (conformance tier added); Brain._drain polls the inbox
+     between stream updates: chitchat answered inline, abort/supersede/correction
+     cancel the in-flight step; handshake-less bodies keep the D-E baseline.
+     True anytime-barge — D-E fully closed. Sim 21/21 GO after.
+  9 ✅ D2 merge — tempomem.trace.TraceLog (own file or shared .smem via
+     TempoMem.trace_log(); table trace_episodes; fuse-before-persist holds across
+     trace commits); mindloop.TraceStore is now a thin adapter (API unchanged).
+  10 ✅ small batch — SubTask.negation_constraints (Replanner stamps
+     not:<verb>:<failed id>, accumulating) · Phylax FMEA doc (15 modes x guards)
+     + conservative_policy() preset · Phylax.replace_policy adult-only override
+     + access-control spec (mindloop docs, EN+ZH)
+T6 (host/GPU — host available, not hardware-blocked)
+  11 Qwen3-VL → worldsense perception adapter (host :8001 already serving)
+  12 research: LLM-rollout scale-up · scorecard sim-batch nightly (D-P source 1)
+HW-blocked (true hardware): streaming ASR+VAD mic fill · live camera feeds ·
+  Thor switch · D3 real-HW body track
 ```
 
 T1–T3 are autonomous + network-free; each tranche ends tests-green + committed.
@@ -98,10 +124,10 @@ unanswered asks still spend budget).
 
 | Item | State | Home |
 |---|---|---|
-| Phylax FMEA (policy from failure-mode analysis) | open | mindloop DEV-PLAN §8 |
-| D2: L4 trace → tempomem core merge | deferred | mindloop DEV-PLAN §8 |
-| `negation_constraints` SubTask field | not added (B2R parity) | mindloop DEV-PLAN §8 |
+| Phylax FMEA (policy from failure-mode analysis) | ✅ done 2026-07-04 (T5-10; phylax-fmea.md) | mindloop DEV-PLAN §8 |
+| D2: L4 trace → tempomem core merge | ✅ done 2026-07-04 (T5-9) | mindloop DEV-PLAN §8 |
+| `negation_constraints` SubTask field | ✅ done 2026-07-04 (T5-10) | mindloop DEV-PLAN §8 |
 | Cloud → Thor switch (P6 exit) | pending hardware | mindloop DEV-PLAN P6 |
 | P7.3–7.4 edge stack + degradation telemetry | software done 2026-07-04 (seam + P7.4); on-body ASR/TTS/LLM install pending HW | mindloop DEV-PLAN P7 |
 | D3 real-HW body track (BT/reflex tiers) | pending | bodylink design docs |
-| Owner access-control spec (runtime region-policy override) | flagged | TASK-FAMILIES §1.2 |
+| Owner access-control spec (runtime region-policy override) | ✅ done 2026-07-04 (T5-10; access-control.md + replace_policy) | TASK-FAMILIES §1.2 |

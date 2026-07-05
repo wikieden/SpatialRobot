@@ -53,12 +53,18 @@ T4 ─────────────────────────�
                   D-P 记分卡+可靠度提示。余项（硬件）：流式 ASR+VAD 填充 ·
                   真相机感知喂入（动态场景 P4）
 ──────────────────────────────────────────────────────────────
-T5（下一批，纯软件 —— 不依赖硬件）                                 [2026-07-04 修订]
-  8  步内抢占 —— bodylink cancel/pause/resume 握手（TaskStatus.PAUSED 已有；
-     Mock/sim 全可测）→ 真"随时打断"，彻底关掉 D-E 尾巴。
-     从"硬件"重新归类：握手是身体接缝软件。
-  9  D2：L4 trace → tempomem core 合并（跨仓协调变更）
-  10 小件打包：Phylax FMEA · negation_constraints · 屋主访问控制规范
+T5 ✅ 2026-07-04 当日修订当日完成
+  8 ✅ 步内抢占 —— BaseExecutorAdapter + SimDeviceAdapter 落 cancel/pause/resume
+     握手（一致性套件加可选层）；Brain._drain 在流更新之间轮询收件箱：闲聊步内
+     作答，中止/取代/纠正取消在途步；无握手身体保持 D-E 基线。真"随时打断"，
+     D-E 彻底关闭。之后 sim 21/21 GO。
+  9 ✅ D2 合并 —— tempomem.trace.TraceLog（独立文件或经 TempoMem.trace_log()
+     共享 .smem；表 trace_episodes；trace 提交全程守 fuse-before-persist）；
+     mindloop.TraceStore 变薄适配层（API 不变）。
+  10 ✅ 小件打包 —— SubTask.negation_constraints（Replanner 盖
+     not:<动词>:<失败id>，累积）· Phylax FMEA 文档（15 模式 × 防线）+
+     conservative_policy() 预设 · Phylax.replace_policy 仅 adult 覆写 +
+     访问控制规范（mindloop docs，EN+ZH）
 T6（主机/GPU —— 主机在手，非硬件阻塞）
   11 Qwen3-VL → worldsense 感知 adapter（主机 :8001 正在服务）
   12 研究轨：LLM rollout 扩量 · 记分卡 sim 批量夜跑（D-P 数据源 1）
@@ -103,10 +109,10 @@ MEDIUM-2 零分并列盲信首位（现在异标签并列判歧义）。LOW 记�
 
 | 项 | 状态 | 归属 |
 |---|---|---|
-| Phylax FMEA（按失效模式分析出策略） | open | mindloop DEV-PLAN §8 |
-| D2：L4 trace → tempomem core 合并 | deferred | mindloop DEV-PLAN §8 |
-| `negation_constraints` SubTask 字段 | 未加（B2R 对齐项） | mindloop DEV-PLAN §8 |
+| Phylax FMEA（按失效模式分析出策略） | ✅ 2026-07-04 完成（T5-10；phylax-fmea.md） | mindloop DEV-PLAN §8 |
+| D2：L4 trace → tempomem core 合并 | ✅ 2026-07-04 完成（T5-9） | mindloop DEV-PLAN §8 |
+| `negation_constraints` SubTask 字段 | ✅ 2026-07-04 完成（T5-10） | mindloop DEV-PLAN §8 |
 | 云 → Thor 切换（P6 出口） | 待硬件 | mindloop DEV-PLAN P6 |
 | P7.3–7.4 边缘栈 + 降级遥测 | 软件面 2026-07-04 完成（seam + P7.4）；本体 ASR/TTS/LLM 装机待硬件 | mindloop DEV-PLAN P7 |
 | D3 真机身体轨（BT/反射层） | pending | bodylink 设计文档 |
-| 屋主访问控制规范（运行时区域策略覆写） | flagged | TASK-FAMILIES §1.2 |
+| 屋主访问控制规范（运行时区域策略覆写） | ✅ 2026-07-04 完成（T5-10；access-control.md + replace_policy） | TASK-FAMILIES §1.2 |
