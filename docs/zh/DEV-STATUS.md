@@ -12,7 +12,7 @@
 | **worldsense** | RGB(-D)→世界系 Detection，CLIP 在 extra 后；**VLMDetector 已落**（Qwen3-VL grounding → Box3D，主机实测 GO） | — | 真相机喂入（硬件） |
 | **mindloop** | P0–P5 ✅；P6 ◐（eval+真LLM已验；Thor 待硬件）；P7 ◐（7.1 failover + 7.2 语音接缝 ✅）；动态场景 1–4 ✅；**TempoMem 改名已落**；**步骤 3/3b 已落**；**第 7 步软件面已落**（D-I 绑定歧义、D-D 宏展开、D-P 可靠度提示、P7.3 ListenerInterruptSource、P7.4 降级模式） | — | 硬件轨：Thor 切换；步内抢占（需 bodylink cancel/pause/resume） |
 | **bodylink** | D3 manifest 框架、MockBody、Genesis sim、一致性套件、4 内置身体；**步骤 1 动词已落**（13 通用 + arm 子集） | — | D3 真机轨（BT/反射层）；cancel/pause/resume 握手（步内抢占） |
-| **voicelink** | EndpointListener/Speaker（Qwen3-ASR/TTS）；打断 seam 经 mindloop `ListenerInterruptSource` 可达 | — | 本体流式 ASR+VAD 填 `audio_source`（硬件） |
+| **voicelink** | EndpointListener/Speaker（Qwen3-ASR/TTS）；**ASR+VAD v1 已落**（能量 `SpeechSegmenter` + `SpeechStream.poll` 填 `audio_source`；`[mic]` extra 带 `SoundDeviceMic`） | — | 真机验证：麦克风增益/时延调优 + Qwen3-ASR 端点 pass |
 | **skillforge** | ENPIRE 骨架、4 场景基线 GO ✅、**evolve 接受门已落**；六套件 GO；templates（D-Q）；数据闭环（curate/author/crystallize）；**D-G 复合奖励**；**D-P 记分卡**；语音导览示例 | — | 主机 LLM rollout 扩量（可选深化） |
 
 ## 2. 统一执行顺序（依赖链）
@@ -50,8 +50,8 @@ T4 ─────────────────────────�
                   ListenerInterruptSource 语音打断 seam（P7.3）· P7.4 降级模式
                   （逐轮模式遥测 · 离线安全收紧 · 诚实离线提示）· D-I 绑定歧义
                   （只问一次、共享预算）· D-D 宏展开（macro_parent 入痕迹）·
-                  D-P 记分卡+可靠度提示。余项（硬件）：流式 ASR+VAD 填充 ·
-                  真相机感知喂入（动态场景 P4）
+                  D-P 记分卡+可靠度提示。余项（硬件）：真相机感知喂入（动态场景 P4）；
+                  ASR+VAD 软件 v1 已落（2026-07-05，voicelink）—— 余下只剩真机验证
 ──────────────────────────────────────────────────────────────
 T5 ✅ 2026-07-04 当日修订当日完成
   8 ✅ 步内抢占 —— BaseExecutorAdapter + SimDeviceAdapter 落 cancel/pause/resume
@@ -74,7 +74,7 @@ T6 ✅ 2026-07-05 完成
      Scorecard；scorecard_nightly.py GO，弱 grasp 0.67 被披露）·
      rollout_scale.py（K 个种子任务过 evolve；基线 12/12；Cosmos 实测 4/4
      pass@1，每任务约 90 tokens）
-真硬件阻塞：流式 ASR+VAD 麦克风填充 · 真相机喂入 · Thor 切换 · D3 真机身体轨
+真硬件阻塞（语音只剩验证）：ASR+VAD 真机调优 · 真相机喂入 · Thor 切换 · D3 真机身体轨
 ```
 
 T1–T3 可自主、无网络；每批以测试全绿+提交收尾。仅步骤 5 需主机。

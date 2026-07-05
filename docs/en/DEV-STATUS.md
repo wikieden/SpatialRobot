@@ -12,7 +12,7 @@
 | **worldsense** | RGB(-D)→world Detections, CLIP behind extra; **VLMDetector landed** (Qwen3-VL grounding → Box3D, live GO on the host) | — | real-camera feeds (hardware) |
 | **mindloop** | P0–P5 ✅; P6 ◐ (eval + real-LLM validated; Thor pending HW); P7 ◐ (7.1 failover + 7.2 voice seams ✅); dynamic-scene 1–4 ✅; **TempoMem rename landed**; **steps 3/3b landed**; **step-7 software landed** (D-I binding ambiguity, D-D macro expansion, D-P advisory reliability, P7.3 ListenerInterruptSource, P7.4 degraded mode) | — | hardware tracks: Thor switch; mid-step preempt (needs bodylink cancel/pause/resume) |
 | **bodylink** | D3 manifest framework, MockBody, Genesis sim, conformance kit, 4 builtin bodies; **step-1 verbs landed** (13 common + arm subset) | — | D3 real-HW track (BT/reflex tiers); cancel/pause/resume handshake (mid-step preempt) |
-| **voicelink** | EndpointListener/Speaker (Qwen3-ASR/TTS); barge seam reachable via mindloop `ListenerInterruptSource` | — | on-body streaming ASR+VAD fill of `audio_source` (hardware) |
+| **voicelink** | EndpointListener/Speaker (Qwen3-ASR/TTS); **ASR+VAD v1 landed** (energy `SpeechSegmenter` + `SpeechStream.poll` fills `audio_source`; `[mic]` extra ships `SoundDeviceMic`) | — | on-device validation: real-mic gain/latency tuning + Qwen3-ASR endpoint pass |
 | **skillforge** | ENPIRE skeleton, 4-scenario baseline harness GO ✅, **evolve acceptance gate landed**; six suites GO; templates (D-Q); data loop (curate/author/crystallize); **D-G composite reward**; **D-P Scorecard**; voice-tour example | — | LLM-rollout scale-up on the host (optional deepening) |
 
 ## 2. Unified execution order (dependency chain)
@@ -53,8 +53,9 @@ T4 ─────────────────────────�
                    (per-turn mode telemetry · offline policy tighten · honest offline UX) ·
                    D-I binding ambiguity (ask-once, shared budget) · D-D macro expansion
                    (macro_parent traced) · D-P scorecard + advisory reliability.
-                   Remaining (hardware): streaming ASR+VAD fill · live-camera perception
-                   (dyn-scene P4 feeds)
+                   Remaining (hardware): live-camera perception (dyn-scene P4 feeds);
+                   ASR+VAD software v1 landed 2026-07-05 (voicelink) — on-device
+                   validation is the remainder
 ──────────────────────────────────────────────────────────────
 T5 ✅ done 2026-07-04 (same day as revised)
   8 ✅ mid-step preempt — cancel/pause/resume handshake on BaseExecutorAdapter +
@@ -79,8 +80,8 @@ T6 ✅ done 2026-07-05
      the production executor seam → Scorecard; scorecard_nightly.py GO, weak
      grasp surfaced at 0.67) · rollout_scale.py (K seeded tasks through evolve;
      baseline 12/12; live on Cosmos 4/4 pass@1, ~90 tokens/task)
-HW-blocked (true hardware): streaming ASR+VAD mic fill · live camera feeds ·
-  Thor switch · D3 real-HW body track
+HW-blocked (true hardware, validation-only for voice): on-device ASR+VAD tuning ·
+  live camera feeds · Thor switch · D3 real-HW body track
 ```
 
 T1–T3 are autonomous + network-free; each tranche ends tests-green + committed.
