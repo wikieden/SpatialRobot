@@ -9,7 +9,7 @@
 | 成员 | 已完成 | 进行中 | 下一步 |
 |---|---|---|---|
 | **tempomem** | 核心（融合/持久/查询/序列化）、区域、衰减、viz；**语义 Tier-1 已落**（edges/properties/events，migration 002）；**`last_seen` 已落**（步骤 2 ✅） | — | 动态场景 P4 供数（推迟） |
-| **worldsense** | RGB(-D)→世界系 Detection，CLIP 在 extra 后 | — | 动态场景 P4 实时感知（推迟） |
+| **worldsense** | RGB(-D)→世界系 Detection，CLIP 在 extra 后；**VLMDetector 已落**（Qwen3-VL grounding → Box3D，主机实测 GO） | — | 真相机喂入（硬件） |
 | **mindloop** | P0–P5 ✅；P6 ◐（eval+真LLM已验；Thor 待硬件）；P7 ◐（7.1 failover + 7.2 语音接缝 ✅）；动态场景 1–4 ✅；**TempoMem 改名已落**；**步骤 3/3b 已落**；**第 7 步软件面已落**（D-I 绑定歧义、D-D 宏展开、D-P 可靠度提示、P7.3 ListenerInterruptSource、P7.4 降级模式） | — | 硬件轨：Thor 切换；步内抢占（需 bodylink cancel/pause/resume） |
 | **bodylink** | D3 manifest 框架、MockBody、Genesis sim、一致性套件、4 内置身体；**步骤 1 动词已落**（13 通用 + arm 子集） | — | D3 真机轨（BT/反射层）；cancel/pause/resume 握手（步内抢占） |
 | **voicelink** | EndpointListener/Speaker（Qwen3-ASR/TTS）；打断 seam 经 mindloop `ListenerInterruptSource` 可达 | — | 本体流式 ASR+VAD 填 `audio_source`（硬件） |
@@ -65,9 +65,15 @@ T5 ✅ 2026-07-04 当日修订当日完成
      not:<动词>:<失败id>，累积）· Phylax FMEA 文档（15 模式 × 防线）+
      conservative_policy() 预设 · Phylax.replace_policy 仅 adult 覆写 +
      访问控制规范（mindloop docs，EN+ZH）
-T6（主机/GPU —— 主机在手，非硬件阻塞）
-  11 Qwen3-VL → worldsense 感知 adapter（主机 :8001 正在服务）
-  12 研究轨：LLM rollout 扩量 · 记分卡 sim 批量夜跑（D-P 数据源 1）
+T6 ✅ 2026-07-05 完成
+  11 ✅ Qwen3-VL 之眼 —— worldsense.VLMDetector 填 Detector3D（2D grounding
+     JSON → 深度反投影 → 相机系 Box3D → 复用 BoxDetectorAdapter 升维+编码）；
+     传输注入、stdlib PNG、网络隔离测试。主机实测 GO（:8001，Qwen3-VL-32B-FP8）：
+     眼→记忆接地+查回；实测坑已收编（裸对象回复、0-1000 归一化坐标）。
+  12 ✅ 研究对 —— run_sim_batch（D-P 数据源 1：动词×回合走生产执行 seam →
+     Scorecard；scorecard_nightly.py GO，弱 grasp 0.67 被披露）·
+     rollout_scale.py（K 个种子任务过 evolve；基线 12/12；Cosmos 实测 4/4
+     pass@1，每任务约 90 tokens）
 真硬件阻塞：流式 ASR+VAD 麦克风填充 · 真相机喂入 · Thor 切换 · D3 真机身体轨
 ```
 

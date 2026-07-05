@@ -9,7 +9,7 @@
 | Member | Done | In progress | Next |
 |---|---|---|---|
 | **tempomem** | core (fuse/persist/query/serialize), regions, decay, viz; **semantic Tier-1 landed** (edges/properties/events, migration 002); **`last_seen` landed** (step 2 ✅) | — | dynamic-scene P4 feeds (deferred) |
-| **worldsense** | RGB(-D)→world Detections, CLIP behind extra | — | dynamic-scene P4 live perception (deferred) |
+| **worldsense** | RGB(-D)→world Detections, CLIP behind extra; **VLMDetector landed** (Qwen3-VL grounding → Box3D, live GO on the host) | — | real-camera feeds (hardware) |
 | **mindloop** | P0–P5 ✅; P6 ◐ (eval + real-LLM validated; Thor pending HW); P7 ◐ (7.1 failover + 7.2 voice seams ✅); dynamic-scene 1–4 ✅; **TempoMem rename landed**; **steps 3/3b landed**; **step-7 software landed** (D-I binding ambiguity, D-D macro expansion, D-P advisory reliability, P7.3 ListenerInterruptSource, P7.4 degraded mode) | — | hardware tracks: Thor switch; mid-step preempt (needs bodylink cancel/pause/resume) |
 | **bodylink** | D3 manifest framework, MockBody, Genesis sim, conformance kit, 4 builtin bodies; **step-1 verbs landed** (13 common + arm subset) | — | D3 real-HW track (BT/reflex tiers); cancel/pause/resume handshake (mid-step preempt) |
 | **voicelink** | EndpointListener/Speaker (Qwen3-ASR/TTS); barge seam reachable via mindloop `ListenerInterruptSource` | — | on-body streaming ASR+VAD fill of `audio_source` (hardware) |
@@ -69,9 +69,16 @@ T5 ✅ done 2026-07-04 (same day as revised)
      not:<verb>:<failed id>, accumulating) · Phylax FMEA doc (15 modes x guards)
      + conservative_policy() preset · Phylax.replace_policy adult-only override
      + access-control spec (mindloop docs, EN+ZH)
-T6 (host/GPU — host available, not hardware-blocked)
-  11 Qwen3-VL → worldsense perception adapter (host :8001 already serving)
-  12 research: LLM-rollout scale-up · scorecard sim-batch nightly (D-P source 1)
+T6 ✅ done 2026-07-05
+  11 ✅ Qwen3-VL eyes — worldsense.VLMDetector fills Detector3D (2D grounding
+     JSON → depth back-projection → camera Box3D → existing BoxDetectorAdapter
+     lift+encode); transport-injected, stdlib PNG, network-free tests. Live GO
+     on the host (:8001, Qwen3-VL-32B-FP8): eyes→memory grounded + queried;
+     live findings folded in (bare-object replies, 0-1000 normalized coords).
+  12 ✅ research pair — run_sim_batch (D-P source 1: verbs x episodes through
+     the production executor seam → Scorecard; scorecard_nightly.py GO, weak
+     grasp surfaced at 0.67) · rollout_scale.py (K seeded tasks through evolve;
+     baseline 12/12; live on Cosmos 4/4 pass@1, ~90 tokens/task)
 HW-blocked (true hardware): streaming ASR+VAD mic fill · live camera feeds ·
   Thor switch · D3 real-HW body track
 ```
