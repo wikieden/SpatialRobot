@@ -6,6 +6,9 @@
 __pycache__/
 *.py[cod]
 
+# Test artifacts
+.coverage
+
 # Agent / tooling state
 .omc/
 .omx/
