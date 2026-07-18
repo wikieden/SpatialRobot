@@ -1,0 +1,178 @@
+<svg viewBox="0 0 1200 800" xmlns="http://www.w3.org/2000/svg" font-family="'PingFang SC','Noto Sans SC','Microsoft YaHei',sans-serif">
+  <rect x="0" y="0" width="1200" height="800" fill="#FBF8F1"/>
+  <rect x="0" y="0" width="1200" height="800" fill="none" stroke="#E3DACB" stroke-width="2"/>
+
+  <text x="36" y="56" font-size="30" font-weight="700" fill="#1F2A3D">数据与训练地图 · 业务闭环 + 逐模型方法</text>
+  <text x="36" y="84" font-size="15" fill="#6E5836">记忆-first 的数据飞轮：跑起来即埋点，轨迹变数据，按模型分别 冻结 / 调参 / SFT / RL</text>
+  <rect x="36" y="98" width="1128" height="4" fill="#1FB6C1"/>
+
+  <!-- ===== closed loop band ===== -->
+  <text x="36" y="140" font-size="15" letter-spacing="2" fill="#9A7B4F" font-weight="700">主业务闭环 · 数据飞轮</text>
+  <g font-size="14" text-anchor="middle">
+    <!-- 6 stages -->
+    <g>
+      <rect x="36" y="156" width="168" height="60" rx="9" fill="#121E33"/>
+      <text x="120" y="182" fill="#FFFFFF" font-weight="700">① 部署 · 运行</text>
+      <text x="120" y="202" fill="#9CC4E4" font-size="12">感知→记忆→规划→行动</text>
+    </g>
+    <g>
+      <rect x="228" y="156" width="168" height="60" rx="9" fill="#F4EFE6" stroke="#E3DACB"/>
+      <text x="312" y="182" fill="#1F2A3D" font-weight="700">② 埋点 · 追踪</text>
+      <text x="312" y="202" fill="#6E5836" font-size="12">TraceStore 情节·引用 id</text>
+    </g>
+    <g>
+      <rect x="420" y="156" width="168" height="60" rx="9" fill="#F4EFE6" stroke="#E3DACB"/>
+      <text x="504" y="182" fill="#1F2A3D" font-weight="700">③ 整编 · 数据集</text>
+      <text x="504" y="202" fill="#6E5836" font-size="12">过滤成功→SFT·全量→RL</text>
+    </g>
+    <g>
+      <rect x="612" y="156" width="168" height="60" rx="9" fill="#FBF0DF" stroke="#C8842B"/>
+      <text x="696" y="182" fill="#1F2A3D" font-weight="700">④ 训练</text>
+      <text x="696" y="202" fill="#9A6418" font-size="12">SFT 冷启 → RL(RLVR)</text>
+    </g>
+    <g>
+      <rect x="804" y="156" width="168" height="60" rx="9" fill="#EBF0E9" stroke="#6F8A6B"/>
+      <text x="888" y="182" fill="#1F2A3D" font-weight="700">⑤ 门控 eval</text>
+      <text x="888" y="202" fill="#4F6B4C" font-size="12">run_eval·meets 严格改进</text>
+    </g>
+    <g>
+      <rect x="996" y="156" width="168" height="60" rx="9" fill="#121E33"/>
+      <text x="1080" y="182" fill="#FFFFFF" font-weight="700">⑥ 提升上线</text>
+      <text x="1080" y="202" fill="#C9A86E" font-size="12">进 Brain 规划/叠加层</text>
+    </g>
+    <!-- arrows between -->
+    <g fill="#9A7B4F">
+      <path d="M206 186 l16 -7 v14 z"/>
+      <path d="M398 186 l16 -7 v14 z"/>
+      <path d="M590 186 l16 -7 v14 z"/>
+      <path d="M782 186 l16 -7 v14 z"/>
+      <path d="M974 186 l16 -7 v14 z"/>
+    </g>
+    <!-- return arrow -->
+    <path d="M1080 216 v26 H120 v-26" fill="none" stroke="#9A7B4F" stroke-width="2" stroke-dasharray="5 4"/>
+    <path d="M120 242 l-7 -16 h14 z" fill="#9A7B4F"/>
+    <text x="600" y="236" fill="#8C857A" font-size="12">更好的模型回到运行时 —— 跑得越多，数据越多，越聪明</text>
+  </g>
+
+  <!-- ===== legend ===== -->
+  <text x="36" y="292" font-size="15" letter-spacing="2" fill="#9A7B4F" font-weight="700">逐模型训练方法</text>
+  <g font-size="12" transform="translate(300,282)">
+    <rect x="0" y="0" width="14" height="14" rx="3" fill="#8C857A"/><text x="20" y="12" fill="#2B2A26">冻结 Frozen</text>
+    <rect x="120" y="0" width="14" height="14" rx="3" fill="#3F6FA8"/><text x="140" y="12" fill="#2B2A26">调参 Tune</text>
+    <rect x="232" y="0" width="14" height="14" rx="3" fill="#6F8A6B"/><text x="252" y="12" fill="#2B2A26">SFT</text>
+    <rect x="312" y="0" width="14" height="14" rx="3" fill="#C8842B"/><text x="332" y="12" fill="#2B2A26">RL</text>
+    <rect x="392" y="0" width="14" height="14" rx="3" fill="none" stroke="#A99C86" stroke-dasharray="3 2"/><text x="412" y="12" fill="#2B2A26">研究/待建</text>
+  </g>
+
+  <!-- ===== model lanes ===== -->
+  <!-- lane headers -->
+  <g font-size="14" font-weight="700" fill="#1F2A3D" text-anchor="middle">
+    <text x="132" y="336">感知 Eyes</text>
+    <text x="366" y="336">记忆 Memory</text>
+    <text x="600" y="336">皮层 Cortex</text>
+    <text x="834" y="336">本体 Body</text>
+    <text x="1068" y="336">语音 Voice</text>
+  </g>
+
+  <!-- helper: each card 224 wide -->
+  <!-- Perception lane x=20 -->
+  <g>
+    <rect x="20" y="350" width="224" height="86" rx="9" fill="#EBF0E9" stroke="#6F8A6B"/>
+    <text x="36" y="376" font-size="14" font-weight="700" fill="#1F2A3D">检测 VLM</text>
+    <rect x="150" y="362" width="80" height="20" rx="10" fill="#6F8A6B"/><text x="190" y="376" font-size="11" fill="#FFFFFF" text-anchor="middle">SFT</text>
+    <text x="36" y="397" font-size="12" fill="#4F6B4C">Cosmos3 / Qwen3-VL</text>
+    <text x="36" y="416" font-size="11.5" fill="#6E5836">格式对齐 + grounding 蒸馏</text>
+    <text x="36" y="431" font-size="11" fill="#8C857A">数据：标注/蒸馏 3D 框</text>
+  </g>
+  <g>
+    <rect x="20" y="446" width="224" height="70" rx="9" fill="#F1EEE9" stroke="#8C857A"/>
+    <text x="36" y="472" font-size="14" font-weight="700" fill="#1F2A3D">CLIP 裁剪编码器</text>
+    <rect x="150" y="458" width="80" height="20" rx="10" fill="#8C857A"/><text x="190" y="472" font-size="11" fill="#FFFFFF" text-anchor="middle">冻结</text>
+    <text x="36" y="493" font-size="11.5" fill="#6E5836">改编码器 = 重建库(迁移)</text>
+    <text x="36" y="508" font-size="11" fill="#8C857A">锁 embedding_dim，勿原地微调</text>
+  </g>
+
+  <!-- Memory lane x=254 -->
+  <g>
+    <rect x="254" y="350" width="224" height="86" rx="9" fill="#EAF0F5" stroke="#3F6FA8"/>
+    <text x="270" y="376" font-size="14" font-weight="700" fill="#1F2A3D">融合仲裁 / decay</text>
+    <rect x="384" y="362" width="80" height="20" rx="10" fill="#3F6FA8"/><text x="424" y="376" font-size="11" fill="#FFFFFF" text-anchor="middle">调参</text>
+    <text x="270" y="397" font-size="11.5" fill="#33526F">纯算法·无神经模型</text>
+    <text x="270" y="416" font-size="11.5" fill="#6E5836">τ_merge/权重/半衰期 网格搜索</text>
+    <text x="270" y="431" font-size="11" fill="#8C857A">对 bench.recall_at_k 调</text>
+  </g>
+  <g>
+    <rect x="254" y="446" width="224" height="70" rx="9" fill="#EBF0E9" stroke="#A99C86" stroke-dasharray="4 3"/>
+    <text x="270" y="472" font-size="14" font-weight="700" fill="#1F2A3D">图编码器 GNN</text>
+    <rect x="384" y="458" width="80" height="20" rx="10" fill="#6F8A6B"/><text x="424" y="472" font-size="11" fill="#FFFFFF" text-anchor="middle">SFT·研究</text>
+    <text x="270" y="493" font-size="11.5" fill="#6E5836">结构感知检索 + 桥 latent</text>
+    <text x="270" y="508" font-size="11" fill="#8C857A">对比/自监督·torch 在 extras</text>
+  </g>
+
+  <!-- Cortex lane x=488 -->
+  <g>
+    <rect x="488" y="350" width="224" height="86" rx="9" fill="#FBF0DF" stroke="#C8842B" stroke-width="2"/>
+    <text x="504" y="376" font-size="14" font-weight="700" fill="#1F2A3D">Reasoner 皮层</text>
+    <rect x="600" y="362" width="98" height="20" rx="10" fill="#C8842B"/><text x="649" y="376" font-size="11" fill="#FFFFFF" text-anchor="middle">SFT→RL · P1</text>
+    <text x="504" y="397" font-size="11.5" fill="#9A6418">Cosmos-Reason2-8B</text>
+    <text x="504" y="416" font-size="11.5" fill="#6E5836">RLVR·GRPO：成功+引用-步数</text>
+    <text x="504" y="431" font-size="11" fill="#8C857A">数据：记忆优势 eval 轨迹</text>
+  </g>
+  <g>
+    <rect x="488" y="446" width="224" height="70" rx="9" fill="#FBF0DF" stroke="#C8842B"/>
+    <text x="504" y="472" font-size="14" font-weight="700" fill="#1F2A3D">Planner 规划器</text>
+    <rect x="604" y="458" width="94" height="20" rx="10" fill="#C8842B"/><text x="651" y="472" font-size="11" fill="#FFFFFF" text-anchor="middle">SFT→RL</text>
+    <text x="504" y="493" font-size="11.5" fill="#6E5836">Qwen3.x·动词序列格式</text>
+    <text x="504" y="508" font-size="11" fill="#8C857A">RL：compile 通过率+任务成功</text>
+  </g>
+  <g>
+    <rect x="488" y="526" width="224" height="66" rx="9" fill="#FBF0DF" stroke="#A99C86" stroke-dasharray="4 3"/>
+    <text x="504" y="550" font-size="14" font-weight="700" fill="#1F2A3D">C4 主动感知</text>
+    <rect x="600" y="536" width="98" height="20" rx="10" fill="#C8842B"/><text x="649" y="550" font-size="11" fill="#FFFFFF" text-anchor="middle">规则→RL · P3</text>
+    <text x="504" y="571" font-size="11.5" fill="#6E5836">先规则预算控制器</text>
+    <text x="504" y="586" font-size="11" fill="#8C857A">reward = 信息增益 − 动作代价</text>
+  </g>
+
+  <!-- Body lane x=722 -->
+  <g>
+    <rect x="722" y="350" width="224" height="86" rx="9" fill="#FBF0DF" stroke="#A99C86" stroke-dasharray="4 3"/>
+    <text x="738" y="376" font-size="14" font-weight="700" fill="#1F2A3D">VLA 控制</text>
+    <rect x="820" y="362" width="118" height="20" rx="10" fill="#C8842B"/><text x="879" y="376" font-size="11" fill="#FFFFFF" text-anchor="middle">模仿→RL · 研究</text>
+    <text x="738" y="397" font-size="11.5" fill="#6E5836">GR00T N1 / OpenVLA</text>
+    <text x="738" y="416" font-size="11.5" fill="#6E5836">teleop 模仿 → sim RL</text>
+    <text x="738" y="431" font-size="11" fill="#8C857A">数据：机器人本体(稀缺)+ego 视频</text>
+  </g>
+  <g>
+    <rect x="722" y="446" width="224" height="70" rx="9" fill="#FBF0DF" stroke="#C8842B"/>
+    <text x="738" y="472" font-size="14" font-weight="700" fill="#1F2A3D">skillforge</text>
+    <rect x="846" y="458" width="92" height="20" rx="10" fill="#C8842B"/><text x="892" y="472" font-size="11" fill="#FFFFFF" text-anchor="middle">在线 RL</text>
+    <text x="738" y="493" font-size="11.5" fill="#6E5836">跨回合策略进化·结晶技能卡</text>
+    <text x="738" y="508" font-size="11" fill="#8C857A">held-out 严格改进门</text>
+  </g>
+  <g>
+    <rect x="722" y="526" width="224" height="66" rx="9" fill="#EBF0E9" stroke="#A99C86" stroke-dasharray="4 3"/>
+    <text x="738" y="550" font-size="14" font-weight="700" fill="#1F2A3D">bridge latent 头</text>
+    <rect x="838" y="536" width="100" height="20" rx="10" fill="#6F8A6B"/><text x="888" y="550" font-size="11" fill="#FFFFFF" text-anchor="middle">SFT·研究</text>
+    <text x="738" y="571" font-size="11.5" fill="#6E5836">子图 latent → VLA 条件</text>
+    <text x="738" y="586" font-size="11" fill="#8C857A">融合 tier-1·M5 后</text>
+  </g>
+
+  <!-- Voice lane x=956 -->
+  <g>
+    <rect x="956" y="350" width="208" height="86" rx="9" fill="#F1EEE9" stroke="#8C857A"/>
+    <text x="972" y="376" font-size="14" font-weight="700" fill="#1F2A3D">ASR / TTS</text>
+    <rect x="1064" y="362" width="90" height="20" rx="10" fill="#8C857A"/><text x="1109" y="376" font-size="11" fill="#FFFFFF" text-anchor="middle">冻结/轻</text>
+    <text x="972" y="397" font-size="11.5" fill="#6E5836">Qwen3-ASR / Qwen3-TTS</text>
+    <text x="972" y="416" font-size="11.5" fill="#6E5836">直接用·可选域适配</text>
+    <text x="972" y="431" font-size="11" fill="#8C857A">非训练重点</text>
+  </g>
+
+  <!-- ===== bottom principle bar ===== -->
+  <rect x="36" y="620" width="1128" height="150" rx="10" fill="#121E33"/>
+  <text x="60" y="654" font-size="15" font-weight="700" fill="#C9A86E">花钱原则</text>
+  <text x="150" y="654" font-size="14" fill="#FFFFFF">RL 预算砸在推理皮层（唯一有「可自动验证奖励的多步决策」的组件）；感知走密集监督；记忆是调参不是训练。</text>
+  <text x="60" y="686" font-size="13.5" fill="#C9D9F0">· 数据划分：L3 规划 ← 人类任务 + ego 视频（充足、免机器人）　L2/L1 控制 ← 机器人本体数据（稀缺）　联合训练降数据壁垒</text>
+  <text x="60" y="710" font-size="13.5" fill="#C9D9F0">· 冷启动数据：teleop 演示 · ego 视频 · 标注 3D 框 · Genesis/IsaacLab sim rollout · 脚本技能卡 + FMEA 安全例 · ScriptedReasoner 轨迹</text>
+  <text x="60" y="734" font-size="13.5" fill="#C9D9F0">· 飞轮数据：生产轨迹(引用 id) · 失败例(typed) · 澄清对话 · L5 偏好 · 结晶技能 —— 整编→SFT/RL→eval 门→上线</text>
+  <text x="60" y="758" font-size="12.5" fill="#F5A623">护栏：感知不 RL · 编码器不原地微调 · 融合层无梯度 · 反奖励黑客(过度引用/盲答) · injection_breach 重罚</text>
+</svg>
